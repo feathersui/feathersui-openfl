@@ -1349,7 +1349,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 			// Math.POSITIVE_INFINITY bug workaround for swf
 			if (this.gap == (1.0 / 0.0)) {
 				this._currentIcon.y = this.paddingTop;
-				this.textField.y = this.actualHeight - this.paddingBottom - this.textField.height;
+				this.textField.y = Math.max(this.paddingTop, this.actualHeight - this.paddingBottom - this.textField.height);
 			} else {
 				if (this.verticalAlign == TOP) {
 					this.textField.y += this._currentIcon.height + this.gap;
@@ -1362,7 +1362,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 			// Math.POSITIVE_INFINITY bug workaround for swf
 			if (this.gap == (1.0 / 0.0)) {
 				this.textField.x = this.paddingLeft;
-				this._currentIcon.x = this.actualWidth - this.paddingRight - this._currentIcon.width;
+				this._currentIcon.x = Math.max(this.paddingLeft, this.actualWidth - this.paddingRight - this._currentIcon.width);
 			} else {
 				if (this.horizontalAlign == RIGHT) {
 					this.textField.x -= this._currentIcon.width + this.gap;
@@ -1375,7 +1375,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 			// Math.POSITIVE_INFINITY bug workaround for swf
 			if (this.gap == (1.0 / 0.0)) {
 				this.textField.y = this.paddingTop;
-				this._currentIcon.y = this.actualHeight - this.paddingBottom - this._currentIcon.height;
+				this._currentIcon.y = Math.max(this.paddingTop, this.actualHeight - this.paddingBottom - this._currentIcon.height);
 			} else {
 				if (this.verticalAlign == BOTTOM) {
 					this.textField.y -= this._currentIcon.height + this.gap;
@@ -1388,7 +1388,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 			// Math.POSITIVE_INFINITY bug workaround for swf
 			if (this.gap == (1.0 / 0.0)) {
 				this._currentIcon.x = this.paddingLeft;
-				this.textField.x = this.actualWidth - this.paddingRight - this.textField.width;
+				this.textField.x = Math.max(this.paddingLeft, this.actualWidth - this.paddingRight - this.textField.width);
 			} else {
 				if (this.horizontalAlign == LEFT) {
 					this.textField.x += this.gap + this._currentIcon.width;
@@ -1403,18 +1403,20 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 			if (this.verticalAlign == TOP) {
 				this._currentIcon.y = this.paddingTop;
 			} else if (this.verticalAlign == BOTTOM) {
-				this._currentIcon.y = this.actualHeight - this.paddingBottom - this._currentIcon.height;
+				this._currentIcon.y = Math.max(this.paddingTop, this.actualHeight - this.paddingBottom - this._currentIcon.height);
 			} else {
-				this._currentIcon.y = this.paddingTop + (this.actualHeight - this.paddingTop - this.paddingBottom - this._currentIcon.height) / 2.0;
+				this._currentIcon.y = Math.max(this.paddingTop,
+					this.paddingTop + (this.actualHeight - this.paddingTop - this.paddingBottom - this._currentIcon.height) / 2.0);
 			}
 		} else // top or bottom
 		{
 			if (this.horizontalAlign == LEFT) {
 				this._currentIcon.x = this.paddingLeft;
 			} else if (this.horizontalAlign == RIGHT) {
-				this._currentIcon.x = this.actualWidth - this.paddingRight - this._currentIcon.width;
+				this._currentIcon.x = Math.max(this.paddingLeft, this.actualWidth - this.paddingRight - this._currentIcon.width);
 			} else {
-				this._currentIcon.x = this.paddingLeft + (this.actualWidth - this.paddingLeft - this.paddingRight - this._currentIcon.width) / 2.0;
+				this._currentIcon.x = Math.max(this.paddingLeft,
+					this.paddingLeft + (this.actualWidth - this.paddingLeft - this.paddingRight - this._currentIcon.width) / 2.0);
 			}
 		}
 	}
