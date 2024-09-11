@@ -71,6 +71,7 @@ class AssetLoader extends FeathersControl {
 		@since 1.0.0
 	**/
 	public function new(?source:String, ?completeListener:(Event) -> Void) {
+		initializeAssetLoaderTheme();
 		super();
 
 		this.source = source;
@@ -315,6 +316,12 @@ class AssetLoader extends FeathersControl {
 		this._scaleMode = value;
 		this.setInvalid(LAYOUT);
 		return this._scaleMode;
+	}
+
+	private function initializeAssetLoaderTheme():Void {
+		#if !feathersui_disable_default_theme
+		feathers.themes.steel.components.SteelAssetLoaderStyles.initialize();
+		#end
 	}
 
 	override public function dispose():Void {

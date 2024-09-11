@@ -11,6 +11,7 @@ package feathers.themes.steel;
 import feathers.themes.steel.components.SteelActivityIndicatorStyles;
 import feathers.themes.steel.components.SteelAlertStyles;
 import feathers.themes.steel.components.SteelApplicationStyles;
+import feathers.themes.steel.components.SteelAssetLoaderStyles;
 import feathers.themes.steel.components.SteelButtonBarStyles;
 import feathers.themes.steel.components.SteelButtonStyles;
 import feathers.themes.steel.components.SteelCalloutStyles;
@@ -79,6 +80,7 @@ class SteelTheme extends BaseSteelTheme {
 		SteelActivityIndicatorStyles.initialize(this);
 		SteelAlertStyles.initialize(this);
 		SteelApplicationStyles.initialize(this);
+		SteelAssetLoaderStyles.initialize(this);
 		SteelButtonStyles.initialize(this);
 		SteelButtonBarStyles.initialize(this);
 		SteelCalloutStyles.initialize(this);
