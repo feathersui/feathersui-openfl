@@ -1004,7 +1004,13 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 		var hasSecondaryText = this.showSecondaryText && this._secondaryText != null;
 		var hasSecondaryHTMLText = this.showSecondaryText && this._secondaryHtmlText != null && this._secondaryHtmlText.length > 0;
 		var availableContentWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
+		if (availableContentWidth < 0.0) {
+			availableContentWidth = 0.0;
+		}
 		var availableContentHeight = this.actualHeight - this.paddingTop - this.paddingBottom;
+		if (availableContentHeight < 0.0) {
+			availableContentHeight = 0.0;
+		}
 		var totalContentWidth = (hasText || hasHTMLText) ? this._textMeasuredWidth : 0.0;
 		var totalContentHeight = (hasText || hasHTMLText) ? this._textMeasuredHeight : 0.0;
 		if ((hasSecondaryText || hasSecondaryHTMLText) && this.secondaryTextField != null) {
