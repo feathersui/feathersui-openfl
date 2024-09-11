@@ -150,11 +150,14 @@ class HProgressBar extends BaseProgressBar {
 			}
 		}
 		var maxWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
+		if (maxWidth < 0.0) {
+			maxWidth = 0.0;
+		}
 		var calculatedWidth:Float = this._indeterminate ? maxWidth : Math.round(percentage * maxWidth);
 
 		this._currentFillSkin.x = this.paddingLeft;
 		this._currentFillSkin.y = this.paddingTop;
-		this._currentFillSkin.height = this.actualHeight - this.paddingTop - this.paddingBottom;
+		this._currentFillSkin.height = Math.max(0.0, this.actualHeight - this.paddingTop - this.paddingBottom);
 
 		switch (this.fillMode) {
 			case MASK:
