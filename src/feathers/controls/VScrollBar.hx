@@ -83,6 +83,9 @@ class VScrollBar extends BaseScrollBar {
 		if (this.showDecrementAndIncrementButtons) {
 			trackScrollableHeight -= (this.decrementButton.height + this.incrementButton.height);
 		}
+		if (trackScrollableHeight < 0.0) {
+			trackScrollableHeight = 0.0;
+		}
 		var result = this.paddingTop + (trackScrollableHeight * normalized);
 		if (this.showDecrementAndIncrementButtons) {
 			result += this.decrementButton.height;
@@ -97,6 +100,9 @@ class VScrollBar extends BaseScrollBar {
 		if (this.showDecrementAndIncrementButtons) {
 			minYPosition += this.decrementButton.height;
 			trackScrollableHeight -= (this.decrementButton.height + this.incrementButton.height);
+		}
+		if (trackScrollableHeight < 0.0) {
+			trackScrollableHeight = 0.0;
 		}
 		var yOffset = y - this._pointerStartY;
 		var yPosition = Math.min(Math.max(0.0, this._thumbStartY + yOffset - minYPosition), trackScrollableHeight);
@@ -301,7 +307,13 @@ class VScrollBar extends BaseScrollBar {
 		}
 
 		var contentWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
+		if (contentWidth < 0.0) {
+			contentWidth = 0.0;
+		}
 		var contentHeight = this.actualHeight - this.paddingTop - this.paddingBottom;
+		if (contentHeight < 0.0) {
+			contentHeight = 0.0;
+		}
 
 		if (this.fixedThumbSize) {
 			if (this._thumbSkinMeasurements.height != null) {

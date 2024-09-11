@@ -83,6 +83,9 @@ class HScrollBar extends BaseScrollBar {
 		if (this.showDecrementAndIncrementButtons) {
 			trackScrollableWidth -= (this.decrementButton.width + this.incrementButton.width);
 		}
+		if (trackScrollableWidth < 0.0) {
+			trackScrollableWidth = 0.0;
+		}
 		var result = this.paddingLeft + (trackScrollableWidth * normalized);
 		if (this.showDecrementAndIncrementButtons) {
 			result += this.decrementButton.width;
@@ -97,6 +100,9 @@ class HScrollBar extends BaseScrollBar {
 		if (this.showDecrementAndIncrementButtons) {
 			minXPosition += this.decrementButton.width;
 			trackScrollableWidth -= (this.decrementButton.width + this.incrementButton.width);
+		}
+		if (trackScrollableWidth < 0.0) {
+			trackScrollableWidth = 0.0;
 		}
 		var xOffset = x - this._pointerStartX;
 		var xPosition = Math.min(Math.max(0.0, this._thumbStartX + xOffset - minXPosition), trackScrollableWidth);
@@ -301,7 +307,13 @@ class HScrollBar extends BaseScrollBar {
 		}
 
 		var contentWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
+		if (contentWidth < 0.0) {
+			contentWidth = 0.0;
+		}
 		var contentHeight = this.actualHeight - this.paddingTop - this.paddingBottom;
+		if (contentHeight < 0.0) {
+			contentHeight = 0.0;
+		}
 
 		if (this.fixedThumbSize) {
 			if (this._thumbSkinMeasurements.width != null) {
