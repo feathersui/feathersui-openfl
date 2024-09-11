@@ -799,9 +799,15 @@ class Header extends FeathersControl implements ITextControl {
 		this.layoutBackgroundSkin();
 
 		var textFieldMinX = this.paddingLeft;
-		var textFieldMaxX = this.actualWidth - this.paddingRight;
+		var textFieldMaxX = Math.max(this.paddingLeft, this.actualWidth - this.paddingRight);
 		var maxContentWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
+		if (maxContentWidth < 0.0) {
+			maxContentWidth = 0.0;
+		}
 		var maxContentHeight = this.actualHeight - this.paddingTop - this.paddingBottom;
+		if (maxContentHeight < 0.0) {
+			maxContentHeight = 0.0;
+		}
 		var textFieldMaxWidth = maxContentWidth;
 
 		if (this._leftView != null) {

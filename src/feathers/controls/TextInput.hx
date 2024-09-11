@@ -1774,6 +1774,9 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 		var textFieldHeight = this._textMeasuredHeight;
 		var maxHeight = this.actualHeight - this.paddingTop - this.paddingBottom;
+		if (maxHeight < 0.0) {
+			maxHeight = 0.0;
+		}
 		if (textFieldHeight > maxHeight || this.verticalAlign == JUSTIFY) {
 			textFieldHeight = maxHeight;
 		}

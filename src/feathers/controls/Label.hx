@@ -892,6 +892,9 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 
 		var textFieldHeight = this._textMeasuredHeight;
 		var maxHeight = this.actualHeight - this.paddingTop - this.paddingBottom;
+		if (maxHeight < 0.0) {
+			maxHeight = 0.0;
+		}
 		if (textFieldHeight > maxHeight) {
 			textFieldHeight = maxHeight;
 		}
