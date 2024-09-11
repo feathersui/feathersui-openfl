@@ -1329,18 +1329,20 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		if (this.horizontalAlign == LEFT) {
 			displayObject.x = this.paddingLeft;
 		} else if (this.horizontalAlign == RIGHT) {
-			displayObject.x = this.actualWidth - this.paddingRight - displayObject.width;
+			displayObject.x = Math.max(this.paddingLeft, this.actualWidth - this.paddingRight - displayObject.width);
 		} else // center
 		{
-			displayObject.x = this.paddingLeft + (this.actualWidth - this.paddingLeft - this.paddingRight - displayObject.width) / 2.0;
+			displayObject.x = Math.max(this.paddingLeft,
+				this.paddingLeft + (this.actualWidth - this.paddingLeft - this.paddingRight - displayObject.width) / 2.0);
 		}
 		if (this.verticalAlign == TOP) {
 			displayObject.y = this.paddingTop;
 		} else if (this.verticalAlign == BOTTOM) {
-			displayObject.y = this.actualHeight - this.paddingBottom - displayObject.height;
+			displayObject.y = Math.max(this.paddingTop, this.actualHeight - this.paddingBottom - displayObject.height);
 		} else // middle
 		{
-			displayObject.y = this.paddingTop + (this.actualHeight - this.paddingTop - this.paddingBottom - displayObject.height) / 2.0;
+			displayObject.y = Math.max(this.paddingTop,
+				this.paddingTop + (this.actualHeight - this.paddingTop - this.paddingBottom - displayObject.height) / 2.0);
 		}
 	}
 
