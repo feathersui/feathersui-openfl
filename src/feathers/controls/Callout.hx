@@ -1165,9 +1165,16 @@ class Callout extends FeathersControl {
 			this._currentBackgroundSkin.height = backgroundHeight;
 		}
 
+		var contentWidth = backgroundWidth - this.paddingLeft - this.paddingRight;
+		if (contentWidth < 0.0) {
+			contentWidth = 0.0;
+		}
+		var contentHeight = backgroundHeight - this.paddingTop - this.paddingBottom;
+		if (contentHeight < 0.0) {
+			contentHeight = 0.0;
+		}
+
 		if (this._currentArrowSkin != null) {
-			var contentWidth = backgroundWidth - this.paddingLeft - this.paddingRight;
-			var contentHeight = backgroundHeight - this.paddingTop - this.paddingBottom;
 			switch (this.arrowPosition) {
 				case LEFT:
 					this.leftArrowSkin.x = xPosition - this.leftArrowSkin.width - this.leftArrowGap;
@@ -1249,8 +1256,8 @@ class Callout extends FeathersControl {
 			this._content.y = yPosition + this.paddingTop;
 			var oldIgnoreContentResize = this._ignoreContentResize;
 			this._ignoreContentResize = true;
-			this._content.width = backgroundWidth - this.paddingLeft - this.paddingRight;
-			this._content.height = backgroundHeight - this.paddingTop - this.paddingBottom;
+			this._content.width = contentWidth;
+			this._content.height = contentHeight;
 			if ((this._content is IValidating)) {
 				(cast this._content : IValidating).validateNow();
 			}
