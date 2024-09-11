@@ -387,6 +387,10 @@ class FormLayout extends EventDispatcher implements ILayout {
 	}
 
 	private inline function applyHorizontalAlign(items:Array<DisplayObject>, viewPortWidth:Float):Void {
+		var itemWidth = viewPortWidth - this._paddingLeft - this._paddingRight;
+		if (itemWidth < 0.0) {
+			itemWidth = 0.0;
+		}
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
 			if ((item is ILayoutObject)) {
@@ -395,7 +399,7 @@ class FormLayout extends EventDispatcher implements ILayout {
 					continue;
 				}
 			}
-			item.width = viewPortWidth - this._paddingLeft - this._paddingRight;
+			item.width = itemWidth;
 		}
 	}
 
