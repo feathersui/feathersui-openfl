@@ -517,6 +517,10 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout imp
 	}
 
 	private inline function applyVerticalAlign(items:Array<DisplayObject>, viewPortHeight:Float):Void {
+		var justifyContentHeight = viewPortHeight - this._paddingTop - this._paddingBottom;
+		if (justifyContentHeight < 0.0) {
+			justifyContentHeight = 0.0;
+		}
 		for (item in items) {
 			var layoutObject:ILayoutObject = null;
 			if ((item is ILayoutObject)) {
@@ -527,14 +531,14 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout imp
 			}
 			switch (this._verticalAlign) {
 				case BOTTOM:
-					item.y = Math.max(this._paddingTop, this._paddingTop + (viewPortHeight - this._paddingTop - this._paddingBottom) - item.height);
+					item.y = Math.max(this._paddingTop, this._paddingTop + justifyContentHeight - item.height);
 				case MIDDLE:
-					item.y = Math.max(this._paddingTop, this._paddingTop + (viewPortHeight - this._paddingTop - this._paddingBottom - item.height) / 2.0);
+					item.y = Math.max(this._paddingTop, this._paddingTop + (justifyContentHeight - item.height) / 2.0);
 				case TOP:
 					item.y = this._paddingTop;
 				case JUSTIFY:
 					item.y = this._paddingTop;
-					item.height = viewPortHeight - this._paddingTop - this._paddingBottom;
+					item.height = justifyContentHeight;
 				default:
 					throw new ArgumentError("Unknown vertical align: " + this._verticalAlign);
 			}

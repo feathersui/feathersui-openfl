@@ -551,6 +551,9 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 		var maxItemHeight = this.calculateMaxItemHeight(items, measurements);
 		var viewPortHeight = this.calculateViewPortHeight(maxItemHeight, measurements);
 		var minItemHeight = viewPortHeight - this._paddingTop - this._paddingBottom;
+		if (minItemHeight < 0.0) {
+			minItemHeight = 0.0;
+		}
 		var itemHeight = maxItemHeight;
 		if (!this._contentJustify || itemHeight < minItemHeight) {
 			itemHeight = minItemHeight;
@@ -702,6 +705,9 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 		}
 		if (measurements.maxHeight != null) {
 			var maxJustifyHeight = measurements.maxHeight - this._paddingTop - this._paddingBottom;
+			if (maxJustifyHeight < 0.0) {
+				maxJustifyHeight = 0.0;
+			}
 			if (maxItemHeight > maxJustifyHeight) {
 				maxItemHeight = maxJustifyHeight;
 			}
@@ -1186,6 +1192,9 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 		var alignOffset = 0.0;
 		var gapOffset = 0.0;
 		var maxAlignmentWidth = viewPortWidth - this._paddingLeft - this._paddingRight;
+		if (maxAlignmentWidth < 0.0) {
+			maxAlignmentWidth = 0.0;
+		}
 		var adjustedGap = this._gap;
 		var hasFlexGap = this._gap == (1.0 / 0.0);
 		if (hasFlexGap) {
