@@ -355,7 +355,7 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 			this.selectedBorderColor = this.lighten(this.themeColor, 0x0f0f0f);
 			this.focusBorderColor = this.lighten(this.themeColor, 0x0f0f0f);
 			this.containerFillColor = 0x383838;
-			this.headerFillColor = 0x3f3f3f;
+			this.headerFillColor = 0x484848;
 			this.overlayFillColor = 0x6f6f6f;
 			this.subHeadingFillColor = 0x2c2c2c;
 			this.dangerFillColor = 0x9f4f4f;
