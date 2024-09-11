@@ -937,6 +937,9 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 		}
 
 		var availableRowWidth = viewPortWidth - this.paddingLeft - this.paddingRight;
+		if (availableRowWidth < 0.0) {
+			availableRowWidth = 0.0;
+		}
 
 		var verticalTileCount = this.calculateVerticalTileCount(tileHeight, measurements.height, measurements.maxHeight, adjustedVerticalGap, items.length,
 			horizontalTileCount);
@@ -1145,6 +1148,9 @@ class PagedTiledRowsListLayout extends EventDispatcher implements IVirtualLayout
 		var hasFlexHorizontalGap = this._horizontalGap == (1.0 / 0.0);
 		if (hasFlexHorizontalGap) {
 			var availableRowWidth = viewPortWidth - this.paddingLeft - this.paddingRight;
+			if (availableRowWidth < 0.0) {
+				availableRowWidth = 0.0;
+			}
 			adjustedHorizontalGap = this._minHorizontalGap;
 			var maxContentWidth = itemCount * (tileWidth + adjustedHorizontalGap);
 			if (itemCount > 0) {
