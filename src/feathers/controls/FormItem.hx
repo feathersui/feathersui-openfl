@@ -1322,6 +1322,12 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 				throw new ArgumentError("Unknown text position: " + this.textPosition);
 		}
 		this.textField.width = textFieldWidth;
+		if (remainingWidth < 0.0) {
+			remainingWidth = 0.0;
+		}
+		if (remainingHeight < 0.0) {
+			remainingHeight = 0.0;
+		}
 		var wordWrap = this.wordWrap;
 		if (wordWrap && !this._wrappedOnMeasure && textFieldWidth >= this._textMeasuredWidth) {
 			// sometimes, using the width measured with wrapping disabled
