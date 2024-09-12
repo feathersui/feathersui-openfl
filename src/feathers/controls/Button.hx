@@ -341,6 +341,28 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 	@:style
 	public var wordWrap:Bool = false;
 
+	#if (openfl >= "9.2.0" || flash)
+	/**
+		Determines if the whitespace in the `htmlText` is condensed or affects
+		the text layout.
+
+		In the following example, the button's HTML text whitespace is condensed:
+
+		```haxe
+		button.htmlText = "<p>Hello</p>\n<p>World</p>";
+		button.condenseWhite = true;
+		```
+
+		@default false
+
+		@see `Button.htmlText`
+
+		@since 1.4.0
+	**/
+	@:style
+	public var condenseWhite:Bool = false;
+	#end
+
 	private var _stateToIcon:Map<ButtonState, DisplayObject> = new Map();
 	private var _iconMeasurements:Measurements = null;
 	private var _currentIcon:DisplayObject = null;
@@ -1036,6 +1058,10 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 		#if (openfl >= "9.2.0" || flash)
 		if (this.textField.styleSheet != this.styleSheet) {
 			this.textField.styleSheet = this.styleSheet;
+			this._updatedTextStyles = true;
+		}
+		if (this.textField.condenseWhite != this.condenseWhite) {
+			this.textField.condenseWhite = this.condenseWhite;
 			this._updatedTextStyles = true;
 		}
 		#end

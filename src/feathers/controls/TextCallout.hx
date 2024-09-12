@@ -267,6 +267,28 @@ class TextCallout extends Callout implements ITextControl implements IHTMLTextCo
 	@:style
 	public var wordWrap:Bool = false;
 
+	#if (openfl >= "9.2.0" || flash)
+	/**
+		Determines if the whitespace in the `htmlText` is condensed or affects
+		the text layout.
+
+		In the following example, the callout's HTML text whitespace is condensed:
+
+		```haxe
+		callout.htmlText = "<p>Hello</p>\n<p>World</p>";
+		callout.condenseWhite = true;
+		```
+
+		@default false
+
+		@see `TextCallout.htmlText`
+
+		@since 1.4.0
+	**/
+	@:style
+	public var condenseWhite:Bool = false;
+	#end
+
 	private function initializeTextCalloutTheme():Void {
 		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelTextCalloutStyles.initialize();
@@ -305,6 +327,7 @@ class TextCallout extends Callout implements ITextControl implements IHTMLTextCo
 		this.label.embedFonts = this.embedFonts;
 		#if (openfl >= "9.2.0" || flash)
 		this.label.styleSheet = this.styleSheet;
+		this.label.condenseWhite = this.condenseWhite;
 		#end
 	}
 

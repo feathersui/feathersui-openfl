@@ -493,6 +493,28 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 	@:style
 	public var wordWrap:Bool = false;
 
+	#if (openfl >= "9.2.0" || flash)
+	/**
+		Determines if the whitespace in the `htmlText` is condensed or affects
+		the text layout.
+
+		In the following example, the label's HTML text whitespace is condensed:
+
+		```haxe
+		label.htmlText = "<p>Hello</p>\n<p>World</p>";
+		label.condenseWhite = true;
+		```
+
+		@default false
+
+		@see `Label.htmlText`
+
+		@since 1.4.0
+	**/
+	@:style
+	public var condenseWhite:Bool = false;
+	#end
+
 	private var _currentBackgroundSkin:DisplayObject = null;
 	private var _backgroundSkinMeasurements:Measurements = null;
 
@@ -695,6 +717,10 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 		#if (openfl >= "9.2.0" || flash)
 		if (this.textField.styleSheet != this.styleSheet) {
 			this.textField.styleSheet = this.styleSheet;
+			this._updatedTextStyles = true;
+		}
+		if (this.textField.condenseWhite != this.condenseWhite) {
+			this.textField.condenseWhite = this.condenseWhite;
 			this._updatedTextStyles = true;
 		}
 		#end
