@@ -596,7 +596,7 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 
 	private function findPreviousChildFocus(child:DisplayObject):IFocusObject {
 		var childContainer = Std.downcast(child, DisplayObjectContainer);
-		if (childContainer != null) {
+		if (childContainer != null && childContainer.visible) {
 			var findPrevChildContainer = !(childContainer is IFocusObject);
 			if (!findPrevChildContainer && (childContainer is IFocusContainer)) {
 				var focusContainer:IFocusContainer = cast childContainer;
@@ -653,7 +653,7 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 		}
 
 		var childContainer = Std.downcast(child, DisplayObjectContainer);
-		if (childContainer != null) {
+		if (childContainer != null && childContainer.visible) {
 			var findNextChildContainer = !(childContainer is IFocusObject);
 			if (!findNextChildContainer && (childContainer is IFocusContainer)) {
 				var focusContainer:IFocusContainer = cast childContainer;
