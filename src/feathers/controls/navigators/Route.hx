@@ -27,16 +27,6 @@ import openfl.events.Event;
 	Path patterns must start with a forward slash `/` character. Do not include
 	the host/domain part of the URL.
 
-	Path patterns support _named parameters_ that start with a `:` colon
-	character. For example, the path pattern `/:foo/:bar` has named parameters
-	with the names "foo" and "bar". If the display object returned by the `Route` implements
-	the `IRouteView` interface, the name parameters are passsed to the view
-	for additional parsing.
-
-	Named parameters may be made optional by appending a `?` question mark
-	character. For example, the "foo" parameter is optional in the path pattern
-	`/baz/:foo?`, and it will also match "/baz" without the parameter.
-
 	If the path pattern is `null` or an empty string, it will always match.
 
 	If the `RouterNavigator` defines a `basePath`, path patterns should not
