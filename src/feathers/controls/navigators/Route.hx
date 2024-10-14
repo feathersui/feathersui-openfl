@@ -9,7 +9,6 @@
 package feathers.controls.navigators;
 
 import feathers.utils.DisplayObjectFactory;
-import feathers.core.IUIControl;
 import feathers.data.RouteState;
 import feathers.utils.AbstractDisplayObjectFactory;
 import openfl.display.DisplayObject;
@@ -29,13 +28,11 @@ import openfl.events.Event;
 
 	Path patterns support _named parameters_ that start with a `:` colon
 	character. For example, the path pattern `/:foo/:bar` has named parameters
-	with the names "foo" and "bar". If the display object returned by the `Route` implements
-	the `IRouteView` interface, the name parameters are passsed to the view
-	for additional parsing.
-
-	Named parameters may be made optional by appending a `?` question mark
-	character. For example, the "foo" parameter is optional in the path pattern
-	`/baz/:foo?`, and it will also match "/baz" without the parameter.
+	with the names "foo" and "bar". Named parameters may be made optional by
+	appending a `?` question mark character. For example, the "foo" parameter i
+	optional in the path pattern `/baz/:foo?`, and it will also match "/baz"
+	without the parameter. To pass named parameters or other properties of the
+	route's state to its view, see the `Route.updateState` method.
 
 	If the path pattern is `null` or an empty string, it will always match.
 
@@ -136,14 +133,18 @@ class Route {
 	public var path:String;
 
 	/**
-		An optional function to customize the view before it is shown.
+		An optional function to customize the view before it is shown. Receives
+		a `RouteState` object, which contains named parameters, URL variables,
+		history state, and optional, custom data saved with `Route.saveData`.
 
 		@since 1.0.0
 	**/
 	public dynamic function updateState(view:Dynamic, routeState:RouteState):Void {}
 
 	/**
-		An optional function to save the view's data before navigating away.
+		An optional function to save the view's data before navigating away. The
+		data may be restored later when returning to the view by providing a
+		custom `Route.updateState`.
 
 		@since 1.0.0
 	**/
