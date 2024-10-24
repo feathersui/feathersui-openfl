@@ -2,6 +2,6 @@
   "private": true,
   "dependencies": {
     "playwright": "^1.38.1",
-    "serve-handler": "^6.1.5"
+    "serve-handler": "^6.1.6"
   }
 }
