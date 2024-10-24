@@ -70,6 +70,9 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 
 	private static final defaultTabBarFactory = DisplayObjectFactory.withClass(TabBar);
 
+	private static final NO_PENDING_SELECTED_INDEX:Int = -2;
+	private static final NO_PENDING_SELECTED_ITEM:{} = {};
+
 	/**
 		Creates a new `TabNavigator` object.
 
@@ -113,6 +116,15 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 		if (this._dataProvider == value) {
 			return this._dataProvider;
 		}
+		// removing items will result in Event.CHANGE getting dispatched, so
+		// ensure that the selection is updated before that happens
+		if (value == null || value.length == 0) {
+			// use the setter
+			this.selectedIndex = -1;
+		} else {
+			// use the setter
+			this.selectedIndex = 0;
+		}
 		if (this._dataProvider != null) {
 			this._dataProvider.removeEventListener(FlatCollectionEvent.ADD_ITEM, tabNavigator_dataProvider_addItemHandler);
 			this._dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ITEM, tabNavigator_dataProvider_removeItemHandler);
@@ -139,18 +151,14 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 			this._dataProvider.addEventListener(FlatCollectionEvent.RESET, tabNavigator_dataProvider_resetHandler, false, 0, true);
 		}
 		this.setInvalid(DATA);
-		if (this._dataProvider == null || this._dataProvider.length == 0) {
-			// use the setter
-			this.selectedIndex = -1;
-		} else {
-			// use the setter
-			this.selectedIndex = 0;
-		}
 		FeathersEvent.dispatch(this, "dataChange");
 		return this._dataProvider;
 	}
 
 	private var _activeItemIndex:Int = -1;
+
+	private var _pendingSelectedItem:Any = NO_PENDING_SELECTED_ITEM;
+	private var _pendingSelectedIndex:Int = NO_PENDING_SELECTED_INDEX;
 
 	private var _selectedIndex:Int = -1;
 
@@ -161,28 +169,21 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 	public var selectedIndex(get, set):Int;
 
 	private function get_selectedIndex():Int {
+		if (this._pendingSelectedIndex != NO_PENDING_SELECTED_INDEX) {
+			return this._pendingSelectedIndex;
+		}
 		return this._selectedIndex;
 	}
 
 	private function set_selectedIndex(value:Int):Int {
-		if (this._dataProvider == null) {
-			value = -1;
+		var currentSelectedIndex = this._pendingSelectedIndex != NO_PENDING_SELECTED_INDEX ? this._pendingSelectedIndex : this._selectedIndex;
+		if (currentSelectedIndex == value) {
+			return currentSelectedIndex;
 		}
-		if (this._selectedIndex == value) {
-			return this._selectedIndex;
-		}
-		this._selectedIndex = value;
-		// using variable because if we were to call the selectedItem setter,
-		// then this change wouldn't be saved properly
-		if (this._selectedIndex == -1) {
-			this._selectedItem = null;
-		} else {
-			this._selectedItem = this._dataProvider.get(this._selectedIndex);
-		}
+		this._pendingSelectedIndex = value;
+		this._pendingSelectedItem = NO_PENDING_SELECTED_ITEM;
 		this.setInvalid(SELECTION);
-		// don't dispatch Event.CHANGE here because it will be dispatched as
-		// part of the process of changing the view in BaseNavigator
-		return this._selectedIndex;
+		return this._pendingSelectedIndex;
 	}
 
 	/**
@@ -205,18 +206,28 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 	public var selectedItem(get, set):#if flash Dynamic #else TabItem #end;
 
 	private function get_selectedItem():#if flash Dynamic #else TabItem #end {
-		return this._selectedItem;
+		if (this._pendingSelectedItem != NO_PENDING_SELECTED_ITEM) {
+			return this._pendingSelectedItem;
+		}
+		var currentSelectedIndex = this._pendingSelectedIndex != NO_PENDING_SELECTED_INDEX ? this._pendingSelectedIndex : this._selectedIndex;
+		if (currentSelectedIndex == -1 || this._dataProvider == null) {
+			return null;
+		}
+		if (this._selectedIndex >= this._dataProvider.length) {
+			return null;
+		}
+		return this._dataProvider.get(this._selectedIndex);
 	}
 
 	private function set_selectedItem(value:#if flash Dynamic #else TabItem #end):#if flash Dynamic #else TabItem #end {
-		if (this._dataProvider == null) {
-			// use the setter
-			this.selectedIndex = -1;
-			return this._selectedItem;
+		var currentSelectedItem = this._pendingSelectedItem != NO_PENDING_SELECTED_ITEM ? this._pendingSelectedItem : this._selectedItem;
+		if (currentSelectedItem == value) {
+			return currentSelectedItem;
 		}
-		// use the setter
-		this.selectedIndex = this._dataProvider.indexOf(value);
-		return this._selectedItem;
+		this._pendingSelectedItem = value;
+		this._pendingSelectedIndex = NO_PENDING_SELECTED_INDEX;
+		this.setInvalid(SELECTION);
+		return this._pendingSelectedItem;
 	}
 
 	/**
@@ -443,6 +454,7 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 		}
 
 		if (dataInvalid || selectionInvalid || tabBarInvalid) {
+			this.commitSelection();
 			this.refreshSelection();
 		}
 
@@ -474,6 +486,35 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 		}
 
 		return super.measure();
+	}
+
+	private function commitSelection():Void {
+		var pendingSelectedItem = this._pendingSelectedItem;
+		var pendingSelectedIndex = this._pendingSelectedIndex;
+		this._pendingSelectedItem = NO_PENDING_SELECTED_ITEM;
+		this._pendingSelectedIndex = NO_PENDING_SELECTED_INDEX;
+		if (this._dataProvider == null) {
+			this._selectedIndex = -1;
+			this._selectedItem = null;
+			return;
+		}
+		if (pendingSelectedItem != NO_PENDING_SELECTED_ITEM) {
+			this._selectedIndex = this._dataProvider.indexOf(pendingSelectedItem);
+			if (this._selectedIndex != -1) {
+				this._selectedItem = pendingSelectedItem;
+			} else {
+				this._selectedItem = null;
+			}
+		}
+		if (pendingSelectedIndex != NO_PENDING_SELECTED_INDEX) {
+			if (pendingSelectedIndex < this._dataProvider.length) {
+				this._selectedIndex = pendingSelectedIndex;
+				this._selectedItem = this._dataProvider.get(pendingSelectedIndex);
+			} else {
+				this._selectedIndex = -1;
+				this._selectedItem = null;
+			}
+		}
 	}
 
 	private function createTabBar():Void {

@@ -2,6 +2,7 @@ package feathers.controls.navigators;
 
 import feathers.data.ArrayCollection;
 import openfl.Lib;
+import openfl.events.Event;
 import utest.Assert;
 import utest.Test;
 
@@ -41,6 +42,15 @@ class PageNavigatorTest extends Test {
 	}
 
 	public function testDefaultSelectedIndex():Void {
+		var dispatchedChangeSelectedIndex = -2;
+		var dispatchedChangeSelectedItem = {};
+		var dispatchedChangeCount = 0;
+		this._navigator.addEventListener(Event.CHANGE, function(event:Event):Void {
+			dispatchedChangeCount++;
+			dispatchedChangeSelectedIndex = this._navigator.selectedIndex;
+			dispatchedChangeSelectedItem = this._navigator.selectedItem;
+		});
+
 		var one = new LayoutGroup();
 		var two = new LayoutGroup();
 		var pageOne = PageItem.withDisplayObject(one);
@@ -50,9 +60,23 @@ class PageNavigatorTest extends Test {
 		Assert.equals(0, this._navigator.selectedIndex);
 		Assert.equals(pageOne, this._navigator.selectedItem);
 		Assert.equals(one, this._navigator.activeItemView);
+		// Event.CHANGE is dispatched because setting the data provider sets
+		// selectedIndex = 0 by default
+		Assert.equals(1, dispatchedChangeCount);
+		Assert.equals(0, dispatchedChangeSelectedIndex);
+		Assert.equals(pageOne, dispatchedChangeSelectedItem);
 	}
 
 	public function testSetSelectedIndex():Void {
+		var dispatchedChangeSelectedIndex = -2;
+		var dispatchedChangeSelectedItem = {};
+		var dispatchedChangeCount = 0;
+		this._navigator.addEventListener(Event.CHANGE, function(event:Event):Void {
+			dispatchedChangeCount++;
+			dispatchedChangeSelectedIndex = this._navigator.selectedIndex;
+			dispatchedChangeSelectedItem = this._navigator.selectedItem;
+		});
+
 		var one = new LayoutGroup();
 		var two = new LayoutGroup();
 		var pageOne = PageItem.withDisplayObject(one);
@@ -63,9 +87,24 @@ class PageNavigatorTest extends Test {
 		Assert.equals(1, this._navigator.selectedIndex);
 		Assert.equals(pageTwo, this._navigator.selectedItem);
 		Assert.equals(two, this._navigator.activeItemView);
+		// Event.CHANGE doesn't dispatch until validation, so even though
+		// setting dataProvider sets selectedIndex = 0, and we also set
+		// selectedIndex = 1, there's one dispatch of Event.CHANGE only.
+		Assert.equals(1, dispatchedChangeCount);
+		Assert.equals(1, dispatchedChangeSelectedIndex);
+		Assert.equals(pageTwo, dispatchedChangeSelectedItem);
 	}
 
 	public function testSetSelectedItem():Void {
+		var dispatchedChangeSelectedIndex = -2;
+		var dispatchedChangeSelectedItem = {};
+		var dispatchedChangeCount = 0;
+		this._navigator.addEventListener(Event.CHANGE, function(event:Event):Void {
+			dispatchedChangeCount++;
+			dispatchedChangeSelectedIndex = this._navigator.selectedIndex;
+			dispatchedChangeSelectedItem = this._navigator.selectedItem;
+		});
+
 		var one = new LayoutGroup();
 		var two = new LayoutGroup();
 		var pageOne = PageItem.withDisplayObject(one);
@@ -76,9 +115,24 @@ class PageNavigatorTest extends Test {
 		Assert.equals(1, this._navigator.selectedIndex);
 		Assert.equals(pageTwo, this._navigator.selectedItem);
 		Assert.equals(two, this._navigator.activeItemView);
+		// Event.CHANGE doesn't dispatch until validation, so even though
+		// setting dataProvider sets selectedIndex = 0, and we also set
+		// selectedIndex = 1, there's one dispatch of Event.CHANGE only.
+		Assert.equals(1, dispatchedChangeCount);
+		Assert.equals(1, dispatchedChangeSelectedIndex);
+		Assert.equals(pageTwo, dispatchedChangeSelectedItem);
 	}
 
 	public function testValidateWithDataProviderThenNoDataProvider():Void {
+		var dispatchedChangeSelectedIndex = -2;
+		var dispatchedChangeSelectedItem = {};
+		var dispatchedChangeCount = 0;
+		this._navigator.addEventListener(Event.CHANGE, function(event:Event):Void {
+			dispatchedChangeCount++;
+			dispatchedChangeSelectedIndex = this._navigator.selectedIndex;
+			dispatchedChangeSelectedItem = this._navigator.selectedItem;
+		});
+
 		var one = new LayoutGroup();
 		var two = new LayoutGroup();
 		var pageOne = PageItem.withDisplayObject(one);
@@ -88,11 +142,18 @@ class PageNavigatorTest extends Test {
 		Assert.equals(0, this._navigator.selectedIndex);
 		Assert.equals(pageOne, this._navigator.selectedItem);
 		Assert.equals(one, this._navigator.activeItemView);
+		Assert.equals(1, dispatchedChangeCount);
+		Assert.equals(0, dispatchedChangeSelectedIndex);
+		Assert.equals(pageOne, dispatchedChangeSelectedItem);
+
 		this._navigator.dataProvider = null;
 		this._navigator.validateNow();
 		Assert.equals(-1, this._navigator.selectedIndex);
 		Assert.isNull(this._navigator.selectedItem);
 		Assert.isNull(this._navigator.activeItemView);
+		Assert.equals(2, dispatchedChangeCount);
+		Assert.equals(-1, dispatchedChangeSelectedIndex);
+		Assert.isNull(dispatchedChangeSelectedItem);
 	}
 
 	public function testPageIndicatorDefaultVariant():Void {
