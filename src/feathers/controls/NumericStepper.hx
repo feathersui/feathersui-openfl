@@ -917,7 +917,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 
 	private function parseTextInputValue():Void {
 		var newValue = this._value;
-		if (this._valueFormatFunction != null) {
+		if (this._valueParseFunction != null) {
 			newValue = this._valueParseFunction(this.textInput.text);
 		} else {
 			newValue = Std.parseFloat(this.textInput.text);
