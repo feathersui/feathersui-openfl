@@ -1,7 +1,7 @@
 {
   "private": true,
   "dependencies": {
-    "playwright": "^1.38.1",
-    "serve-handler": "^6.1.5"
+    "playwright": "^1.48.1",
+    "serve-handler": "^6.1.6"
   }
 }
