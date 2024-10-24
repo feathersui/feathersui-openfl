@@ -207,7 +207,7 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 
 	private function get_selectedItem():#if flash Dynamic #else TabItem #end {
 		if (this._pendingSelectedItem != NO_PENDING_SELECTED_ITEM) {
-			return this._pendingSelectedItem;
+			return cast(this._pendingSelectedItem, TabItem);
 		}
 		var currentSelectedIndex = this._pendingSelectedIndex != NO_PENDING_SELECTED_INDEX ? this._pendingSelectedIndex : this._selectedIndex;
 		if (currentSelectedIndex == -1 || this._dataProvider == null) {
@@ -227,7 +227,7 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 		this._pendingSelectedItem = value;
 		this._pendingSelectedIndex = NO_PENDING_SELECTED_INDEX;
 		this.setInvalid(SELECTION);
-		return this._pendingSelectedItem;
+		return cast(this._pendingSelectedItem, TabItem);
 	}
 
 	/**
