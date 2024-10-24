@@ -70,7 +70,7 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 	private static final defaultPageIndicatorFactory = DisplayObjectFactory.withClass(PageIndicator);
 
 	private static final NO_PENDING_SELECTED_INDEX:Int = -2;
-	private static final NO_PENDING_SELECTED_ITEM:{} = {};
+	private static final NO_PENDING_SELECTED_ITEM:Any = {};
 
 	/**
 		Creates a new `PageNavigator` object.
@@ -219,9 +219,12 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 	}
 
 	private function set_selectedItem(value:#if flash Dynamic #else PageItem #end):#if flash Dynamic #else PageItem #end {
-		var currentSelectedItem = this._pendingSelectedItem != NO_PENDING_SELECTED_ITEM ? this._pendingSelectedItem : this._selectedItem;
+		var currentSelectedItem:Any = this._pendingSelectedItem;
+		if (currentSelectedItem == NO_PENDING_SELECTED_ITEM) {
+			currentSelectedItem = this._selectedItem;
+		}
 		if (currentSelectedItem == value) {
-			return currentSelectedItem;
+			return cast(currentSelectedItem, PageItem);
 		}
 		this._pendingSelectedItem = value;
 		this._pendingSelectedIndex = NO_PENDING_SELECTED_INDEX;

@@ -71,7 +71,7 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 	private static final defaultTabBarFactory = DisplayObjectFactory.withClass(TabBar);
 
 	private static final NO_PENDING_SELECTED_INDEX:Int = -2;
-	private static final NO_PENDING_SELECTED_ITEM:{} = {};
+	private static final NO_PENDING_SELECTED_ITEM:Any = {};
 
 	/**
 		Creates a new `TabNavigator` object.
@@ -220,9 +220,12 @@ class TabNavigator extends BaseNavigator implements IIndexSelector implements ID
 	}
 
 	private function set_selectedItem(value:#if flash Dynamic #else TabItem #end):#if flash Dynamic #else TabItem #end {
-		var currentSelectedItem = this._pendingSelectedItem != NO_PENDING_SELECTED_ITEM ? this._pendingSelectedItem : this._selectedItem;
+		var currentSelectedItem:Any = this._pendingSelectedItem;
+		if (currentSelectedItem == NO_PENDING_SELECTED_ITEM) {
+			currentSelectedItem = this._selectedItem;
+		}
 		if (currentSelectedItem == value) {
-			return currentSelectedItem;
+			return cast(currentSelectedItem, TabItem);
 		}
 		this._pendingSelectedItem = value;
 		this._pendingSelectedIndex = NO_PENDING_SELECTED_INDEX;
