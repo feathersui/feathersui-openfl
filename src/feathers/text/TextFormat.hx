@@ -462,6 +462,9 @@ abstract AbstractTextFormat(TextFormat) from TextFormat to TextFormat {
 	**/
 	@:from
 	public static function fromSimpleTextFormat(textFormat:openfl.text.TextFormat):AbstractTextFormat {
+		if (textFormat == null) {
+			return null;
+		}
 		var clone = new TextFormat(textFormat.font, textFormat.size, textFormat.color, textFormat.bold, textFormat.italic, textFormat.underline,
 			textFormat.url, textFormat.target, textFormat.align, textFormat.leftMargin, textFormat.rightMargin, textFormat.indent, textFormat.leading);
 		clone.blockIndent = textFormat.blockIndent;
