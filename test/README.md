@@ -58,7 +58,17 @@ To run tests with HTML/JS, run the following command:
 openfl test html5
 ```
 
-To run tests headless in Chromium, WebKit and Firefox, run the following commands:
+You can also run tests headless in Chromium, WebKit and Firefox.
+
+First, run the following commands one time to install dependencies:
+
+```sh
+npm ci
+npx playwright install
+npx playwright install-deps
+```
+
+Then, run the following commmands to run the tests:
 
 ```sh
 haxelib run openfl build html5 -final -Dheadless_html5
