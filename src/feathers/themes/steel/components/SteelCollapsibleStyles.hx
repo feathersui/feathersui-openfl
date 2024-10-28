@@ -76,6 +76,13 @@ class SteelCollapsibleStyles {
 					icon.setViewForState(DISABLED(true), selectedDisabledIcon);
 				}
 
+				if (button.focusRectSkin == null) {
+					var focusRectSkin = new RectangleSkin();
+					focusRectSkin.fill = None;
+					focusRectSkin.border = theme.getFocusBorder();
+					button.focusRectSkin = focusRectSkin;
+				}
+
 				if (button.textFormat == null) {
 					button.textFormat = theme.getTextFormat();
 				}
