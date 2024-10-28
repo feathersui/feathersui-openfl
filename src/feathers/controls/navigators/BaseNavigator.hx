@@ -20,6 +20,8 @@ import feathers.layout.AutoSizeMode;
 import feathers.layout.Measurements;
 import feathers.motion.effects.IEffectContext;
 import feathers.motion.effects.NoOpEffectContext;
+import feathers.skins.IProgrammaticSkin;
+import feathers.utils.MeasurementsUtil;
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.InteractiveObject;
@@ -204,6 +206,47 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 		return this._autoSizeMode;
 	}
 
+	private var _currentBackgroundSkin:DisplayObject = null;
+	private var _backgroundSkinMeasurements:Measurements = null;
+
+	/**
+		The default background skin to display behind all content added to the
+		navigator. The background skin is resized to fill the complete width and
+		height of the navigator.
+
+		The following example passes a bitmap for the navigator to use as a
+		background skin:
+
+		```haxe
+		navigator.backgroundSkin = new Bitmap(bitmapData);
+		```
+
+		@see `BaseNavigator.disabledBackgroundSkin`
+
+		@since 1.4.0
+	**/
+	@:style
+	public var backgroundSkin:DisplayObject = null;
+
+	/**
+		The background skin to display behind all content added to the navigator
+		when it is disabled. The background skin is resized to fill the complete
+		width and height of the navigator.
+
+		The following example gives the navigator a disabled background skin:
+
+		```haxe
+		navigator.disabledBackgroundSkin = new Bitmap(bitmapData);
+		navigator.enabled = false;
+		```
+
+		@see `BaseNavigator.backgroundSkin`
+
+		@since 1.4.0
+	**/
+	@:style
+	public var disabledBackgroundSkin:DisplayObject = null;
+
 	private var topContentOffset:Float = 0.0;
 	private var rightContentOffset:Float = 0.0;
 	private var bottomContentOffset:Float = 0.0;
@@ -286,6 +329,11 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 
 	override private function update():Void {
 		var sizeInvalid = this.isInvalid(SIZE);
+		var stylesInvalid = this.isInvalid(STYLES);
+
+		if (stylesInvalid) {
+			this.refreshBackgroundSkin();
+		}
 
 		this.topContentOffset = 0.0;
 		this.rightContentOffset = 0.0;
@@ -301,6 +349,57 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 		this.layoutContent();
 	}
 
+	private function refreshBackgroundSkin():Void {
+		var oldSkin = this._currentBackgroundSkin;
+		this._currentBackgroundSkin = this.getCurrentBackgroundSkin();
+		if (this._currentBackgroundSkin == oldSkin) {
+			return;
+		}
+		this.removeCurrentBackgroundSkin(oldSkin);
+		this.addCurrentBackgroundSkin(this._currentBackgroundSkin);
+	}
+
+	private function getCurrentBackgroundSkin():DisplayObject {
+		if (!this._enabled && this.disabledBackgroundSkin != null) {
+			return this.disabledBackgroundSkin;
+		}
+		return this.backgroundSkin;
+	}
+
+	private function addCurrentBackgroundSkin(skin:DisplayObject):Void {
+		if (skin == null) {
+			this._backgroundSkinMeasurements = null;
+			return;
+		}
+		if ((skin is IUIControl)) {
+			(cast skin : IUIControl).initializeNow();
+		}
+		if (this._backgroundSkinMeasurements == null) {
+			this._backgroundSkinMeasurements = new Measurements(skin);
+		} else {
+			this._backgroundSkinMeasurements.save(skin);
+		}
+		if ((skin is IProgrammaticSkin)) {
+			(cast skin : IProgrammaticSkin).uiContext = this;
+		}
+		this.addChildAt(skin, 0);
+	}
+
+	private function removeCurrentBackgroundSkin(skin:DisplayObject):Void {
+		if (skin == null) {
+			return;
+		}
+		if ((skin is IProgrammaticSkin)) {
+			(cast skin : IProgrammaticSkin).uiContext = null;
+		}
+		// we need to restore these values so that they won't be lost the
+		// next time that this skin is used for measurement
+		this._backgroundSkinMeasurements.restore(skin);
+		if (skin.parent == this) {
+			this.removeChild(skin);
+		}
+	}
+
 	private function measure():Bool {
 		var needsWidth = this.explicitWidth == null;
 		var needsHeight = this.explicitHeight == null;
@@ -310,6 +409,19 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 		var needsMaxHeight = this.explicitMaxHeight == null;
 		if (!needsWidth && !needsHeight && !needsMinWidth && !needsMinHeight && !needsMaxWidth && !needsMaxHeight) {
 			return false;
+		}
+
+		if (this._currentBackgroundSkin != null) {
+			MeasurementsUtil.resetFluidlyWithParent(this._backgroundSkinMeasurements, this._currentBackgroundSkin, this);
+		}
+
+		var measureSkin:IMeasureObject = null;
+		if ((this._currentBackgroundSkin is IMeasureObject)) {
+			measureSkin = cast this._currentBackgroundSkin;
+		}
+
+		if ((this._currentBackgroundSkin is IValidating)) {
+			(cast this._currentBackgroundSkin : IValidating).validateNow();
 		}
 
 		var needsToMeasureContent = this._autoSizeMode == CONTENT || this.stage == null;
@@ -442,6 +554,9 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 					newWidth = this.chromeMeasuredWidth;
 				}
 				newWidth += this.rightContentOffset + this.leftContentOffset;
+				if (this._currentBackgroundSkin != null) {
+					newWidth = Math.max(newWidth, this._currentBackgroundSkin.width);
+				}
 			} else {
 				newWidth = stageWidth;
 			}
@@ -465,6 +580,9 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 					newHeight = this.chromeMeasuredHeight;
 				}
 				newHeight += this.topContentOffset + this.bottomContentOffset;
+				if (this._currentBackgroundSkin != null) {
+					newHeight = Math.max(newHeight, this._currentBackgroundSkin.height);
+				}
 			} else {
 				newHeight = stageHeight;
 			}
@@ -494,6 +612,11 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 					newMinWidth = this.chromeMeasuredMinWidth;
 				}
 				newMinWidth += this.rightContentOffset + this.leftContentOffset;
+				if (measureSkin != null) {
+					newMinWidth = Math.max(newMinWidth, measureSkin.minWidth);
+				} else if (this._backgroundSkinMeasurements != null && this._backgroundSkinMeasurements.minWidth != null) {
+					newMinWidth = Math.max(newMinWidth, this._backgroundSkinMeasurements.minWidth);
+				}
 			} else {
 				newMinWidth = stageWidth;
 			}
@@ -523,6 +646,11 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 					newMinHeight = this.chromeMeasuredMinHeight;
 				}
 				newMinHeight += this.topContentOffset + this.bottomContentOffset;
+				if (measureSkin != null) {
+					newMinHeight = Math.max(newMinHeight, measureSkin.minHeight);
+				} else if (this._backgroundSkinMeasurements != null && this._backgroundSkinMeasurements.minHeight != null) {
+					newMinHeight = Math.max(newMinHeight, this._backgroundSkinMeasurements.minHeight);
+				}
 			} else {
 				newMinHeight = stageHeight;
 			}
@@ -552,6 +680,11 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 					newMaxWidth = this.chromeMeasuredMaxWidth;
 				}
 				newMaxWidth += this.rightContentOffset + this.leftContentOffset;
+				if (measureSkin != null) {
+					newMaxWidth = Math.min(newMaxWidth, measureSkin.maxWidth);
+				} else if (this._backgroundSkinMeasurements != null && this._backgroundSkinMeasurements.maxWidth != null) {
+					newMaxWidth = Math.min(newMaxWidth, this._backgroundSkinMeasurements.maxWidth);
+				}
 			} else {
 				newMaxWidth = stageWidth;
 			}
@@ -580,6 +713,11 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 					newMaxHeight = this.chromeMeasuredMaxHeight;
 				}
 				newMaxHeight += this.topContentOffset + this.bottomContentOffset;
+				if (measureSkin != null) {
+					newMaxHeight = Math.min(newMaxHeight, measureSkin.maxHeight);
+				} else if (this._backgroundSkinMeasurements != null && this._backgroundSkinMeasurements.maxHeight != null) {
+					newMaxHeight = Math.min(newMaxHeight, this._backgroundSkinMeasurements.maxHeight);
+				}
 			} else {
 				newMaxHeight = stageHeight;
 			}
