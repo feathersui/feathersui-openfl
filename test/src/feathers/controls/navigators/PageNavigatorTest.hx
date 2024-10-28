@@ -156,6 +156,45 @@ class PageNavigatorTest extends Test {
 		Assert.isNull(dispatchedChangeSelectedItem);
 	}
 
+	public function testValidateWithDataProviderThenNewDataProvider():Void {
+		var dispatchedChangeSelectedIndex = -2;
+		var dispatchedChangeSelectedItem = {};
+		var dispatchedChangeCount = 0;
+		this._navigator.addEventListener(Event.CHANGE, function(event:Event):Void {
+			dispatchedChangeCount++;
+			dispatchedChangeSelectedIndex = this._navigator.selectedIndex;
+			dispatchedChangeSelectedItem = this._navigator.selectedItem;
+		});
+
+		var one = new LayoutGroup();
+		var two = new LayoutGroup();
+		var pageOne = PageItem.withDisplayObject(one);
+		var pageTwo = PageItem.withDisplayObject(two);
+		this._navigator.dataProvider = new ArrayCollection([pageOne, pageTwo]);
+		this._navigator.validateNow();
+		Assert.equals(0, this._navigator.selectedIndex);
+		Assert.equals(pageOne, this._navigator.selectedItem);
+		Assert.equals(one, this._navigator.activeItemView);
+		Assert.equals(1, dispatchedChangeCount);
+		Assert.equals(0, dispatchedChangeSelectedIndex);
+		Assert.equals(pageOne, dispatchedChangeSelectedItem);
+
+		var three = new LayoutGroup();
+		var four = new LayoutGroup();
+		var pageThree = PageItem.withDisplayObject(three);
+		var pageFour = PageItem.withDisplayObject(four);
+		this._navigator.dataProvider = new ArrayCollection([pageThree, pageFour]);
+		this._navigator.validateNow();
+		Assert.equals(0, this._navigator.selectedIndex);
+		Assert.equals(pageThree, this._navigator.selectedItem);
+		Assert.equals(three, this._navigator.activeItemView);
+		// setting data provider when a view is active clears that view,
+		// so there are two changes and not only one
+		Assert.equals(3, dispatchedChangeCount);
+		Assert.equals(0, dispatchedChangeSelectedIndex);
+		Assert.equals(pageThree, dispatchedChangeSelectedItem);
+	}
+
 	public function testPageIndicatorDefaultVariant():Void {
 		var pageIndicator:PageIndicator = null;
 		this._navigator.pageIndicatorFactory = () -> {

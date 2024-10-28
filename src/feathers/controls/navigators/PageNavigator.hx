@@ -175,9 +175,8 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 	}
 
 	private function set_selectedIndex(value:Int):Int {
-		var currentSelectedIndex = this._pendingSelectedIndex != NO_PENDING_SELECTED_INDEX ? this._pendingSelectedIndex : this._selectedIndex;
-		if (currentSelectedIndex == value) {
-			return currentSelectedIndex;
+		if (this._pendingSelectedIndex != NO_PENDING_SELECTED_INDEX && this._pendingSelectedIndex == value) {
+			return this._pendingSelectedIndex;
 		}
 		this._pendingSelectedIndex = value;
 		this._pendingSelectedItem = NO_PENDING_SELECTED_ITEM;
@@ -219,12 +218,8 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 	}
 
 	private function set_selectedItem(value:#if flash Dynamic #else PageItem #end):#if flash Dynamic #else PageItem #end {
-		var currentSelectedItem:Any = this._pendingSelectedItem;
-		if (currentSelectedItem == NO_PENDING_SELECTED_ITEM) {
-			currentSelectedItem = this._selectedItem;
-		}
-		if (currentSelectedItem == value) {
-			return cast(currentSelectedItem, PageItem);
+		if (this._pendingSelectedItem != NO_PENDING_SELECTED_ITEM && this._pendingSelectedItem == value) {
+			return cast(this._pendingSelectedItem, PageItem);
 		}
 		this._pendingSelectedItem = value;
 		this._pendingSelectedIndex = NO_PENDING_SELECTED_INDEX;

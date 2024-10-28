@@ -156,6 +156,45 @@ class TabNavigatorTest extends Test {
 		Assert.isNull(dispatchedChangeSelectedItem);
 	}
 
+	public function testValidateWithDataProviderThenNeweDataProvider():Void {
+		var dispatchedChangeSelectedIndex = -2;
+		var dispatchedChangeSelectedItem = {};
+		var dispatchedChangeCount = 0;
+		this._navigator.addEventListener(Event.CHANGE, function(event:Event):Void {
+			dispatchedChangeCount++;
+			dispatchedChangeSelectedIndex = this._navigator.selectedIndex;
+			dispatchedChangeSelectedItem = this._navigator.selectedItem;
+		});
+
+		var one = new LayoutGroup();
+		var two = new LayoutGroup();
+		var tabOne = TabItem.withDisplayObject("one", one);
+		var tabTwo = TabItem.withDisplayObject("two", two);
+		this._navigator.dataProvider = new ArrayCollection([tabOne, tabTwo]);
+		this._navigator.validateNow();
+		Assert.equals(0, this._navigator.selectedIndex);
+		Assert.equals(tabOne, this._navigator.selectedItem);
+		Assert.equals(one, this._navigator.activeItemView);
+		Assert.equals(1, dispatchedChangeCount);
+		Assert.equals(0, dispatchedChangeSelectedIndex);
+		Assert.equals(tabOne, dispatchedChangeSelectedItem);
+
+		var three = new LayoutGroup();
+		var four = new LayoutGroup();
+		var tabThree = TabItem.withDisplayObject("three", three);
+		var tabFour = TabItem.withDisplayObject("four", four);
+		this._navigator.dataProvider = new ArrayCollection([tabThree, tabFour]);
+		this._navigator.validateNow();
+		Assert.equals(0, this._navigator.selectedIndex);
+		Assert.equals(tabThree, this._navigator.selectedItem);
+		Assert.equals(three, this._navigator.activeItemView);
+		// setting data provider when a view is active clears that view,
+		// so there are two changes and not only one
+		Assert.equals(3, dispatchedChangeCount);
+		Assert.equals(0, dispatchedChangeSelectedIndex);
+		Assert.equals(tabThree, dispatchedChangeSelectedItem);
+	}
+
 	public function testTabBarDefaultVariant():Void {
 		var tabBar:TabBar = null;
 		this._navigator.tabBarFactory = () -> {
