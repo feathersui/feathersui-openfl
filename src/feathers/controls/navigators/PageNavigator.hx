@@ -493,7 +493,7 @@ class PageNavigator extends BaseNavigator implements IIndexSelector implements I
 			}
 		}
 		if (pendingSelectedIndex != NO_PENDING_SELECTED_INDEX) {
-			if (pendingSelectedIndex < this._dataProvider.length) {
+			if (pendingSelectedIndex >= 0 && pendingSelectedIndex < this._dataProvider.length) {
 				this._selectedIndex = pendingSelectedIndex;
 				this._selectedItem = this._dataProvider.get(pendingSelectedIndex);
 			} else {
