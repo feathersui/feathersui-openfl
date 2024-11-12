@@ -1804,12 +1804,16 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		var newColumns:ArrayCollection<GridViewColumn> = null;
 		if (this._dataProvider != null && this._dataProvider.length > 0) {
 			var item = this._dataProvider.get(0);
-			newColumns = new ArrayCollection(Reflect.fields(item).map((fieldName) -> {
-				return new GridViewColumn(fieldName, (item) -> {
-					var propertyValue = Reflect.getProperty(item, fieldName);
-					return Std.string(propertyValue);
-				});
-			}));
+			if ((item is String)) {
+				newColumns = new ArrayCollection([new GridViewColumn()]);
+			} else {
+				newColumns = new ArrayCollection(Reflect.fields(item).map((fieldName) -> {
+					return new GridViewColumn(fieldName, (item) -> {
+						var propertyValue = Reflect.getProperty(item, fieldName);
+						return Std.string(propertyValue);
+					});
+				}));
+			}
 		} else {
 			newColumns = new ArrayCollection();
 		}
