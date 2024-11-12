@@ -10,6 +10,7 @@ package feathers.skins;
 
 import feathers.controls.IToggle;
 import feathers.core.IStateContext;
+import feathers.core.IUIControl;
 import feathers.graphics.FillStyle;
 import feathers.graphics.LineStyle;
 import openfl.display.InterpolationMethod;
@@ -116,6 +117,24 @@ class BaseGraphicsPathSkin extends ProgrammaticSkin {
 		this._selectedFill = value;
 		this.setInvalid(STYLES);
 		return this._selectedFill;
+	}
+
+	override private function set_uiContext(value:IUIControl):IUIControl {
+		if (this._uiContext == value) {
+			return this._uiContext;
+		}
+		this._previousBorder = null;
+		this._previousFill = null;
+		return super.uiContext = value;
+	}
+
+	override private function set_stateContext(value:IStateContext<Dynamic>):IStateContext<Dynamic> {
+		if (this._stateContext == value) {
+			return this._stateContext;
+		}
+		this._previousBorder = null;
+		this._previousFill = null;
+		return super.stateContext = value;
 	}
 
 	private var _stateToBorder:Map<EnumValue, LineStyle>;
