@@ -31,62 +31,29 @@ import openfl.utils.AssetType;
 import openfl.utils.Future;
 
 /**
-	Loads and displays an asset using either OpenFL's asset management system or
-	from a URL.
+	Displays `BitmapData` as a Feathers UI component.
 
-	Supports assets of the following types:
+	@see [Tutorial: How to use the BitmapImage component](https://feathersui.com/learn/haxe-openfl/bitmap-image/)
+	@see `feathers.controls.AssetLoader`
 
-	- [`AssetType.IMAGE`](https://api.openfl.org/openfl/utils/AssetType.html#IMAGE)
-	- [`AssetType.MOVIE_CLIP`](https://api.openfl.org/openfl/utils/AssetType.html#MOVIE_CLIP)
-
-	@event openfl.events.Event.COMPLETE Dispatched when `AssetLoader.source`
-	successfully completes loading asynchronously. If `AssetLoader.source` is
-	pre-loaded by `openfl.utils.Assets`, this event will not be dispatched.
-
-	@event openfl.events.ProgressEvent.PROGRESS Dispatched periodically as
-	`AssetLoader.source` loads asynchronously. If `AssetLoader.source` is
-	pre-loaded by `openfl.utils.Assets`, this event will not be dispatched.
-
-	@event openfl.events.IOErrorEvent.IO_ERROR Dispatched if an IO error occurs
-	while loading `AssetLoader.source`.
-
-	@event openfl.events.SecurityErrorEvent.SECURITY_ERROR Dispatched if a
-	security error occurs while loading `AssetLoader.source`.
-
-
-	@see [Tutorial: How to use the AssetLoader component](https://feathersui.com/learn/haxe-openfl/asset-loader/)
-	@see [`openfl.utils.Assets`](https://api.openfl.org/openfl/utils/Assets.html)
-	@see `feathers.controls.BitmapImage`
-
-	@since 1.0.0
+	@since 1.4.0
 **/
-@:event(openfl.events.Event.COMPLETE)
-@:event(openfl.events.ProgressEvent.PROGRESS)
-@:event(openfl.events.IOErrorEvent.IO_ERROR)
-@:event(openfl.events.SecurityErrorEvent.SECURITY_ERROR)
 @:styleContext
-class AssetLoader extends FeathersControl {
+class BitmapImage extends FeathersControl {
 	/**
-		Creates a new `AssetLoader` object.
+		Creates a new `BitmapImage` object.
 
-		@since 1.0.0
+		@since 1.4.0
 	**/
-	public function new(?source:String, ?completeListener:(Event) -> Void) {
-		initializeAssetLoaderTheme();
+	public function new(?source:BitmapData) {
+		initializeBitmapImageTheme();
 		super();
 
 		this.source = source;
-
-		if (completeListener != null) {
-			this.addEventListener(Event.COMPLETE, completeListener);
-		}
 	}
 
-	private var content:DisplayObject;
-	private var loader:Loader;
+	private var content:Bitmap;
 	private var _contentMeasurements:Measurements = new Measurements();
-
-	private var _pendingFuture:Future<Dynamic>;
 
 	private var _sourceScale:Float = 1.0;
 
@@ -102,7 +69,7 @@ class AssetLoader extends FeathersControl {
 
 		@default 1.0
 
-		@since 1.3.0
+		@since 1.4.0
 	**/
 	public var sourceScale(get, set):Float;
 
@@ -119,126 +86,41 @@ class AssetLoader extends FeathersControl {
 		return this._sourceScale;
 	}
 
-	private var _source:String;
+	private var _source:BitmapData;
 
 	/**
-		Sets the loader's source, which may be either the name of an asset or a
-		URL to load the asset from the web instead.
+		Sets the image's source `BitmapData`.
 
-		The following example sets the source to an asset name:
-
-		```haxe
-		loader.source = "my-asset-name";
-		```
-
-		The following example sets the source to a URL:
+		The following example sets the source to a `BitmapData` asset:
 
 		```haxe
-		loader.source = "https://example.com/my-asset.png";
+		var bmd = Assets.getBitmapData("my-asset-name");
+		loader.source = bmd;
 		```
 
-		@since 1.0.0
+		@since 1.4.0
 	**/
 	@:inspectable
-	public var source(get, set):String;
+	public var source(get, set):BitmapData;
 
-	private function get_source():String {
+	private function get_source():BitmapData {
 		return this._source;
 	}
 
-	private function set_source(value:String):String {
+	private function set_source(value:BitmapData):BitmapData {
 		if (this._source == value) {
 			return this._source;
-		}
-		if (this.loader != null) {
-			this.loader.unloadAndStop();
 		}
 		if (this.content != null) {
 			this.removeChild(this.content);
 			this.content = null;
 		}
 		this._source = value;
-		if (this._source == null) {
-			this._pendingFuture = null;
-			this.cleanupLoader();
-		} else {
-			if (Assets.exists(this._source, AssetType.IMAGE)) {
-				this.cleanupLoader();
-				if (Assets.isLocal(this._source, AssetType.IMAGE)) {
-					this._pendingFuture = null;
-					var bitmapData = Assets.getBitmapData(this._source);
-					var bitmap = this.createBitmap(bitmapData);
-					this._contentMeasurements.save(bitmap);
-					this.addChild(bitmap);
-					this.content = bitmap;
-				} else // async
-				{
-					var future = Assets.loadBitmapData(this._source);
-					future.onProgress((progress, total) -> {
-						this.dispatchEvent(new ProgressEvent(ProgressEvent.PROGRESS, false, false, progress, total));
-					}).onComplete(function(bitmapData:BitmapData):Void {
-						if (future != this._pendingFuture) {
-							// cancelled
-							return;
-						}
-						var bitmap = this.createBitmap(bitmapData);
-						this._contentMeasurements.save(bitmap);
-						this.addChild(bitmap);
-						this.content = bitmap;
-						this.setInvalid(DATA);
-						this.dispatchEvent(new Event(Event.COMPLETE));
-					}).onError((event:Dynamic) -> {
-						this.dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
-					});
-					this._pendingFuture = future;
-				}
-			} else if (Assets.exists(this._source, AssetType.MOVIE_CLIP)) {
-				this.cleanupLoader();
-				if (Assets.isLocal(this._source, AssetType.MOVIE_CLIP)) {
-					this._pendingFuture = null;
-					var movieClip = Assets.getMovieClip(this._source);
-					this._contentMeasurements.save(movieClip);
-					this.addChild(movieClip);
-					this.content = movieClip;
-				} else // async
-				{
-					var future = Assets.loadMovieClip(this._source);
-					future.onProgress((progress, total) -> {
-						this.dispatchEvent(new ProgressEvent(ProgressEvent.PROGRESS, false, false, progress, total));
-					}).onComplete(function(movieClip:MovieClip):Void {
-						if (future != this._pendingFuture) {
-							// cancelled
-							return;
-						}
-						this._contentMeasurements.save(movieClip);
-						this.addChild(movieClip);
-						this.content = movieClip;
-						this.setInvalid(DATA);
-						this.dispatchEvent(new Event(Event.COMPLETE));
-					}).onError((event:Dynamic) -> {
-						this.dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
-					});
-					this._pendingFuture = future;
-				}
-			} else {
-				this._pendingFuture = null;
-				if (this.loader == null) {
-					this.loader = new Loader();
-					this.loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loader_contentLoaderInfo_completeHandler);
-					this.loader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, loader_contentLoaderInfo_progressHandler);
-					this.loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, loader_contentLoaderInfo_ioErrorHandler);
-					this.loader.contentLoaderInfo.addEventListener(SecurityErrorEvent.SECURITY_ERROR, loader_contentLoaderInfo_securityErrorHandler);
-				}
-				try {
-					this.loader.load(new URLRequest(this._source));
-				} catch (e:Dynamic) {
-					if ((e is SecurityError)) {
-						var securityError:SecurityError = cast e;
-						this.dispatchEvent(new SecurityErrorEvent(SecurityErrorEvent.SECURITY_ERROR, false, false, securityError.message,
-							securityError.errorID));
-					}
-				}
-			}
+		if (this._source != null) {
+			var bitmap = this.createBitmap(this._source);
+			this._contentMeasurements.save(bitmap);
+			this.addChild(bitmap);
+			this.content = bitmap;
 		}
 		this.setInvalid(DATA);
 		return this._source;
@@ -246,13 +128,12 @@ class AssetLoader extends FeathersControl {
 
 	/**
 		The original width of the `source` asset, measured in pixels. May return
-		`null`, if the `source` is `null`, or if the `source` has not yet
-		completed loading.
+		`null`, if the `source` is `null`.
 
-		@see `AssetLoader.source`
-		@see `AssetLoader.originalSourceHeight`
+		@see `BitmapImage.source`
+		@see `BitmapImage.originalSourceHeight`
 
-		@since 1.0.0
+		@since 1.4.0
 	**/
 	public var originalSourceWidth(get, never):Null<Float>;
 
@@ -264,14 +145,13 @@ class AssetLoader extends FeathersControl {
 	}
 
 	/**
-		The original height of the source asset, measured in pixels. May return
-		`null`, if the `source` is `null`, or if the `source` has not yet
-		completed loading.
+		The original height of the bitmap data, measured in pixels. May return
+		`null`, if the `source` is `null`.
 
-		@see `AssetLoader.source`
-		@see `AssetLoader.originalSourceWidth`
+		@see `BitmapImage.source`
+		@see `BitmapImage.originalSourceWidth`
 
-		@since 1.0.0
+		@since 1.4.0
 	**/
 	public var originalSourceHeight(get, never):Null<Float>;
 
@@ -287,9 +167,8 @@ class AssetLoader extends FeathersControl {
 	private var _scaleMode:StageScaleMode = StageScaleMode.SHOW_ALL;
 
 	/**
-
-		Determines how the asset will be scaled within the width and height of
-		the `AssetLoader` instance. Uses the same constants from
+		Determines how the `BitmapData` will be scaled within the width and
+		height of the `BitmapImage` instance. Uses the same constants from
 		[`StageScaleMode`](https://api.openfl.org/openfl/display/StageScaleMode.html)
 		that are used to scale the OpenFL stage.
 
@@ -302,7 +181,7 @@ class AssetLoader extends FeathersControl {
 
 		@see [`openfl.display.StageScaleMode`](https://api.openfl.org/openfl/display/StageScaleMode.html)
 
-		@since 1.0.0
+		@since 1.4.0
 	**/
 	public var scaleMode(get, set):StageScaleMode;
 
@@ -319,9 +198,9 @@ class AssetLoader extends FeathersControl {
 		return this._scaleMode;
 	}
 
-	private function initializeAssetLoaderTheme():Void {
+	private function initializeBitmapImageTheme():Void {
 		#if !feathersui_disable_default_theme
-		feathers.themes.steel.components.SteelAssetLoaderStyles.initialize();
+		feathers.themes.steel.components.SteelBitmapImageStyles.initialize();
 		#end
 	}
 
@@ -331,9 +210,6 @@ class AssetLoader extends FeathersControl {
 	}
 
 	override private function update():Void {
-		var dataInvalid = this.isInvalid(DATA);
-		var layoutInvalid = this.isInvalid(LAYOUT);
-
 		this.measure();
 		this.layoutChildren();
 	}
@@ -490,36 +366,5 @@ class AssetLoader extends FeathersControl {
 
 	private function createBitmap(bitmapData:BitmapData):Bitmap {
 		return new Bitmap(bitmapData);
-	}
-
-	private function cleanupLoader():Void {
-		if (this.loader == null) {
-			return;
-		}
-		this.loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, loader_contentLoaderInfo_completeHandler);
-		this.loader.contentLoaderInfo.removeEventListener(ProgressEvent.PROGRESS, loader_contentLoaderInfo_progressHandler);
-		this.loader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, loader_contentLoaderInfo_ioErrorHandler);
-		this.loader.contentLoaderInfo.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, loader_contentLoaderInfo_securityErrorHandler);
-		this.loader = null;
-	}
-
-	private function loader_contentLoaderInfo_progressHandler(event:ProgressEvent):Void {
-		this.dispatchEvent(event);
-	}
-
-	private function loader_contentLoaderInfo_ioErrorHandler(event:IOErrorEvent):Void {
-		this.dispatchEvent(event);
-	}
-
-	private function loader_contentLoaderInfo_securityErrorHandler(event:SecurityErrorEvent):Void {
-		this.dispatchEvent(event);
-	}
-
-	private function loader_contentLoaderInfo_completeHandler(event:Event):Void {
-		this.addChild(this.loader);
-		this.content = this.loader;
-		this._contentMeasurements.save(this.content);
-		this.setInvalid(LAYOUT);
-		this.dispatchEvent(event);
 	}
 }
