@@ -13,22 +13,11 @@ import feathers.core.IValidating;
 import feathers.layout.Measurements;
 import feathers.skins.RectangleSkin;
 import feathers.utils.ScaleUtil;
-import openfl.Assets;
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
 import openfl.display.DisplayObject;
-import openfl.display.Loader;
-import openfl.display.MovieClip;
 import openfl.display.StageScaleMode;
-import openfl.errors.SecurityError;
-import openfl.events.Event;
-import openfl.events.IOErrorEvent;
-import openfl.events.ProgressEvent;
-import openfl.events.SecurityErrorEvent;
 import openfl.geom.Rectangle;
-import openfl.net.URLRequest;
-import openfl.utils.AssetType;
-import openfl.utils.Future;
 
 /**
 	Displays `BitmapData` as a Feathers UI component.
