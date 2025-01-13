@@ -72,14 +72,7 @@ import openfl.events.Event;
 @:event(openfl.events.TouchEvent.TOUCH_ROLL_OVER)
 @:event(openfl.events.TouchEvent.TOUCH_TAP)
 #if air
-@:event(openfl.events.MouseEvent.CONTEXT_MENU)
-@:event(openfl.events.TouchEvent.PROXIMITY_BEGIN)
-@:event(openfl.events.TouchEvent.PROXIMITY_END)
-@:event(openfl.events.TouchEvent.PROXIMITY_MOVE)
-@:event(openfl.events.TouchEvent.PROXIMITY_OUT)
-@:event(openfl.events.TouchEvent.PROXIMITY_OVER)
-@:event(openfl.events.TouchEvent.PROXIMITY_ROLL_OUT)
-@:event(openfl.events.TouchEvent.PROXIMITY_ROLL_OVER)
+@:event(openfl.events.MouseEvent.CONTEXT_MENU) @:event(openfl.events.TouchEvent.PROXIMITY_BEGIN) @:event(openfl.events.TouchEvent.PROXIMITY_END) @:event(openfl.events.TouchEvent.PROXIMITY_MOVE) @:event(openfl.events.TouchEvent.PROXIMITY_OUT) @:event(openfl.events.TouchEvent.PROXIMITY_OVER) @:event(openfl.events.TouchEvent.PROXIMITY_ROLL_OUT) @:event(openfl.events.TouchEvent.PROXIMITY_ROLL_OVER)
 #end
 class ValidatingSprite extends Sprite implements IValidating {
 	private function new() {
@@ -134,6 +127,8 @@ class ValidatingSprite extends Sprite implements IValidating {
 		```
 
 		@since 1.0.0
+
+		@see [The Feathers UI Component Lifecycle](https://feathersui.com/learn/haxe-openfl/ui-component-lifecycle/)
 	**/
 	public function isInvalid(?flag:InvalidationFlag):Bool {
 		if (this._allInvalid) {
@@ -205,6 +200,8 @@ class ValidatingSprite extends Sprite implements IValidating {
 		```
 
 		@since 1.0.0
+
+		@see [The Feathers UI Component Lifecycle](https://feathersui.com/learn/haxe-openfl/ui-component-lifecycle/)
 	**/
 	public function setInvalid(?flag:InvalidationFlag):Void {
 		if (this._ignoreInvalidationFlags) {
@@ -273,6 +270,8 @@ class ValidatingSprite extends Sprite implements IValidating {
 
 	/**
 		@see `feathers.core.IValidating.validateNow`
+		@see `ValidatingSprite.update`
+		@see [The Feathers UI Component Lifecycle](https://feathersui.com/learn/haxe-openfl/ui-component-lifecycle/)
 	**/
 	public function validateNow():Void {
 		// if we're not actually invalid, there's nothing to do here, so
@@ -303,9 +302,10 @@ class ValidatingSprite extends Sprite implements IValidating {
 		this function during `draw()` to manipulate the flags that
 		its superclass sees.
 
-		@see `ValidatingSprite.setInvalid()`
-
 		@since 1.0.0
+
+		@see `ValidatingSprite.setInvalid()`
+		@see [The Feathers UI Component Lifecycle](https://feathersui.com/learn/haxe-openfl/ui-component-lifecycle/)
 	**/
 	@:dox(show)
 	private function setInvalidationFlag(flag:InvalidationFlag):Void {
@@ -333,6 +333,8 @@ class ValidatingSprite extends Sprite implements IValidating {
 		```
 
 		@since 1.0.0
+
+		@see [The Feathers UI Component Lifecycle](https://feathersui.com/learn/haxe-openfl/ui-component-lifecycle/)
 	**/
 	@:dox(show)
 	private function update():Void {}

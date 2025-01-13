@@ -794,6 +794,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 
 	/**
 		@see `feathers.core.IUIControl.initializeNow`
+		@see [The Feathers UI Component Lifecycle](https://feathersui.com/learn/haxe-openfl/ui-component-lifecycle/)
 	**/
 	public function initializeNow():Void {
 		if (this._initialized || this._initializing) {
@@ -838,6 +839,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 
 	/**
 		@see `feathers.core.IUIControl.dispose`
+		@see [The Feathers UI Component Lifecycle](https://feathersui.com/learn/haxe-openfl/ui-component-lifecycle/)
 	**/
 	public function dispose():Void {
 		this.clearStyles();
@@ -866,6 +868,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 
 		@since 1.0.0
 
+		@see [The Feathers UI Component Lifecycle](https://feathersui.com/learn/haxe-openfl/ui-component-lifecycle/)
 		@see `feathers.events.FeathersEvent.INITIALIZE`
 	**/
 	@:dox(show)

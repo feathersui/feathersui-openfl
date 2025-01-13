@@ -69,6 +69,9 @@ interface IUIControl extends IDisplayObject {
 		and validate immediately, call `validateNow()` instead.
 
 		@since 1.0.0
+
+		@see `feathers.core.FeathersControl.initialize()`
+		@see [The Feathers UI Component Lifecycle](https://feathersui.com/learn/haxe-openfl/ui-component-lifecycle/)
 	**/
 	public function initializeNow():Void;
 
@@ -81,6 +84,8 @@ interface IUIControl extends IDisplayObject {
 		use cases where some extra cleanup may benefit memory usage.
 
 		@since 1.3.0
+
+		@see [The Feathers UI Component Lifecycle](https://feathersui.com/learn/haxe-openfl/ui-component-lifecycle/)
 	**/
 	public function dispose():Void;
 }

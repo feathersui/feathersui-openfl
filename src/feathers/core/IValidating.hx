@@ -34,6 +34,8 @@ interface IValidating {
 		time without requiring a full update every time.
 
 		@since 1.0.0
+
+		@see [The Feathers UI Component Lifecycle](https://feathersui.com/learn/haxe-openfl/ui-component-lifecycle/)
 	**/
 	public function validateNow():Void;
 }
