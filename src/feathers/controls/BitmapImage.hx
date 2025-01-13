@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import openfl.display.PixelSnapping;
 import feathers.core.FeathersControl;
 import feathers.core.IValidating;
 import feathers.layout.Measurements;
@@ -34,11 +35,13 @@ class BitmapImage extends FeathersControl {
 
 		@since 1.4.0
 	**/
-	public function new(?source:BitmapData) {
+	public function new(?source:BitmapData, pixelSnapping:PixelSnapping = AUTO, smoothing:Bool = false) {
 		initializeBitmapImageTheme();
 		super();
 
 		this.source = source;
+		this.pixelSnapping = pixelSnapping;
+		this.smoothing = smoothing;
 	}
 
 	private var content:Bitmap;
@@ -187,6 +190,18 @@ class BitmapImage extends FeathersControl {
 		return this._scaleMode;
 	}
 
+	/**
+		@see [`openfl.display.Bitmap.pixelSnapping`](https://api.openfl.org/openfl/display/Bitmap.html#pixelSnapping)
+	**/
+	@:style
+	public var pixelSnapping:PixelSnapping = AUTO;
+
+	/**
+		@see [`openfl.display.Bitmap.smoothing`](https://api.openfl.org/openfl/display/Bitmap.html#smoothing)
+	**/
+	@:style
+	public var smoothing:Bool = false;
+
 	private function initializeBitmapImageTheme():Void {
 		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelBitmapImageStyles.initialize();
@@ -199,6 +214,16 @@ class BitmapImage extends FeathersControl {
 	}
 
 	override private function update():Void {
+		var dataInvalid = this.isInvalid(DATA);
+		var stylesInvalid = this.isInvalid(STYLES);
+
+		if (dataInvalid || stylesInvalid) {
+			if (this.content != null) {
+				this.content.pixelSnapping = this.pixelSnapping;
+				this.content.smoothing = this.smoothing;
+			}
+		}
+
 		this.measure();
 		this.layoutChildren();
 	}
@@ -354,6 +379,6 @@ class BitmapImage extends FeathersControl {
 	}
 
 	private function createBitmap(bitmapData:BitmapData):Bitmap {
-		return new Bitmap(bitmapData);
+		return new Bitmap(bitmapData, this.pixelSnapping, this.smoothing);
 	}
 }
