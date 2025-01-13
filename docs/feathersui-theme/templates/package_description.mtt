@@ -1,0 +1,65 @@
+::if full == ""::
+	<h1>Feathers UI API Reference <small ::cond api.isDefined("version")::>version ::api.getValue('version')::</small></h1>
+	<p><a href="https://feathersui.com/">Feathers UI</a> is an <a href="https://github.com/feathersui/feathersui-openfl">open source</a> framework of <a href="https://feathersui.com/learn/haxe-openfl/ui-components/">graphical user interface (GUI) components</a> for creative, <a href="https://feathersui.com/cross-platform-guis/">cross-platform</a> frontend projects. It is especially well-suited for games, interactive data visualizations, and other rich, multimedia experiences.</p>
+	<p>The foundation of Feathers UI is built on the <a href="https://haxe.org/">Haxe</a> programming language and <a href="https://openfl.org/">OpenFL</a>, a user-friendly library for rendering, input, networking, and more. Like Feathers UI, both Haxe and OpenFL are open source, and they may be used for free in commercial projects.</p>
+	<h3>Get Started With Feathers UI</h3>
+	<ul>
+		<li>Read through the <a href="https://feathersui.com/learn/haxe-openfl/" target="_blank">Feathers UI Manual</a></li>
+		<li>Try running the <a href="https://feathersui.com/samples/haxe-openfl/" target="_blank">Feathers UI sample projects</a></li>
+	</ul>
+	<hr/>
+	<h3>::api.currentPageName:: <small ::cond api.isDefined("version") && full == ""::>version ::api.getValue('version')::</small></h3>
+	<p ::cond api.isDefined("description")::>::api.getValue("description")::</p>
+::else::
+	<h1>::api.currentPageName:: <small ::cond api.isDefined("version") && full == ""::>version ::api.getValue('version')::</small></h1>
+	<p ::cond api.isDefined("description")::>::api.getValue("description")::</p>
+	::if full == "feathers.controls"::
+	<p>Check out some additional documentation from the <a href="https://feathersui.com/learn/haxe-openfl/">Feathers UI Manual</a> to help you get started with the ::api.currentPageName:: package:</p>
+	<ul>
+		<li><a href="https://feathersui.com/learn/haxe-openfl/ui-components/" target="_blank">Introduction to UI components</a></li>
+	</ul>
+	::elseif full == "feathers.controls.dataRenderers"::
+	<p>Check out some additional documentation from the <a href="https://feathersui.com/learn/haxe-openfl/">Feathers UI Manual</a> to help you get started with the ::api.currentPageName:: package:</p>
+	<ul>
+		<li><a href="https://feathersui.com/learn/haxe-openfl/custom-item-renderers/" target="_blank">Create custom item renderers for data containers</a></li>
+		<li><a href="https://feathersui.com/learn/haxe-openfl/class-based-custom-item-renderers/" target="_blank">Create class-based custom item renderers</a></li>
+	</ul>
+	::elseif full == "feathers.data"::
+	<p>Check out some additional documentation from the <a href="https://feathersui.com/learn/haxe-openfl/">Feathers UI Manual</a> to help you get started with the ::api.currentPageName:: package:</p>
+	<ul>
+		<li><a href="https://feathersui.com/learn/haxe-openfl/data-collections/" target="_blank">Data collections in Feathers UI</a></li>
+	</ul>
+	::elseif full == "feathers.dragDrop"::
+	<p>Check out some additional documentation from the <a href="https://feathersui.com/learn/haxe-openfl/">Feathers UI Manual</a> to help you get started with the ::api.currentPageName:: package:</p>
+	<ul>
+		<li><a href="https://feathersui.com/learn/haxe-openfl/drag-and-drop/" target="_blank">Drag and drop in Feathers UI</a></li>
+	</ul>
+	::elseif full == "feathers.layout"::
+	<p>Check out some additional documentation from the <a href="https://feathersui.com/learn/haxe-openfl/">Feathers UI Manual</a> to help you get started with the ::api.currentPageName:: package:</p>
+	<ul>
+		<li><a href="https://feathersui.com/learn/haxe-openfl/layouts-and-containers/" target="_blank">Introduction to layouts and containers</a></li>
+		<li><a href="https://feathersui.com/learn/haxe-openfl/layout-data/" target="_blank">Layout data</a></li>
+		<li><a href="https://feathersui.com/learn/haxe-openfl/custom-layouts/" target="_blank">Custom layouts</a></li>
+	</ul>
+	::elseif full == "feathers.motion.transitions"::
+	<p>Check out some additional documentation from the <a href="https://feathersui.com/learn/haxe-openfl/">Feathers UI Manual</a> to help you get started with the ::api.currentPageName:: package:</p>
+	<ul>
+		<li><a href="https://feathersui.com/learn/haxe-openfl/navigator-transitions/" target="_blank">Navigator animated transitions</a></li>
+		<li><a href="https://feathersui.com/learn/haxe-openfl/custom-navigator-transitions/" target="_blank">Custom navigator transitions</a></li>
+	</ul>
+	::elseif full == "feathers.skins"::
+	<p>Check out some additional documentation from the <a href="https://feathersui.com/learn/haxe-openfl/">Feathers UI Manual</a> to help you get started with the ::api.currentPageName:: package:</p>
+	<ul>
+		<li><a href="https://feathersui.com/learn/haxe-openfl/intro-to-skins/" target="_blank">Introduction to skins for Feathers UI components</a></li>
+		<li><a href="https://feathersui.com/learn/haxe-openfl/shape-skins/" target="_blank">Skinning with common shapes</a></li>
+		<li><a href="https://feathersui.com/learn/haxe-openfl/custom-programmatic-skins/" target="_blank">Custom programmatic skins</a></li>
+	</ul>
+	::elseif full == "feathers.themes"::
+	<p>Check out some additional documentation from the <a href="https://feathersui.com/learn/haxe-openfl/">Feathers UI Manual</a> to help you get started with the ::api.currentPageName:: package:</p>
+	<ul>
+		<li><a href="https://feathersui.com/learn/haxe-openfl/themes/" target="_blank">Introduction to themes</a></li>
+		<li><a href="https://feathersui.com/learn/haxe-openfl/custom-themes/" target="_blank">Create a custom theme</a></li>
+	</ul>
+	::end::
+
+::end::
