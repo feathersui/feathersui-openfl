@@ -15,8 +15,9 @@ import openfl.events.Event;
 import openfl.events.EventDispatcher;
 
 /**
-	Wraps an `Array` data source with a common API for use with UI controls that
-	support hierarchical data, such as `TreeView` or `TreeGridView`.
+	Wraps an `Array<TreeNode<T>>` data source with a common API for use with UI
+	controls that support hierarchical data, such as `TreeView` or
+	`TreeGridView`.
 
 	@event openfl.events.Event.CHANGE Dispatched when the collection changes.
 
