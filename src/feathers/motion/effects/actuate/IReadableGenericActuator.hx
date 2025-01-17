@@ -32,7 +32,7 @@ interface IReadableGenericActuator extends IGenericActuator extends IGotoActuato
 
 		@since 1.0.0
 	**/
-	public function getDuration():Dynamic;
+	public function getDuration():Float;
 
 	/**
 		Gets whether toggles automatically based on alpha values
