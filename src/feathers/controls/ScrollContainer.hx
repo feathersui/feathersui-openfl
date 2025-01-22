@@ -313,7 +313,7 @@ class ScrollContainer extends BaseScrollContainer implements IFocusContainer {
 
 	override public function getChildAt(index:Int):DisplayObject {
 		if (!this._displayListBypassEnabled) {
-			return super.removeChildAt(index);
+			return super.getChildAt(index);
 		}
 		return this.layoutViewPort.getChildAt(index);
 	}
