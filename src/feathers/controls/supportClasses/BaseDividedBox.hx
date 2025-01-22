@@ -217,7 +217,7 @@ class BaseDividedBox extends FeathersControl {
 		}
 		if (this.items.length > 1) {
 			var i = this.items.length - 1;
-			while (i >= 1) {
+			while (i > 0) {
 				var layoutIndex = i * 2;
 				var childIndex = layoutIndex + ((this._currentBackgroundSkin != null) ? 1 : 0);
 				var oldDivider = this.removeRawChildAt(childIndex - 1);
