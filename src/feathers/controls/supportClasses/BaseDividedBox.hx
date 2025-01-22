@@ -216,11 +216,13 @@ class BaseDividedBox extends FeathersControl {
 			return this._dividerFactory;
 		}
 		if (this.items.length > 1) {
-			for (i in 1...this.items.length) {
+			var i = this.items.length - 1;
+			while (i >= 1) {
 				var layoutIndex = i * 2;
 				var childIndex = layoutIndex + ((this._currentBackgroundSkin != null) ? 1 : 0);
 				var oldDivider = this.removeRawChildAt(childIndex - 1);
 				this.destroyDivider(cast(oldDivider, InteractiveObject), this._dividerFactory);
+				i--;
 			}
 		}
 		this._dividerFactory = value;
