@@ -24,7 +24,9 @@ import openfl.display.Stage;
 import openfl.errors.TypeError;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
+import openfl.events.TimerEvent;
 import openfl.events.TouchEvent;
+import openfl.utils.Timer;
 #if air
 import openfl.ui.Multitouch;
 #end
@@ -330,6 +332,51 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		this._page = value;
 		this.setInvalid(DATA);
 		return this._page;
+	}
+
+	private var _repeatTimer:Timer;
+	private var _currentRepeatAction:() -> Void = null;
+
+	private var _repeatDelay:Float = 0.05;
+
+	/**
+		The time, in seconds, before actions triggered by pressing the increment
+		and decrement buttons are repeated. The first repeat happens after a
+		delay that is five times longer than the following repeats.
+
+		In the following example, the scroll bar's repeat delay is set to
+		500 milliseconds:
+
+		```haxe
+		scrollBar.repeatDelay = 0.5;
+		```
+
+		To disable repeat, set `repeatDelay` to `0.0` seconds.
+
+		```haxe
+		// disable repeat
+		scrollBar.repeatDelay = 0.0;
+		```
+
+		@default 0.05
+
+		@since 1.4.0
+	**/
+	public var repeatDelay(get, set):Float;
+
+	private function get_repeatDelay():Float {
+		return this._repeatDelay;
+	}
+
+	private function set_repeatDelay(value:Float):Float {
+		if (this._repeatDelay == value) {
+			return this._repeatDelay;
+		}
+		this._repeatDelay = value;
+		if (this._repeatDelay == 0.0) {
+			this.cleanupRepeatTimer();
+		}
+		return this._repeatDelay;
 	}
 
 	/**
@@ -731,6 +778,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 	}
 
 	override public function dispose():Void {
+		this.cleanupRepeatTimer();
 		this.destroyDecrementButton();
 		this.destroyIncrementButton();
 		super.dispose();
@@ -1042,6 +1090,31 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 		return normalized;
 	}
 
+	private function startRepeatTimer(action:() -> Void):Void {
+		if (this._repeatDelay <= 0.0) {
+			this.cleanupRepeatTimer();
+			return;
+		}
+		this._currentRepeatAction = action;
+		if (this._repeatTimer == null) {
+			this._repeatTimer = new Timer(this._repeatDelay * 1000);
+			this._repeatTimer.addEventListener(TimerEvent.TIMER, baseScrollBar_repeatTimer_timerHandler);
+		} else {
+			this._repeatTimer.reset();
+			this._repeatTimer.delay = this._repeatDelay * 1000;
+		}
+		this._repeatTimer.start();
+	}
+
+	private function cleanupRepeatTimer():Void {
+		this._currentRepeatAction = null;
+		if (this._repeatTimer != null) {
+			this._repeatTimer.removeEventListener(TimerEvent.TIMER, baseScrollBar_repeatTimer_timerHandler);
+			this._repeatTimer.stop();
+			this._repeatTimer = null;
+		}
+	}
+
 	private function restrictValue(value:Float):Float {
 		if (this._snapInterval != 0.0 && value != this._minimum && value != this._maximum) {
 			value = MathUtil.roundToNearest(value, this._snapInterval);
@@ -1186,6 +1259,10 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 			return;
 		}
 		this.decrement();
+		if (this._repeatDelay != 0.0) {
+			this.startRepeatTimer(this.decrement);
+			this.stage.addEventListener(MouseEvent.MOUSE_UP, baseScrollBar_repeatTimer_stage_mouseUpHandler, false, 0, true);
+		}
 	}
 
 	private function baseScrollBar_decrementButton_touchBeginHandler(event:TouchEvent):Void {
@@ -1204,6 +1281,10 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 			return;
 		}
 		this.decrement();
+		if (this._repeatDelay != 0.0) {
+			this.startRepeatTimer(this.decrement);
+			this.stage.addEventListener(TouchEvent.TOUCH_END, baseScrollBar_repeatTimer_stage_touchEndHandler, false, 0, true);
+		}
 	}
 
 	private function baseScrollBar_incrementButton_mouseDownHandler(event:MouseEvent):Void {
@@ -1217,6 +1298,10 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 			return;
 		}
 		this.increment();
+		if (this._repeatDelay != 0.0) {
+			this.startRepeatTimer(this.increment);
+			this.stage.addEventListener(MouseEvent.MOUSE_UP, baseScrollBar_repeatTimer_stage_mouseUpHandler, false, 0, true);
+		}
 	}
 
 	private function baseScrollBar_incrementButton_touchBeginHandler(event:TouchEvent):Void {
@@ -1235,5 +1320,28 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 			return;
 		}
 		this.increment();
+		if (this._repeatDelay != 0.0) {
+			this.startRepeatTimer(this.increment);
+			this.stage.addEventListener(TouchEvent.TOUCH_END, baseScrollBar_repeatTimer_stage_touchEndHandler, false, 0, true);
+		}
+	}
+
+	private function baseScrollBar_repeatTimer_stage_mouseUpHandler(event:MouseEvent):Void {
+		var stage = cast(event.currentTarget, Stage);
+		stage.removeEventListener(MouseEvent.MOUSE_UP, baseScrollBar_repeatTimer_stage_mouseUpHandler);
+		this.cleanupRepeatTimer();
+	}
+
+	private function baseScrollBar_repeatTimer_stage_touchEndHandler(event:TouchEvent):Void {
+		var stage = cast(event.currentTarget, Stage);
+		stage.removeEventListener(TouchEvent.TOUCH_END, baseScrollBar_repeatTimer_stage_touchEndHandler);
+		this.cleanupRepeatTimer();
+	}
+
+	private function baseScrollBar_repeatTimer_timerHandler(event:TimerEvent):Void {
+		if (this._repeatTimer.currentCount < 5) {
+			return;
+		}
+		this._currentRepeatAction();
 	}
 }
