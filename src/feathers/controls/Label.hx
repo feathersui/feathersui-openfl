@@ -25,6 +25,8 @@ import openfl.display.DisplayObject;
 import openfl.display.InteractiveObject;
 import openfl.events.Event;
 import openfl.events.FocusEvent;
+import openfl.text.AntiAliasType;
+import openfl.text.GridFitType;
 import openfl.text.TextField;
 #if (openfl >= "9.2.0")
 import openfl.text.StyleSheet;
@@ -281,6 +283,43 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 	**/
 	@:style
 	public var embedFonts:Bool = false;
+
+	/**
+		Determines the type of anti-aliasing used for embedded fonts.
+
+		In the following example, the label uses advanced anti-aliasing:
+
+		```haxe
+		label.embedFonts = true;
+		label.antiAliasType = ADVANCED;
+		```
+
+		@see `Label.embedFonts`
+		@see `Label.gridFitType`
+
+		@since 1.4.0
+	**/
+	@:style
+	public var antiAliasType:AntiAliasType = NORMAL;
+
+	/**
+		Determines the type of anti-aliasing used for embedded fonts.
+
+		In the following example, the label uses sub-pixel grid fitting:
+
+		```haxe
+		label.embedFonts = true;
+		label.antiAliasType = ADVANCED;
+		label.gridFitType = SUBPIXEL;
+		```
+
+		@see `Label.antiAliasType`
+		@see `Label.embedFonts`
+
+		@since 1.4.0
+	**/
+	@:style
+	public var gridFitType:GridFitType = PIXEL;
 
 	private var _selectable:Bool = false;
 
@@ -712,6 +751,14 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 		}
 		if (this.textField.embedFonts != this.embedFonts) {
 			this.textField.embedFonts = this.embedFonts;
+			this._updatedTextStyles = true;
+		}
+		if (this.textField.antiAliasType != this.antiAliasType) {
+			this.textField.antiAliasType = this.antiAliasType;
+			this._updatedTextStyles = true;
+		}
+		if (this.textField.gridFitType != this.gridFitType) {
+			this.textField.gridFitType = this.gridFitType;
 			this._updatedTextStyles = true;
 		}
 		#if (openfl >= "9.2.0" || flash)

@@ -527,6 +527,14 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 			this.secondaryTextField.embedFonts = this.embedFonts;
 			this._updatedSecondaryTextStyles = true;
 		}
+		if (this.secondaryTextField.antiAliasType != this.antiAliasType) {
+			this.secondaryTextField.antiAliasType = this.antiAliasType;
+			this._updatedSecondaryTextStyles = true;
+		}
+		if (this.secondaryTextField.gridFitType != this.gridFitType) {
+			this.secondaryTextField.gridFitType = this.gridFitType;
+			this._updatedSecondaryTextStyles = true;
+		}
 		var textFormat = this.getCurrentSecondaryTextFormat();
 		var simpleTextFormat = textFormat != null ? textFormat.toSimpleTextFormat() : null;
 		if (simpleTextFormat == this._previousSecondarySimpleTextFormat) {

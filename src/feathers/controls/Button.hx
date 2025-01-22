@@ -8,7 +8,6 @@
 
 package feathers.controls;
 
-import feathers.layout.ILayoutObject;
 import feathers.core.IFocusObject;
 import feathers.core.IHTMLTextControl;
 import feathers.core.IMeasureObject;
@@ -18,6 +17,7 @@ import feathers.core.IUIControl;
 import feathers.core.IValidating;
 import feathers.events.TriggerEvent;
 import feathers.layout.HorizontalAlign;
+import feathers.layout.ILayoutObject;
 import feathers.layout.Measurements;
 import feathers.layout.RelativePosition;
 import feathers.layout.VerticalAlign;
@@ -29,6 +29,8 @@ import openfl.events.Event;
 import openfl.events.FocusEvent;
 import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
+import openfl.text.AntiAliasType;
+import openfl.text.GridFitType;
 import openfl.text.TextField;
 import openfl.ui.Keyboard;
 #if (openfl >= "9.2.0")
@@ -323,6 +325,43 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 	**/
 	@:style
 	public var embedFonts:Bool = false;
+
+	/**
+		Determines the type of anti-aliasing used for embedded fonts.
+
+		In the following example, the button uses advanced anti-aliasing:
+
+		```haxe
+		button.embedFonts = true;
+		button.antiAliasType = ADVANCED;
+		```
+
+		@see `Button.embedFonts`
+		@see `Button.gridFitType`
+
+		@since 1.4.0
+	**/
+	@:style
+	public var antiAliasType:AntiAliasType = NORMAL;
+
+	/**
+		Determines the type of anti-aliasing used for embedded fonts.
+
+		In the following example, the button uses sub-pixel grid fitting:
+
+		```haxe
+		button.embedFonts = true;
+		button.antiAliasType = ADVANCED;
+		button.gridFitType = SUBPIXEL;
+		```
+
+		@see `Button.antiAliasType`
+		@see `Button.embedFonts`
+
+		@since 1.4.0
+	**/
+	@:style
+	public var gridFitType:GridFitType = PIXEL;
 
 	/**
 		Determines if the text is displayed on a single line, or if it wraps.
@@ -1053,6 +1092,14 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 		}
 		if (this.textField.embedFonts != this.embedFonts) {
 			this.textField.embedFonts = this.embedFonts;
+			this._updatedTextStyles = true;
+		}
+		if (this.textField.antiAliasType != this.antiAliasType) {
+			this.textField.antiAliasType = this.antiAliasType;
+			this._updatedTextStyles = true;
+		}
+		if (this.textField.gridFitType != this.gridFitType) {
+			this.textField.gridFitType = this.gridFitType;
 			this._updatedTextStyles = true;
 		}
 		#if (openfl >= "9.2.0" || flash)

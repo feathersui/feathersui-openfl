@@ -17,6 +17,8 @@ import openfl.display.InteractiveObject;
 import openfl.errors.ArgumentError;
 import openfl.events.Event;
 import openfl.events.FocusEvent;
+import openfl.text.AntiAliasType;
+import openfl.text.GridFitType;
 import openfl.text.TextField;
 import openfl.text.TextFieldType;
 import openfl.text.TextFormat;
@@ -334,6 +336,51 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 		this._embedFonts = value;
 		this.setInvalid(STYLES);
 		return this._embedFonts;
+	}
+
+	private var _antiAliasType:AntiAliasType = NORMAL;
+
+	/**
+		Determines the anti-aliasing type used for embedded fonts.
+
+		@since 1.4.0
+	**/
+	public var antiAliasType(get, set):AntiAliasType;
+
+	private function get_antiAliasType():AntiAliasType {
+		return this._antiAliasType;
+	}
+
+	private function set_antiAliasType(value:AntiAliasType):AntiAliasType {
+		if (this._antiAliasType == value) {
+			return this._antiAliasType;
+		}
+		this._antiAliasType = value;
+		this.setInvalid(STYLES);
+		return this._antiAliasType;
+	}
+
+	private var _gridFitType:GridFitType = PIXEL;
+
+	/**
+		Determines the grid fitting used for embedded fonts with advanced
+		anti-aliasing.
+
+		@since 1.4.0
+	**/
+	public var gridFitType(get, set):GridFitType;
+
+	private function get_gridFitType():GridFitType {
+		return this._gridFitType;
+	}
+
+	private function set_gridFitType(value:GridFitType):GridFitType {
+		if (this._gridFitType == value) {
+			return this._gridFitType;
+		}
+		this._gridFitType = value;
+		this.setInvalid(STYLES);
+		return this._gridFitType;
 	}
 
 	private var _paddingTop:Float = 0.0;
@@ -846,6 +893,14 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 	private function refreshTextStyles():Void {
 		if (this._textField.embedFonts != this._embedFonts) {
 			this._textField.embedFonts = this._embedFonts;
+			this._updatedTextStyles = true;
+		}
+		if (this._textField.antiAliasType != this._antiAliasType) {
+			this._textField.antiAliasType = this._antiAliasType;
+			this._updatedTextStyles = true;
+		}
+		if (this._textField.gridFitType != this._gridFitType) {
+			this._textField.gridFitType = this._gridFitType;
 			this._updatedTextStyles = true;
 		}
 		if (this._textFormat != this._previousTextFormat) {

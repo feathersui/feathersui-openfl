@@ -25,6 +25,8 @@ import openfl.display.InteractiveObject;
 import openfl.events.Event;
 import openfl.events.FocusEvent;
 import openfl.events.KeyboardEvent;
+import openfl.text.AntiAliasType;
+import openfl.text.GridFitType;
 import openfl.text.TextField;
 
 /**
@@ -561,6 +563,43 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 	public var embedFonts:Bool = false;
 
 	/**
+		Determines the type of anti-aliasing used for embedded fonts.
+
+		In the following example, the text area uses advanced anti-aliasing:
+
+		```haxe
+		textArea.embedFonts = true;
+		textArea.antiAliasType = ADVANCED;
+		```
+
+		@see `TextArea.embedFonts`
+		@see `TextArea.gridFitType`
+
+		@since 1.4.0
+	**/
+	@:style
+	public var antiAliasType:AntiAliasType = NORMAL;
+
+	/**
+		Determines the type of anti-aliasing used for embedded fonts.
+
+		In the following example, the text area uses sub-pixel grid fitting:
+
+		```haxe
+		textArea.embedFonts = true;
+		textArea.antiAliasType = ADVANCED;
+		textArea.gridFitType = SUBPIXEL;
+		```
+
+		@see `TextArea.antiAliasType`
+		@see `TextArea.embedFonts`
+
+		@since 1.4.0
+	**/
+	@:style
+	public var gridFitType:GridFitType = PIXEL;
+
+	/**
 		Determines if the text will wrap when reaching the right edge, or if
 		horizontal scrolling will be required.
 
@@ -981,6 +1020,8 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		if (stylesInvalid) {
 			this.refreshTextStyles();
 			this.textFieldViewPort.embedFonts = this.embedFonts;
+			this.textFieldViewPort.antiAliasType = this.antiAliasType;
+			this.textFieldViewPort.gridFitType = this.gridFitType;
 			this.textFieldViewPort.wordWrap = this.wordWrap;
 			this.textFieldViewPort.paddingTop = this.textPaddingTop;
 			this.textFieldViewPort.paddingRight = this.textPaddingRight;
@@ -1114,6 +1155,14 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		}
 		if (this.promptTextField.embedFonts != this.embedFonts) {
 			this.promptTextField.embedFonts = this.embedFonts;
+			this._updatedPromptStyles = true;
+		}
+		if (this.promptTextField.antiAliasType != this.antiAliasType) {
+			this.promptTextField.antiAliasType = this.antiAliasType;
+			this._updatedPromptStyles = true;
+		}
+		if (this.promptTextField.gridFitType != this.gridFitType) {
+			this.promptTextField.gridFitType = this.gridFitType;
 			this._updatedPromptStyles = true;
 		}
 		var textFormat = this.getCurrentPromptTextFormat();

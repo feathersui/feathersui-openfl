@@ -20,6 +20,8 @@ import feathers.text.TextFormat;
 import feathers.utils.MeasurementsUtil;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
+import openfl.text.AntiAliasType;
+import openfl.text.GridFitType;
 import openfl.text.TextField;
 #if (openfl >= "9.2.0")
 import openfl.text.StyleSheet;
@@ -221,6 +223,43 @@ class Header extends FeathersControl implements ITextControl {
 	**/
 	@:style
 	public var embedFonts:Bool = false;
+
+	/**
+		Determines the type of anti-aliasing used for embedded fonts.
+
+		In the following example, the header uses advanced anti-aliasing:
+
+		```haxe
+		header.embedFonts = true;
+		header.antiAliasType = ADVANCED;
+		```
+
+		@see `Header.embedFonts`
+		@see `Header.gridFitType`
+
+		@since 1.4.0
+	**/
+	@:style
+	public var antiAliasType:AntiAliasType = NORMAL;
+
+	/**
+		Determines the type of anti-aliasing used for embedded fonts.
+
+		In the following example, the header uses sub-pixel grid fitting:
+
+		```haxe
+		header.embedFonts = true;
+		header.antiAliasType = ADVANCED;
+		header.gridFitType = SUBPIXEL;
+		```
+
+		@see `Header.antiAliasType`
+		@see `Header.embedFonts`
+
+		@since 1.4.0
+	**/
+	@:style
+	public var gridFitType:GridFitType = PIXEL;
 
 	/**
 		The font styles used to render the header's text when the header is
@@ -658,6 +697,14 @@ class Header extends FeathersControl implements ITextControl {
 	private function refreshTextStyles():Void {
 		if (this.textField.embedFonts != this.embedFonts) {
 			this.textField.embedFonts = this.embedFonts;
+			this._updatedTextStyles = true;
+		}
+		if (this.textField.antiAliasType != this.antiAliasType) {
+			this.textField.antiAliasType = this.antiAliasType;
+			this._updatedTextStyles = true;
+		}
+		if (this.textField.gridFitType != this.gridFitType) {
+			this.textField.gridFitType = this.gridFitType;
 			this._updatedTextStyles = true;
 		}
 		#if (openfl >= "9.2.0" || flash)

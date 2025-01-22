@@ -15,7 +15,6 @@ import feathers.core.IValidating;
 import feathers.events.FeathersEvent;
 import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
-import feathers.text.TextFormat.AbstractTextFormat;
 import feathers.text.TextFormat;
 import feathers.utils.ExclusivePointer;
 import motion.Actuate;
@@ -28,6 +27,8 @@ import openfl.events.Event;
 import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
 import openfl.events.TouchEvent;
+import openfl.text.AntiAliasType;
+import openfl.text.GridFitType;
 import openfl.text.TextField;
 import openfl.ui.Keyboard;
 #if air
@@ -277,6 +278,43 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 	**/
 	@:style
 	public var embedFonts:Bool = false;
+
+	/**
+		Determines the type of anti-aliasing used for embedded fonts.
+
+		In the following example, the toggle switch uses advanced anti-aliasing:
+
+		```haxe
+		toggleSwitch.embedFonts = true;
+		toggleSwitch.antiAliasType = ADVANCED;
+		```
+
+		@see `ToggleSwitch.embedFonts`
+		@see `ToggleSwitch.gridFitType`
+
+		@since 1.4.0
+	**/
+	@:style
+	public var antiAliasType:AntiAliasType = NORMAL;
+
+	/**
+		Determines the type of anti-aliasing used for embedded fonts.
+
+		In the following example, the toggle switch uses sub-pixel grid fitting:
+
+		```haxe
+		toggleSwitch.embedFonts = true;
+		toggleSwitch.antiAliasType = ADVANCED;
+		toggleSwitch.gridFitType = SUBPIXEL;
+		```
+
+		@see `ToggleSwitch.antiAliasType`
+		@see `ToggleSwitch.embedFonts`
+
+		@since 1.4.0
+	**/
+	@:style
+	public var gridFitType:GridFitType = PIXEL;
 
 	private var _currentThumbSkin:DisplayObject = null;
 	private var _thumbSkinMeasurements:Measurements = null;
@@ -636,6 +674,14 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 				this.offTextField.embedFonts = this.embedFonts;
 				this._updatedOffTextStyles = true;
 			}
+			if (this.offTextField.antiAliasType != this.antiAliasType) {
+				this.offTextField.antiAliasType = this.antiAliasType;
+				this._updatedOffTextStyles = true;
+			}
+			if (this.offTextField.gridFitType != this.gridFitType) {
+				this.offTextField.gridFitType = this.gridFitType;
+				this._updatedOffTextStyles = true;
+			}
 			if (simpleTextFormat != this._previousOffSimpleTextFormat) {
 				if (this._previousOffTextFormat != null) {
 					this._previousOffTextFormat.removeEventListener(Event.CHANGE, toggleSwitch_offTextFormat_changeHandler);
@@ -658,6 +704,14 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 		if (this.onTextField != null) {
 			if (this.onTextField.embedFonts != this.embedFonts) {
 				this.onTextField.embedFonts = this.embedFonts;
+				this._updatedOnTextStyles = true;
+			}
+			if (this.onTextField.antiAliasType != this.antiAliasType) {
+				this.onTextField.antiAliasType = this.antiAliasType;
+				this._updatedOnTextStyles = true;
+			}
+			if (this.onTextField.gridFitType != this.gridFitType) {
+				this.onTextField.gridFitType = this.gridFitType;
 				this._updatedOnTextStyles = true;
 			}
 			if (simpleTextFormat != this._previousOnSimpleTextFormat) {

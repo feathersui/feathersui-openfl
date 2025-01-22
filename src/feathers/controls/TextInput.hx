@@ -30,6 +30,8 @@ import openfl.display.DisplayObject;
 import openfl.display.InteractiveObject;
 import openfl.events.Event;
 import openfl.events.FocusEvent;
+import openfl.text.AntiAliasType;
+import openfl.text.GridFitType;
 import openfl.text.TextField;
 import openfl.text.TextFieldType;
 
@@ -669,6 +671,43 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	**/
 	@:style
 	public var embedFonts:Bool = false;
+
+	/**
+		Determines the type of anti-aliasing used for embedded fonts.
+
+		In the following example, the text input uses advanced anti-aliasing:
+
+		```haxe
+		textInput.embedFonts = true;
+		textInput.antiAliasType = ADVANCED;
+		```
+
+		@see `TextInput.embedFonts`
+		@see `TextInput.gridFitType`
+
+		@since 1.4.0
+	**/
+	@:style
+	public var antiAliasType:AntiAliasType = NORMAL;
+
+	/**
+		Determines the type of anti-aliasing used for embedded fonts.
+
+		In the following example, the text input uses sub-pixel grid fitting:
+
+		```haxe
+		textInput.embedFonts = true;
+		textInput.antiAliasType = ADVANCED;
+		textInput.gridFitType = SUBPIXEL;
+		```
+
+		@see `TextInput.antiAliasType`
+		@see `TextInput.embedFonts`
+
+		@since 1.4.0
+	**/
+	@:style
+	public var gridFitType:GridFitType = PIXEL;
 
 	private var _stateToTextFormat:Map<TextInputState, AbstractTextFormat> = new Map();
 
@@ -1596,6 +1635,14 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			this.textField.embedFonts = this.embedFonts;
 			this._updatedTextStyles = true;
 		}
+		if (this.textField.antiAliasType != this.antiAliasType) {
+			this.textField.antiAliasType = this.antiAliasType;
+			this._updatedTextStyles = true;
+		}
+		if (this.textField.gridFitType != this.gridFitType) {
+			this.textField.gridFitType = this.gridFitType;
+			this._updatedTextStyles = true;
+		}
 		if (this.textField.displayAsPassword != this._displayAsPassword) {
 			this.textField.displayAsPassword = this._displayAsPassword;
 			this._updatedTextStyles = true;
@@ -1666,6 +1713,14 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 		}
 		if (this.promptTextField.embedFonts != this.embedFonts) {
 			this.promptTextField.embedFonts = this.embedFonts;
+			this._updatedPromptStyles = true;
+		}
+		if (this.promptTextField.antiAliasType != this.antiAliasType) {
+			this.promptTextField.antiAliasType = this.antiAliasType;
+			this._updatedPromptStyles = true;
+		}
+		if (this.promptTextField.gridFitType != this.gridFitType) {
+			this.promptTextField.gridFitType = this.gridFitType;
 			this._updatedPromptStyles = true;
 		}
 		var textFormat = this.getCurrentPromptTextFormat();

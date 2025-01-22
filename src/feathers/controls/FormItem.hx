@@ -8,7 +8,6 @@
 
 package feathers.controls;
 
-import feathers.events.FeathersEvent;
 import feathers.core.FeathersControl;
 import feathers.core.IFocusManagerAware;
 import feathers.core.IFocusObject;
@@ -16,6 +15,7 @@ import feathers.core.IMeasureObject;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
+import feathers.events.FeathersEvent;
 import feathers.layout.HorizontalAlign;
 import feathers.layout.Measurements;
 import feathers.layout.RelativePosition;
@@ -27,6 +27,8 @@ import openfl.display.DisplayObject;
 import openfl.errors.ArgumentError;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
+import openfl.text.AntiAliasType;
+import openfl.text.GridFitType;
 import openfl.text.TextField;
 #if (openfl >= "9.2.0")
 import openfl.text.StyleSheet;
@@ -420,6 +422,43 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 	**/
 	@:style
 	public var embedFonts:Bool = false;
+
+	/**
+		Determines the type of anti-aliasing used for embedded fonts.
+
+		In the following example, the form item uses advanced anti-aliasing:
+
+		```haxe
+		formItem.embedFonts = true;
+		formItem.antiAliasType = ADVANCED;
+		```
+
+		@see `FormItem.embedFonts`
+		@see `FormItem.gridFitType`
+
+		@since 1.4.0
+	**/
+	@:style
+	public var antiAliasType:AntiAliasType = NORMAL;
+
+	/**
+		Determines the type of anti-aliasing used for embedded fonts.
+
+		In the following example, the form item uses sub-pixel grid fitting:
+
+		```haxe
+		formItem.embedFonts = true;
+		formItem.antiAliasType = ADVANCED;
+		formItem.gridFitType = SUBPIXEL;
+		```
+
+		@see `FormItem.antiAliasType`
+		@see `FormItem.embedFonts`
+
+		@since 1.4.0
+	**/
+	@:style
+	public var gridFitType:GridFitType = PIXEL;
 
 	/**
 		The minimum space, in pixels, between the form item's top edge and the
@@ -983,6 +1022,14 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 		}
 		if (this.textField.embedFonts != this.embedFonts) {
 			this.textField.embedFonts = this.embedFonts;
+			this._updatedTextStyles = true;
+		}
+		if (this.textField.antiAliasType != this.antiAliasType) {
+			this.textField.antiAliasType = this.antiAliasType;
+			this._updatedTextStyles = true;
+		}
+		if (this.textField.gridFitType != this.gridFitType) {
+			this.textField.gridFitType = this.gridFitType;
 			this._updatedTextStyles = true;
 		}
 		#if (openfl >= "9.2.0" || flash)
