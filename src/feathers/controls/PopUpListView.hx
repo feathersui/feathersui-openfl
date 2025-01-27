@@ -130,6 +130,14 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 	**/
 	public static final CHILD_VARIANT_LIST_VIEW = "popUpListView_listView";
 
+	private static function defaultItemToText(data:Dynamic):String {
+		return Std.string(data);
+	}
+
+	private static function defaultItemToEnabled(data:Dynamic):Bool {
+		return true;
+	}
+
 	private static final defaultButtonFactory = DisplayObjectFactory.withClass(Button);
 
 	private static final defaultListViewFactory = DisplayObjectFactory.withClass(ListView);
@@ -381,6 +389,8 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		return this._itemRendererRecycler;
 	}
 
+	private var _itemToText:(Dynamic) -> String = defaultItemToText;
+
 	/**
 		Converts an item to text to display within the pop-up `ListView`, or
 		within the `Button`, if the item is selected. By default, the
@@ -404,9 +414,25 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 		@since 1.0.0
 	**/
-	public dynamic function itemToText(data:Dynamic):String {
-		return Std.string(data);
+	public var itemToText(get, set):(Dynamic) -> String;
+
+	private function get_itemToText():(Dynamic) -> String {
+		return this._itemToText;
 	}
+
+	private function set_itemToText(value:(Dynamic) -> String):(Dynamic) -> String {
+		if (value == null) {
+			value = defaultItemToText;
+		}
+		if (this._itemToText == value || Reflect.compareMethods(this._itemToText, value)) {
+			return this._itemToText;
+		}
+		this._itemToText = value;
+		this.setInvalid(DATA);
+		return this._itemToText;
+	}
+
+	private var _itemToEnabled:(Dynamic) -> Bool = defaultItemToEnabled;
 
 	/**
 		Determines if an item should be enabled or disabled. By default, all
@@ -431,8 +457,22 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 
 		@since 1.2.0
 	**/
-	public dynamic function itemToEnabled(data:Dynamic):Bool {
-		return true;
+	public var itemToEnabled(get, set):(Dynamic) -> Bool;
+
+	private function get_itemToEnabled():(Dynamic) -> Bool {
+		return this._itemToEnabled;
+	}
+
+	private function set_itemToEnabled(value:(Dynamic) -> Bool):(Dynamic) -> Bool {
+		if (value == null) {
+			value = defaultItemToEnabled;
+		}
+		if (this._itemToEnabled == value || Reflect.compareMethods(this._itemToEnabled, value)) {
+			return this._itemToEnabled;
+		}
+		this._itemToEnabled = value;
+		this.setInvalid(DATA);
+		return this._itemToEnabled;
 	}
 
 	/**

@@ -194,6 +194,18 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 	private static final RESET_ITEM_STATE = new GroupListViewItemState();
 
+	private static function defaultItemToText(data:Dynamic):String {
+		return Std.string(data);
+	}
+
+	private static function defaultItemToEnabled(data:Dynamic):Bool {
+		return true;
+	}
+
+	private static function defaultItemToHeaderText(data:Dynamic):String {
+		return Std.string(data);
+	}
+
 	private static function defaultUpdateItemRenderer(itemRenderer:DisplayObject, state:GroupListViewItemState):Void {
 		if ((itemRenderer is ITextControl)) {
 			var textControl:ITextControl = cast itemRenderer;
@@ -840,6 +852,8 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	private var _ignoreSelectionChange = false;
 	private var _ignoreLayoutChanges = false;
 
+	private var _itemToText:(Dynamic) -> String = defaultItemToText;
+
 	/**
 		Converts an item to text to display within group list view. By default,
 		the `toString()` method is called to convert an item to text. This
@@ -862,9 +876,25 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		@since 1.0.0
 	**/
-	public dynamic function itemToText(data:Dynamic):String {
-		return Std.string(data);
+	public var itemToText(get, set):(Dynamic) -> String;
+
+	private function get_itemToText():(Dynamic) -> String {
+		return this._itemToText;
 	}
+
+	private function set_itemToText(value:(Dynamic) -> String):(Dynamic) -> String {
+		if (value == null) {
+			value = defaultItemToText;
+		}
+		if (this._itemToText == value || Reflect.compareMethods(this._itemToText, value)) {
+			return this._itemToText;
+		}
+		this._itemToText = value;
+		this.setInvalid(DATA);
+		return this._itemToText;
+	}
+
+	private var _itemToEnabled:(Dynamic) -> Bool = defaultItemToEnabled;
 
 	/**
 		Determines if an item should be enabled or disabled. By default, all
@@ -889,9 +919,25 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		@since 1.2.0
 	**/
-	public dynamic function itemToEnabled(data:Dynamic):Bool {
-		return true;
+	public var itemToEnabled(get, set):(Dynamic) -> Bool;
+
+	private function get_itemToEnabled():(Dynamic) -> Bool {
+		return this._itemToEnabled;
 	}
+
+	private function set_itemToEnabled(value:(Dynamic) -> Bool):(Dynamic) -> Bool {
+		if (value == null) {
+			value = defaultItemToEnabled;
+		}
+		if (this._itemToEnabled == value || Reflect.compareMethods(this._itemToEnabled, value)) {
+			return this._itemToEnabled;
+		}
+		this._itemToEnabled = value;
+		this.setInvalid(DATA);
+		return this._itemToEnabled;
+	}
+
+	private var _itemToHeaderText:(Dynamic) -> String = defaultItemToHeaderText;
 
 	/**
 		Converts an group to text to display within a group list view header. By
@@ -915,8 +961,22 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		@since 1.0.0
 	**/
-	public dynamic function itemToHeaderText(data:Dynamic):String {
-		return Std.string(data);
+	public var itemToHeaderText(get, set):(Dynamic) -> String;
+
+	private function get_itemToHeaderText():(Dynamic) -> String {
+		return this._itemToHeaderText;
+	}
+
+	private function set_itemToHeaderText(value:(Dynamic) -> String):(Dynamic) -> String {
+		if (value == null) {
+			value = defaultItemToHeaderText;
+		}
+		if (this._itemToHeaderText == value || Reflect.compareMethods(this._itemToHeaderText, value)) {
+			return this._itemToHeaderText;
+		}
+		this._itemToHeaderText = value;
+		this.setInvalid(DATA);
+		return this._itemToHeaderText;
 	}
 
 	/**

@@ -199,6 +199,14 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private static final RESET_ITEM_STATE = new ListViewItemState();
 
+	private static function defaultItemToText(data:Dynamic):String {
+		return Std.string(data);
+	}
+
+	private static function defaultItemToEnabled(data:Dynamic):Bool {
+		return true;
+	}
+
 	private static function defaultUpdateItemRenderer(itemRenderer:DisplayObject, state:ListViewItemState):Void {
 		if ((itemRenderer is ITextControl)) {
 			var textControl:ITextControl = cast itemRenderer;
@@ -1047,6 +1055,8 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	**/
 	public var edgeAutoScrollDistance:Float = 8.0;
 
+	private var _itemToText:(Dynamic) -> String = defaultItemToText;
+
 	/**
 		Converts an item to text to display within list view. By default, the
 		`toString()` method is called to convert an item to text. This method
@@ -1069,9 +1079,25 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
-	public dynamic function itemToText(data:Dynamic):String {
-		return Std.string(data);
+	public var itemToText(get, set):(Dynamic) -> String;
+
+	private function get_itemToText():(Dynamic) -> String {
+		return this._itemToText;
 	}
+
+	private function set_itemToText(value:(Dynamic) -> String):(Dynamic) -> String {
+		if (value == null) {
+			value = defaultItemToText;
+		}
+		if (this._itemToText == value || Reflect.compareMethods(this._itemToText, value)) {
+			return this._itemToText;
+		}
+		this._itemToText = value;
+		this.setInvalid(DATA);
+		return this._itemToText;
+	}
+
+	private var _itemToEnabled:(Dynamic) -> Bool = defaultItemToEnabled;
 
 	/**
 		Determines if an item should be enabled or disabled. By default, all
@@ -1096,8 +1122,22 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.2.0
 	**/
-	public dynamic function itemToEnabled(data:Dynamic):Bool {
-		return true;
+	public var itemToEnabled(get, set):(Dynamic) -> Bool;
+
+	private function get_itemToEnabled():(Dynamic) -> Bool {
+		return this._itemToEnabled;
+	}
+
+	private function set_itemToEnabled(value:(Dynamic) -> Bool):(Dynamic) -> Bool {
+		if (value == null) {
+			value = defaultItemToEnabled;
+		}
+		if (this._itemToEnabled == value || Reflect.compareMethods(this._itemToEnabled, value)) {
+			return this._itemToEnabled;
+		}
+		this._itemToEnabled = value;
+		this.setInvalid(DATA);
+		return this._itemToEnabled;
 	}
 
 	/**
