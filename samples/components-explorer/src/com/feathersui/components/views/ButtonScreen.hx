@@ -1,5 +1,6 @@
 package com.feathersui.components.views;
 
+import feathers.controls.AssetLoader;
 import feathers.controls.Button;
 import feathers.controls.Header;
 import feathers.controls.Panel;
@@ -31,9 +32,11 @@ class ButtonScreen extends Panel {
 		this.button.addEventListener(TriggerEvent.TRIGGER, button_triggerHandler);
 		this.addChild(this.button);
 
+		var icon = new AssetLoader("favicon");
+		icon.sourceScale = 0.5;
 		this.iconButton = new Button();
 		this.iconButton.text = "Button with Icon";
-		this.iconButton.icon = new Bitmap(Assets.getBitmapData("favicon"));
+		this.iconButton.icon = icon;
 		this.addChild(this.iconButton);
 
 		this.toggleButton = new ToggleButton();
