@@ -89,7 +89,12 @@ class PageItem {
 
 	private var internalID:String;
 
-	private var viewFactory:AbstractDisplayObjectFactory<Dynamic, DisplayObject>;
+	/**
+		The factory used to create the view.
+
+		@since 1.4.0
+	**/
+	public var viewFactory:AbstractDisplayObjectFactory<Dynamic, DisplayObject>;
 
 	// called internally by PageNavigator to get this item's view
 	private function getView(navigator:PageNavigator):DisplayObject {

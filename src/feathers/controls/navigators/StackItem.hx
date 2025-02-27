@@ -127,7 +127,13 @@ class StackItem {
 	**/
 	public var id:String;
 
-	private var viewFactory:AbstractDisplayObjectFactory<Dynamic, DisplayObject>;
+	/**
+		The factory used to create the view.
+
+		@since 1.4.0
+	**/
+	public var viewFactory:AbstractDisplayObjectFactory<Dynamic, DisplayObject>;
+
 	private var actions:Map<String, StackAction>;
 	private var returnHandlers:Map<String, (Dynamic, Dynamic) -> Void>;
 

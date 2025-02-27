@@ -152,7 +152,13 @@ class Route {
 		return null;
 	}
 
-	private var viewFactory:AbstractDisplayObjectFactory<Dynamic, DisplayObject>;
+	/**
+		The factory used to create the view.
+
+		@since 1.4.0
+	**/
+	public var viewFactory:AbstractDisplayObjectFactory<Dynamic, DisplayObject>;
+
 	private var redirectTo:String;
 	private var actions:Map<String, RouterAction>;
 

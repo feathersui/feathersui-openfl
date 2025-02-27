@@ -101,7 +101,12 @@ class TabItem {
 	**/
 	public var text:String;
 
-	private var viewFactory:AbstractDisplayObjectFactory<Dynamic, DisplayObject>;
+	/**
+		The factory used to create the view.
+
+		@since 1.4.0
+	**/
+	public var viewFactory:AbstractDisplayObjectFactory<Dynamic, DisplayObject>;
 
 	// called internally by TabNavigator to get this item's view
 	private function getView(navigator:TabNavigator):DisplayObject {
