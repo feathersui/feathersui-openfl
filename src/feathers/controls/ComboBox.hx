@@ -836,6 +836,41 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		return this._pendingSelectionActiveIndex;
 	}
 
+	private var _errorString:String = null;
+
+	/**
+		Error text to display in a `TextCallout` when the combo box's text input
+		has focus. When this value is not `null` the text input's `currentState`
+		is changed to `TextInputState.ERROR`.
+
+		An empty string will change the background, but no `TextCallout` will
+		appear on focus.
+
+		To clear an error, the `errorString` property must be set to `null`.
+
+		The following example displays an error string:
+
+		```haxe
+		comboBox.errorString = "Something is wrong";
+		```
+
+		@since 1.4.0
+	**/
+	public var errorString(get, set):String;
+
+	private function get_errorString():String {
+		return this._errorString;
+	}
+
+	private function set_errorString(value:String):String {
+		if (this._errorString == value) {
+			return this._errorString;
+		}
+		this._errorString = value;
+		this.setInvalid(DATA);
+		return this._errorString;
+	}
+
 	/**
 		Indicates if the pop-up list is open or closed.
 
@@ -1172,6 +1207,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		} else {
 			this.textInput.text = "";
 		}
+		this.textInput.errorString = this._errorString;
 		this._ignoreTextInputChange = oldIgnoreTextInputChange;
 	}
 
