@@ -788,6 +788,54 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		return this._listViewFactory;
 	}
 
+	private var _pendingSelectionAnchorIndex:Int = -1;
+
+	/**
+		The character position of the anchor part of the selection. If the
+		selection is changed with the arrow keys, the active index changes and
+		the anchor index stays fixed. If both the active index and the anchor
+		index are equal, then no text is selected and both values represent the
+		position of the caret.
+
+		@see `ComboBox.selectionActiveIndex`
+		@see `ComboBox.selectRange()`
+		@see `ComboBox.selectAll()`
+
+		@since 1.4.0
+	**/
+	public var selectionAnchorIndex(get, never):Int;
+
+	private function get_selectionAnchorIndex():Int {
+		if (this.textInput != null && this._pendingSelectionAnchorIndex == -1) {
+			return this.textInput.selectionAnchorIndex;
+		}
+		return this._pendingSelectionAnchorIndex;
+	}
+
+	private var _pendingSelectionActiveIndex:Int = -1;
+
+	/**
+		The character position of the active part of the selection. If the
+		selection is changed with the arrow keys, the active index changes and
+		the anchor index stays fixed. If both the active index and the anchor
+		index are equal, then no text is selected and both values represent the
+		position of the caret.
+
+		@see `ComboBox.selectionAnchorIndex`
+		@see `ComboBox.selectRange()`
+		@see `ComboBox.selectAll()`
+
+		@since 1.4.0
+	**/
+	public var selectionActiveIndex(get, never):Int;
+
+	private function get_selectionActiveIndex():Int {
+		if (this.textInput != null && this._pendingSelectionActiveIndex == -1) {
+			return this.textInput.selectionActiveIndex;
+		}
+		return this._pendingSelectionActiveIndex;
+	}
+
 	/**
 		Indicates if the pop-up list is open or closed.
 
@@ -892,6 +940,42 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		this.popUpAdapter.close();
 	}
 
+	/**
+		Selects the specified range of characters in the combo box's text input.
+
+		The following example selects the first three characters:
+
+		```haxe
+		comboBox.selectRange(0, 3);
+		```
+
+		@see `ComboBox.selectAll()`
+		@see `ComboBox.selectionAnchorIndex`
+		@see `ComboBox.selectionActiveIndex`
+
+		@since 1.4.0
+	**/
+	public function selectRange(anchorIndex:Int, activeIndex:Int):Void {
+		// we can't call textInput.setSelection() directly here because the
+		// TextInput may not have been created or updated yet
+		this._pendingSelectionAnchorIndex = anchorIndex;
+		this._pendingSelectionActiveIndex = activeIndex;
+		this.setInvalid(SELECTION);
+	}
+
+	/**
+		Selects all of the text displayed by the combo box's text input.
+
+		@see `ComboBox.selectRange()`
+		@see `ComboBox.selectionAnchorIndex`
+		@see `ComboBox.selectionActiveIndex`
+
+		@since 1.4.0
+	**/
+	public function selectAll():Void {
+		this.selectRange(0, this.text.length);
+	}
+
 	override public function dispose():Void {
 		this.destroyButton();
 		this.destroyTextInput();
@@ -947,6 +1031,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		if (selectionInvalid || listViewFactoryInvalid || buttonFactoryInvalid || textInputFactoryInvalid) {
 			this.refreshSelection();
+			this.refreshTextInputSelection();
 		}
 
 		if (stateInvalid || listViewFactoryInvalid || buttonFactoryInvalid || textInputFactoryInvalid) {
@@ -1088,6 +1173,17 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			this.textInput.text = "";
 		}
 		this._ignoreTextInputChange = oldIgnoreTextInputChange;
+	}
+
+	private function refreshTextInputSelection():Void {
+		if (this._pendingSelectionActiveIndex == -1 && this._pendingSelectionAnchorIndex == -1) {
+			return;
+		}
+		var anchorIndex = this._pendingSelectionAnchorIndex;
+		var activeIndex = this._pendingSelectionActiveIndex;
+		this._pendingSelectionAnchorIndex = -1;
+		this._pendingSelectionActiveIndex = -1;
+		this.textInput.selectRange(anchorIndex, activeIndex);
 	}
 
 	private function refreshEnabled():Void {
