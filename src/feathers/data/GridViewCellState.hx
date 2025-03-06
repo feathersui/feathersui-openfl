@@ -91,11 +91,20 @@ class GridViewCellState {
 	public var text:String;
 
 	/**
-		Returns whether the item is enabled or not.
+		Returns whether the cell is enabled or not.
 
 		@see `feathers.core.IUIControl.enabled`
 
 		@since 1.0.0
 	**/
 	public var enabled:Bool = true;
+
+	/**
+		Returns the cell's recycler ID.
+
+		@see `feathers.controls.GridViewColumn.cellRendererRecyclerIDFunction`
+
+		@since 1.4.0
+	**/
+	public var recyclerID:String;
 }

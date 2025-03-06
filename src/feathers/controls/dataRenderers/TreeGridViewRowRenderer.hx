@@ -618,6 +618,20 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 					}
 				}
 			}
+			var recyclerMap = @:privateAccess column._recyclerMap;
+			if (recyclerMap != null) {
+				for (recycler in recyclerMap) {
+					if (recycler.update == null) {
+						if (recycler.update == null) {
+							recycler.update = defaultUpdateCellRenderer;
+							// don't replace reset if we didn't replace update too
+							if (recycler.reset == null) {
+								recycler.reset = defaultResetCellRenderer;
+							}
+						}
+					}
+				}
+			}
 		}
 
 		this.refreshInactiveCellRenderers(this._defaultStorage, false);
@@ -676,9 +690,14 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 			var column = this._columns.get(i);
 			var cellRenderer = this._columnToCellRenderer.get(column);
 			if (cellRenderer != null) {
-				var storage = this.cellRendererRecyclerToStorage(column.cellRendererRecycler);
 				var state = this._cellRendererToCellState.get(cellRenderer);
 				var changed = this.populateCurrentItemState(column, i, state, this._forceCellStateUpdate);
+				var oldRecyclerID = state.recyclerID;
+				var storage = this.cellStateToStorage(state);
+				if (storage.id != oldRecyclerID) {
+					this._unrenderedData.push(i);
+					continue;
+				}
 				if (changed) {
 					this.updateCellRenderer(cellRenderer, state, storage);
 				}
@@ -700,9 +719,27 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 		}
 	}
 
-	private function cellRendererRecyclerToStorage(recycler:DisplayObjectRecycler<Dynamic, TreeGridViewCellState, DisplayObject>):CellRendererStorage {
+	private function cellStateToStorage(state:TreeGridViewCellState):CellRendererStorage {
+		var column = state.column;
+		var recyclerID:String = null;
+		if (column.cellRendererRecyclerIDFunction != null) {
+			recyclerID = column.cellRendererRecyclerIDFunction(state);
+		}
+		var recycler = column.cellRendererRecycler;
+		if (recyclerID != null) {
+			var recyclerMap = @:privateAccess column._recyclerMap;
+			if (recyclerMap != null) {
+				recycler = recyclerMap.get(recyclerID);
+			}
+			if (recycler == null) {
+				throw new IllegalOperationError('Cell renderer recycler ID "${recyclerID}" is not registered.');
+			}
+		}
 		if (recycler == null) {
 			return this._defaultStorage;
+		}
+		if (recyclerID == null) {
+			recyclerID = "__treeGridView_recycler_" + @:privateAccess column.__columnID;
 		}
 		if (this._additionalStorage == null) {
 			this._additionalStorage = [];
@@ -713,7 +750,7 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 				return storage;
 			}
 		}
-		var storage = new CellRendererStorage(recycler);
+		var storage = new CellRendererStorage(recyclerID, recycler);
 		this._additionalStorage.push(storage);
 		return storage;
 	}
@@ -776,9 +813,8 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 	}
 
 	private function createCellRenderer(state:TreeGridViewCellState):DisplayObject {
-		var column = state.column;
 		var cellRenderer:DisplayObject = null;
-		var storage = this.cellRendererRecyclerToStorage(column.cellRendererRecycler);
+		var storage = this.cellStateToStorage(state);
 		if (storage.inactiveCellRenderers.length == 0) {
 			cellRenderer = storage.cellRendererRecycler.create();
 			if ((cellRenderer is IVariantStyleObject)) {
@@ -803,7 +839,6 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 		} else {
 			cellRenderer = storage.inactiveCellRenderers.shift();
 		}
-		var storage = this.cellRendererRecyclerToStorage(column.cellRendererRecycler);
 		this.updateCellRenderer(cellRenderer, state, storage);
 		if ((cellRenderer is ITriggerView)) {
 			// prefer TriggerEvent.TRIGGER
@@ -826,7 +861,7 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 			cellRenderer.addEventListener(Event.CLOSE, treeGridViewRowRenderer_cellRenderer_closeHandler);
 		}
 		this._cellRendererToCellState.set(cellRenderer, state);
-		this._columnToCellRenderer.set(column, cellRenderer);
+		this._columnToCellRenderer.set(state.column, cellRenderer);
 		storage.activeCellRenderers.push(cellRenderer);
 		return cellRenderer;
 	}
@@ -847,12 +882,12 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 			this.setInvalid(DATA);
 			return;
 		}
-		var storage = this.cellRendererRecyclerToStorage(column.cellRendererRecycler);
 		var state = this._cellRendererToCellState.get(cellRenderer);
 		if (state.owner == null) {
 			// a previous update is already pending
 			return;
 		}
+		var storage = this.cellStateToStorage(state);
 		this.populateCurrentItemState(column, columnIndex, state, true);
 		// in order to display the same item with modified properties, this
 		// hack tricks the item renderer into thinking that it has been given
@@ -914,6 +949,7 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 	}
 
 	private function updateCellRenderer(cellRenderer:DisplayObject, state:TreeGridViewCellState, storage:CellRendererStorage):Void {
+		state.recyclerID = storage.id;
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
 		var oldIgnoreOpenedChange = this._ignoreOpenedChange;
@@ -1203,10 +1239,12 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 }
 
 private class CellRendererStorage {
-	public function new(?recycler:DisplayObjectRecycler<Dynamic, TreeGridViewCellState, DisplayObject>) {
+	public function new(?id:String, ?recycler:DisplayObjectRecycler<Dynamic, TreeGridViewCellState, DisplayObject>) {
+		this.id = id;
 		this.cellRendererRecycler = recycler;
 	}
 
+	public var id:String;
 	public var oldCellRendererRecycler:DisplayObjectRecycler<Dynamic, TreeGridViewCellState, DisplayObject>;
 	public var cellRendererRecycler:DisplayObjectRecycler<Dynamic, TreeGridViewCellState, DisplayObject>;
 	public var activeCellRenderers:Array<DisplayObject> = [];
