@@ -570,6 +570,23 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	}
 
 	/**
+		The baseline of the text, measured from the top of the control. May be
+		used in layouts.
+
+		Note: This property may not return the correct value when the control is
+		in an invalid state. To be safe, call `validateNow()` before accessing
+		this value.
+	**/
+	public var baseline(get, never):Float;
+
+	private function get_baseline():Float {
+		if (this.textInput == null) {
+			return 0.0;
+		}
+		return this.textInput.baseline;
+	}
+
+	/**
 		Called when none of the items in the data provider match the custom text
 		typed by the user. By default, returns the original string, without any
 		changes.

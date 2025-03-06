@@ -476,6 +476,23 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 	}
 
 	/**
+		The baseline of the text, measured from the top of the control. May be
+		used in layouts.
+
+		Note: This property may not return the correct value when the control is
+		in an invalid state. To be safe, call `validateNow()` before accessing
+		this value.
+	**/
+	public var baseline(get, never):Float;
+
+	private function get_baseline():Float {
+		if (this.button == null) {
+			return 0.0;
+		}
+		return this.button.baseline;
+	}
+
+	/**
 		Manages how the list view is displayed when it is opened and closed.
 
 		In the following example, a custom pop-up adapter is provided:

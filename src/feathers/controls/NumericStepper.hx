@@ -531,6 +531,23 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		return this.textInput;
 	}
 
+	/**
+		The baseline of the text, measured from the top of the control. May be
+		used in layouts.
+
+		Note: This property may not return the correct value when the control is
+		in an invalid state. To be safe, call `validateNow()` before accessing
+		this value.
+	**/
+	public var baseline(get, never):Float;
+
+	private function get_baseline():Float {
+		if (this.textInput == null) {
+			return 0.0;
+		}
+		return this.textInput.baseline;
+	}
+
 	private var _oldDecrementButtonFactory:DisplayObjectFactory<Dynamic, Button>;
 
 	private var _decrementButtonFactory:DisplayObjectFactory<Dynamic, Button>;

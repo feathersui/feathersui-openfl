@@ -527,6 +527,23 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 	}
 
 	/**
+		The baseline of the text, measured from the top of the control. May be
+		used in layouts.
+
+		Note: This property may not return the correct value when the control is
+		in an invalid state. To be safe, call `validateNow()` before accessing
+		this value.
+	**/
+	public var baseline(get, never):Float;
+
+	private function get_baseline():Float {
+		if (this.textInput == null) {
+			return 0.0;
+		}
+		return this.textInput.baseline;
+	}
+
+	/**
 		Indicates if the pop-up date picker is open or closed.
 
 		@see `PopUpDatePicker.openDatePicker()`
