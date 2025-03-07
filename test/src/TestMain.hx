@@ -96,6 +96,7 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.core.ToggleGroupTest());
 		runner.addCase(new feathers.data.ArrayCollectionTest());
 		runner.addCase(new feathers.data.ArrayHierarchicalCollectionTest());
+		runner.addCase(new feathers.data.HierarchicalSubCollectionTest());
 		runner.addCase(new feathers.data.TreeCollectionTest());
 		runner.addCase(new feathers.layout.AnchorLayoutTest());
 		runner.addCase(new feathers.layout.FlowRowsLayoutTest());
