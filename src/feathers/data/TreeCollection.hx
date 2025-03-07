@@ -454,6 +454,9 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 			FeathersEvent.dispatch(this, Event.CHANGE);
 			return;
 		}
+		if (getLength(location) == 0) {
+			return;
+		}
 		if (this._filterAndSortData != null) {
 			var firstChildLocation = location.copy();
 			firstChildLocation.push(0);
