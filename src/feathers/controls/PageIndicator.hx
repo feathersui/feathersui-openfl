@@ -585,7 +585,7 @@ class PageIndicator extends FeathersControl implements IIndexSelector implements
 
 	private function destroyToggleButton(button:ToggleButton, recycler:DisplayObjectRecycler<Dynamic, PageIndicatorItemState, ToggleButton>):Void {
 		this.removeChild(button);
-		if (recycler.destroy != null) {
+		if (recycler != null && recycler.destroy != null) {
 			recycler.destroy(button);
 		}
 	}
