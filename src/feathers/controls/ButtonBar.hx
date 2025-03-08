@@ -721,6 +721,7 @@ class ButtonBar extends FeathersControl {
 		if (factoryInvalid) {
 			this.recoverInactiveButtons(storage);
 			this.freeInactiveButtons(storage);
+			storage.oldButtonRecycler = null;
 		}
 	}
 
@@ -741,17 +742,18 @@ class ButtonBar extends FeathersControl {
 				this.objectDataToButton.remove(item);
 			}
 			button.removeEventListener(TriggerEvent.TRIGGER, buttonBar_button_triggerHandler);
-			this.resetButton(button, state);
+			this.resetButton(button, state, storage);
 			this.itemStatePool.release(state);
 		}
 	}
 
 	private function freeInactiveButtons(storage:ButtonStorage):Void {
+		var recycler = storage.oldButtonRecycler != null ? storage.oldButtonRecycler : storage.buttonRecycler;
 		for (button in storage.inactiveButtons) {
 			if (button == null) {
 				continue;
 			}
-			this.destroyButton(button);
+			this.destroyButton(button, recycler);
 		}
 		#if (hl && haxe_ver < 4.3)
 		storage.inactiveButtons.splice(0, storage.inactiveButtons.length);
@@ -899,7 +901,7 @@ class ButtonBar extends FeathersControl {
 		var storage = this.itemStateToStorage(state);
 		var button:Button = null;
 		if (storage.inactiveButtons.length == 0) {
-			button = this.buttonRecycler.create();
+			button = storage.buttonRecycler.create();
 			if (button.variant == null) {
 				// if the factory set a variant already, don't use the default
 				var variant = this.customButtonVariant != null ? this.customButtonVariant : ButtonBar.CHILD_VARIANT_BUTTON;
@@ -924,10 +926,10 @@ class ButtonBar extends FeathersControl {
 		return button;
 	}
 
-	private function destroyButton(button:Button):Void {
+	private function destroyButton(button:Button, recycler:DisplayObjectRecycler<Dynamic, ButtonBarItemState, Button>):Void {
 		this.removeChild(button);
-		if (this.buttonRecycler.destroy != null) {
-			this.buttonRecycler.destroy(button);
+		if (recycler != null && recycler.destroy != null) {
+			recycler.destroy(button);
 		}
 	}
 
@@ -993,18 +995,19 @@ class ButtonBar extends FeathersControl {
 		state.recyclerID = storage.id;
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
-		if (this.buttonRecycler.update != null) {
-			this.buttonRecycler.update(button, state);
+		if (storage.buttonRecycler.update != null) {
+			storage.buttonRecycler.update(button, state);
 		}
 		this._ignoreSelectionChange = oldIgnoreSelectionChange;
 		this.refreshButtonProperties(button, state);
 	}
 
-	private function resetButton(button:Button, state:ButtonBarItemState):Void {
+	private function resetButton(button:Button, state:ButtonBarItemState, storage:ButtonStorage):Void {
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
-		if (this.buttonRecycler != null && this.buttonRecycler.reset != null) {
-			this.buttonRecycler.reset(button, state);
+		var recycler = storage.oldButtonRecycler != null ? storage.oldButtonRecycler : storage.buttonRecycler;
+		if (recycler != null && recycler.reset != null) {
+			recycler.reset(button, state);
 		}
 		this._ignoreSelectionChange = oldIgnoreSelectionChange;
 		this.refreshButtonProperties(button, RESET_BUTTON_STATE);
@@ -1063,7 +1066,7 @@ class ButtonBar extends FeathersControl {
 		// in order to display the same item with modified properties, this
 		// hack tricks the item renderer into thinking that it has been given
 		// a different item to render.
-		this.resetButton(button, state);
+		this.resetButton(button, state, storage);
 		// ensures that the change is detected when we validate later
 		state.owner = null;
 		this.setInvalid(DATA);

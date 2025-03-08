@@ -850,6 +850,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		if (factoryInvalid) {
 			this.recoverInactiveTabs(storage);
 			this.freeInactiveTabs(storage);
+			storage.oldTabRecycler = null;
 		}
 	}
 
@@ -871,17 +872,18 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			}
 			tab.removeEventListener(TriggerEvent.TRIGGER, tabBar_tab_triggerHandler);
 			tab.removeEventListener(Event.CHANGE, tabBar_tab_changeHandler);
-			this.resetTab(tab, state);
+			this.resetTab(tab, state, storage);
 			this.itemStatePool.release(state);
 		}
 	}
 
 	private function freeInactiveTabs(storage:TabStorage):Void {
+		var recycler = storage.oldTabRecycler != null ? storage.oldTabRecycler : storage.tabRecycler;
 		for (tab in storage.inactiveTabs) {
 			if (tab == null) {
 				continue;
 			}
-			this.destroyTab(tab);
+			this.destroyTab(tab, recycler);
 		}
 		#if (hl && haxe_ver < 4.3)
 		storage.inactiveTabs.splice(0, storage.inactiveTabs.length);
@@ -1029,7 +1031,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		var storage = this.itemStateToStorage(state);
 		var tab:ToggleButton = null;
 		if (storage.inactiveTabs.length == 0) {
-			tab = this.tabRecycler.create();
+			tab = storage.tabRecycler.create();
 			if (tab.variant == null) {
 				// if the factory set a variant already, don't use the default
 				var variant = this.customTabVariant != null ? this.customTabVariant : TabBar.CHILD_VARIANT_TAB;
@@ -1056,10 +1058,10 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		return tab;
 	}
 
-	private function destroyTab(tab:ToggleButton):Void {
+	private function destroyTab(tab:ToggleButton, recycler:DisplayObjectRecycler<Dynamic, TabBarItemState, ToggleButton>):Void {
 		this.removeChild(tab);
-		if (this.tabRecycler.destroy != null) {
-			this.tabRecycler.destroy(tab);
+		if (recycler != null && recycler.destroy != null) {
+			recycler.destroy(tab);
 		}
 	}
 
@@ -1130,18 +1132,19 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		state.recyclerID = storage.id;
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
-		if (this.tabRecycler.update != null) {
-			this.tabRecycler.update(tab, state);
+		if (storage.tabRecycler.update != null) {
+			storage.tabRecycler.update(tab, state);
 		}
 		this._ignoreSelectionChange = oldIgnoreSelectionChange;
 		this.refreshTabProperties(tab, state);
 	}
 
-	private function resetTab(tab:ToggleButton, state:TabBarItemState):Void {
+	private function resetTab(tab:ToggleButton, state:TabBarItemState, storage:TabStorage):Void {
 		var oldIgnoreSelectionChange = this._ignoreSelectionChange;
 		this._ignoreSelectionChange = true;
-		if (this.tabRecycler != null && this.tabRecycler.reset != null) {
-			this.tabRecycler.reset(tab, state);
+		var recycler = storage.oldTabRecycler != null ? storage.oldTabRecycler : storage.tabRecycler;
+		if (recycler != null && recycler.reset != null) {
+			recycler.reset(tab, state);
 		}
 		this._ignoreSelectionChange = oldIgnoreSelectionChange;
 		this.refreshTabProperties(tab, RESET_TAB_STATE);
@@ -1337,7 +1340,7 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 		// in order to display the same item with modified properties, this
 		// hack tricks the item renderer into thinking that it has been given
 		// a different item to render.
-		this.resetTab(tab, state);
+		this.resetTab(tab, state, storage);
 		// ensures that the change is detected when we validate later
 		state.owner = null;
 		this.setInvalid(DATA);
