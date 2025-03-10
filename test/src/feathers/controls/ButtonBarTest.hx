@@ -395,6 +395,31 @@ class ButtonBarTest extends Test {
 		TriggerEvent.dispatchFromTouchEvent(button, new TouchEvent(TouchEvent.TOUCH_TAP));
 		Assert.equals(1, dispatchedTriggerCount);
 	}
+
+	private function testRecyclerIDFunction():Void {
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._buttonBar.dataProvider = collection;
+		this._buttonBar.setButtonRecycler("alternate", DisplayObjectRecycler.withClass(Button));
+		this._buttonBar.setButtonRecycler("alternate2", DisplayObjectRecycler.withClass(Button));
+		this._buttonBar.buttonRecyclerIDFunction = (state) -> {
+			if (state.index == 1) {
+				return "alternate";
+			} else if (state.index == 2) {
+				return "alternate2";
+			}
+			return null;
+		};
+		this._buttonBar.validateNow();
+		var state0 = this._buttonBar.itemToItemState(collection.get(0));
+		Assert.notNull(state0);
+		Assert.isNull(state0.recyclerID);
+		var state1 = this._buttonBar.itemToItemState(collection.get(1));
+		Assert.notNull(state1);
+		Assert.equals("alternate", state1.recyclerID);
+		var state2 = this._buttonBar.itemToItemState(collection.get(2));
+		Assert.notNull(state2);
+		Assert.equals("alternate2", state2.recyclerID);
+	}
 }
 
 private class CustomRendererWithInterfaces extends Button implements IDataRenderer implements ILayoutIndexObject {

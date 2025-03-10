@@ -1001,10 +1001,24 @@ class GridViewTest extends Test {
 		Assert.equals(item2, this._gridView.selectedItems[0]);
 	}
 
-	public function testDefaultTextUpdateForAdditionalRecyclers():Void {
+	public function testDefaultTextUpdateForColumnRecyclers():Void {
 		this._gridView.dataProvider = new ArrayCollection([{text: "One"}]);
 		var column1 = new GridViewColumn("1", item -> item.text);
 		column1.cellRendererRecycler = DisplayObjectRecycler.withClass(ItemRenderer);
+		this._gridView.columns = new ArrayCollection([column1]);
+		this._gridView.validateNow();
+		var itemRenderer = cast(this._gridView.itemAndColumnToCellRenderer(this._gridView.dataProvider.get(0), column1), ItemRenderer);
+		Assert.notNull(itemRenderer);
+		Assert.equals("One", itemRenderer.text);
+	}
+
+	public function testDefaultTextUpdateForAdditionalColumnRecyclers():Void {
+		this._gridView.dataProvider = new ArrayCollection([{text: "One"}]);
+		var column1 = new GridViewColumn("1", item -> item.text);
+		column1.setCellRendererRecycler("other", DisplayObjectRecycler.withClass(ItemRenderer));
+		column1.cellRendererRecyclerIDFunction = (state) -> {
+			return "other";
+		};
 		this._gridView.columns = new ArrayCollection([column1]);
 		this._gridView.validateNow();
 		var itemRenderer = cast(this._gridView.itemAndColumnToCellRenderer(this._gridView.dataProvider.get(0), column1), ItemRenderer);
@@ -1167,6 +1181,34 @@ class GridViewTest extends Test {
 		Assert.equals(0, dispatchedTriggerCount);
 		TriggerEvent.dispatchFromTouchEvent(cellRenderer, new TouchEvent(TouchEvent.TOUCH_TAP));
 		Assert.equals(1, dispatchedTriggerCount);
+	}
+
+	private function testColumnRecyclerIDFunction():Void {
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._gridView.dataProvider = collection;
+		var column0 = new GridViewColumn("A", item -> item.text);
+		column0.setCellRendererRecycler("alternate", DisplayObjectRecycler.withClass(ItemRenderer));
+		column0.setCellRendererRecycler("alternate2", DisplayObjectRecycler.withClass(ItemRenderer));
+		column0.cellRendererRecyclerIDFunction = (state) -> {
+			if (state.rowIndex == 1) {
+				return "alternate";
+			} else if (state.rowIndex == 2) {
+				return "alternate2";
+			}
+			return null;
+		};
+		var columns = new ArrayCollection([column0,]);
+		this._gridView.columns = columns;
+		this._gridView.validateNow();
+		var state0 = this._gridView.itemAndColumnToCellState(collection.get(0), column0);
+		Assert.notNull(state0);
+		Assert.isNull(state0.recyclerID);
+		var state1 = this._gridView.itemAndColumnToCellState(collection.get(1), column0);
+		Assert.notNull(state1);
+		Assert.equals("alternate", state1.recyclerID);
+		var state2 = this._gridView.itemAndColumnToCellState(collection.get(2), column0);
+		Assert.notNull(state2);
+		Assert.equals("alternate2", state2.recyclerID);
 	}
 }
 

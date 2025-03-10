@@ -784,6 +784,61 @@ class GroupListViewTest extends Test {
 		TriggerEvent.dispatchFromTouchEvent(itemRenderer, new TouchEvent(TouchEvent.TOUCH_TAP));
 		Assert.equals(1, dispatchedTriggerCount);
 	}
+
+	private function testItemRecyclerIDFunction():Void {
+		var collection = new ArrayHierarchicalCollection([{text: "A", children: [{text: "One"}, {text: "Two"}, {text: "Three"}]}],
+			(item:Dynamic) -> item.children);
+		this._listView.dataProvider = collection;
+		this._listView.setItemRendererRecycler("alternate", DisplayObjectRecycler.withClass(ItemRenderer));
+		this._listView.setItemRendererRecycler("alternate2", DisplayObjectRecycler.withClass(ItemRenderer));
+		this._listView.itemRendererRecyclerIDFunction = (state) -> {
+			if (state.location[0] == 0 && state.location[1] == 1) {
+				return "alternate";
+			} else if (state.location[0] == 0 && state.location[1] == 2) {
+				return "alternate2";
+			}
+			return null;
+		};
+		this._listView.validateNow();
+		var state0 = this._listView.itemToItemState(collection.get([0, 0]));
+		Assert.notNull(state0);
+		Assert.isNull(state0.recyclerID);
+		var state1 = this._listView.itemToItemState(collection.get([0, 1]));
+		Assert.notNull(state1);
+		Assert.equals("alternate", state1.recyclerID);
+		var state2 = this._listView.itemToItemState(collection.get([0, 2]));
+		Assert.notNull(state2);
+		Assert.equals("alternate2", state2.recyclerID);
+	}
+
+	private function testHeaderRecyclerIDFunction():Void {
+		var collection = new ArrayHierarchicalCollection([
+			{text: "A", children: [{text: "One"}, {text: "Two"}, {text: "Three"}]},
+			{text: "B"},
+			{text: "C"}
+		], (item:Dynamic) -> item.children);
+		this._listView.dataProvider = collection;
+		this._listView.setHeaderRendererRecycler("alternate", DisplayObjectRecycler.withClass(ItemRenderer));
+		this._listView.setHeaderRendererRecycler("alternate2", DisplayObjectRecycler.withClass(ItemRenderer));
+		this._listView.headerRendererRecyclerIDFunction = (state) -> {
+			if (state.location[0] == 1) {
+				return "alternate";
+			} else if (state.location[0] == 2) {
+				return "alternate2";
+			}
+			return null;
+		};
+		this._listView.validateNow();
+		var state0 = this._listView.itemToItemState(collection.get([0]));
+		Assert.notNull(state0);
+		Assert.isNull(state0.recyclerID);
+		var state1 = this._listView.itemToItemState(collection.get([1]));
+		Assert.notNull(state1);
+		Assert.equals("alternate", state1.recyclerID);
+		var state2 = this._listView.itemToItemState(collection.get([2]));
+		Assert.notNull(state2);
+		Assert.equals("alternate2", state2.recyclerID);
+	}
 }
 
 private class CustomRendererWithInterfaces extends LayoutGroup implements IToggle implements IDataRenderer implements ILayoutIndexObject

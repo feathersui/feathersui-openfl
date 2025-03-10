@@ -903,6 +903,31 @@ class ListViewTest extends Test {
 		TriggerEvent.dispatchFromTouchEvent(itemRenderer, new TouchEvent(TouchEvent.TOUCH_TAP));
 		Assert.equals(1, dispatchedTriggerCount);
 	}
+
+	private function testRecyclerIDFunction():Void {
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._listView.dataProvider = collection;
+		this._listView.setItemRendererRecycler("alternate", DisplayObjectRecycler.withClass(ItemRenderer));
+		this._listView.setItemRendererRecycler("alternate2", DisplayObjectRecycler.withClass(ItemRenderer));
+		this._listView.itemRendererRecyclerIDFunction = (state) -> {
+			if (state.index == 1) {
+				return "alternate";
+			} else if (state.index == 2) {
+				return "alternate2";
+			}
+			return null;
+		};
+		this._listView.validateNow();
+		var state0 = this._listView.itemToItemState(collection.get(0));
+		Assert.notNull(state0);
+		Assert.isNull(state0.recyclerID);
+		var state1 = this._listView.itemToItemState(collection.get(1));
+		Assert.notNull(state1);
+		Assert.equals("alternate", state1.recyclerID);
+		var state2 = this._listView.itemToItemState(collection.get(2));
+		Assert.notNull(state2);
+		Assert.equals("alternate2", state2.recyclerID);
+	}
 }
 
 private class CustomRendererWithInterfaces extends LayoutGroup implements IToggle implements IDataRenderer implements ILayoutIndexObject

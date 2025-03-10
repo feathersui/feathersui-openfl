@@ -19,11 +19,11 @@ class TestMain extends Sprite {
 		super();
 
 		var runner = new Runner();
-		#if !flash
-		// these tests often timeout on CI when running in Flash/AIR
+		// #if !flash
+		// // these tests often timeout on CI when running in Flash/AIR
 		runner.addCase(new feathers.controls.AssetLoaderTest());
 		runner.addCase(new feathers.utils.LongPressTest());
-		#end
+		// #end
 		runner.addCase(new feathers.controls.AlertTest());
 		runner.addCase(new feathers.controls.BasicButtonMeasurementTest());
 		runner.addCase(new feathers.controls.BasicButtonTest());

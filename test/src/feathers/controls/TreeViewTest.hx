@@ -832,6 +832,31 @@ import utest.Test;
 		TriggerEvent.dispatchFromTouchEvent(itemRenderer, new TouchEvent(TouchEvent.TOUCH_TAP));
 		Assert.equals(1, dispatchedTriggerCount);
 	}
+
+	private function testRecyclerIDFunction():Void {
+		var collection = new ArrayHierarchicalCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._treeView.dataProvider = collection;
+		this._treeView.setItemRendererRecycler("alternate", DisplayObjectRecycler.withClass(HierarchicalItemRenderer));
+		this._treeView.setItemRendererRecycler("alternate2", DisplayObjectRecycler.withClass(HierarchicalItemRenderer));
+		this._treeView.itemRendererRecyclerIDFunction = (state) -> {
+			if (state.location[0] == 1) {
+				return "alternate";
+			} else if (state.location[0] == 2) {
+				return "alternate2";
+			}
+			return null;
+		};
+		this._treeView.validateNow();
+		var state0 = this._treeView.itemToItemState(collection.get([0]));
+		Assert.notNull(state0);
+		Assert.isNull(state0.recyclerID);
+		var state1 = this._treeView.itemToItemState(collection.get([1]));
+		Assert.notNull(state1);
+		Assert.equals("alternate", state1.recyclerID);
+		var state2 = this._treeView.itemToItemState(collection.get([2]));
+		Assert.notNull(state2);
+		Assert.equals("alternate2", state2.recyclerID);
+	}
 }
 
 private class CustomRendererWithInterfaces extends LayoutGroup implements IToggle implements IOpenCloseToggle implements IDataRenderer

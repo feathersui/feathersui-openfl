@@ -851,10 +851,24 @@ import utest.Test;
 		Assert.isFalse(this._treeGridView.isBranchOpen(branch));
 	}
 
-	public function testDefaultTextUpdateForAdditionalRecyclers():Void {
+	public function testDefaultTextUpdateForColumnRecyclers():Void {
 		this._treeGridView.dataProvider = new ArrayHierarchicalCollection([{text: "One"}]);
 		var column1 = new TreeGridViewColumn("1", item -> item.text);
 		column1.cellRendererRecycler = DisplayObjectRecycler.withClass(HierarchicalItemRenderer);
+		this._treeGridView.columns = new ArrayCollection([column1]);
+		this._treeGridView.validateNow();
+		var itemRenderer = cast(this._treeGridView.itemAndColumnToCellRenderer(this._treeGridView.dataProvider.get([0]), column1), HierarchicalItemRenderer);
+		Assert.notNull(itemRenderer);
+		Assert.equals("One", itemRenderer.text);
+	}
+
+	public function testDefaultTextUpdateForAdditionalColumnRecyclers():Void {
+		this._treeGridView.dataProvider = new ArrayHierarchicalCollection([{text: "One"}]);
+		var column1 = new TreeGridViewColumn("1", item -> item.text);
+		column1.setCellRendererRecycler("other", DisplayObjectRecycler.withClass(HierarchicalItemRenderer));
+		column1.cellRendererRecyclerIDFunction = (state) -> {
+			return "other";
+		};
 		this._treeGridView.columns = new ArrayCollection([column1]);
 		this._treeGridView.validateNow();
 		var itemRenderer = cast(this._treeGridView.itemAndColumnToCellRenderer(this._treeGridView.dataProvider.get([0]), column1), HierarchicalItemRenderer);
@@ -934,6 +948,34 @@ import utest.Test;
 		Assert.equals(0, dispatchedTriggerCount);
 		TriggerEvent.dispatchFromTouchEvent(itemRenderer, new TouchEvent(TouchEvent.TOUCH_TAP));
 		Assert.equals(1, dispatchedTriggerCount);
+	}
+
+	private function testColumnRecyclerIDFunction():Void {
+		var collection = new ArrayHierarchicalCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._treeGridView.dataProvider = collection;
+		var column0 = new TreeGridViewColumn("A", item -> item.text);
+		column0.setCellRendererRecycler("alternate", DisplayObjectRecycler.withClass(HierarchicalItemRenderer));
+		column0.setCellRendererRecycler("alternate2", DisplayObjectRecycler.withClass(HierarchicalItemRenderer));
+		column0.cellRendererRecyclerIDFunction = (state) -> {
+			if (state.rowLocation[0] == 1) {
+				return "alternate";
+			} else if (state.rowLocation[0] == 2) {
+				return "alternate2";
+			}
+			return null;
+		};
+		var columns = new ArrayCollection([column0,]);
+		this._treeGridView.columns = columns;
+		this._treeGridView.validateNow();
+		var state0 = this._treeGridView.itemAndColumnToCellState(collection.get([0]), column0);
+		Assert.notNull(state0);
+		Assert.isNull(state0.recyclerID);
+		var state1 = this._treeGridView.itemAndColumnToCellState(collection.get([1]), column0);
+		Assert.notNull(state1);
+		Assert.equals("alternate", state1.recyclerID);
+		var state2 = this._treeGridView.itemAndColumnToCellState(collection.get([2]), column0);
+		Assert.notNull(state2);
+		Assert.equals("alternate2", state2.recyclerID);
 	}
 }
 
