@@ -812,11 +812,11 @@ class GroupListViewTest extends Test {
 	}
 
 	private function testHeaderRecyclerIDFunction():Void {
-		var collection = new ArrayHierarchicalCollection([
+		var collection = new ArrayHierarchicalCollection(([
 			{text: "A", children: [{text: "One"}, {text: "Two"}, {text: "Three"}]},
 			{text: "B"},
 			{text: "C"}
-		], (item:Dynamic) -> item.children);
+		] : Array<Dynamic>), (item:Dynamic) -> item.children);
 		this._listView.dataProvider = collection;
 		this._listView.setHeaderRendererRecycler("alternate", DisplayObjectRecycler.withClass(ItemRenderer));
 		this._listView.setHeaderRendererRecycler("alternate2", DisplayObjectRecycler.withClass(ItemRenderer));
