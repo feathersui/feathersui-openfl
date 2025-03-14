@@ -54,4 +54,4 @@ The Haxe programming language is supported by [more editors and IDEs](https://ha
 
 - [Blog](https://feathersui.com/blog/)
 - [Mastodon](https://fosstodon.org/@feathersui)
-- [Twitter](https://twitter.com/feathersui)
+- [Bluesky](https://bsky.app/profile/feathersui.bsky.social)
