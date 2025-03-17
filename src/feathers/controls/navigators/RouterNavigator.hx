@@ -651,11 +651,33 @@ class RouterNavigator extends BaseNavigator {
 	#end
 }
 
+/**
+	History state data used by `RouterNavigator`.
+
+	@since 1.0.0
+**/
 typedef HistoryState = {
 	#if html5
+	/**
+		The history depth. Available on the HTML5 target only.
+
+		@since 1.0.0
+	**/
 	depth:Int,
 	#end
+
+	/**
+		The history state.
+
+		@since 1.0.0
+	**/
 	state:Any,
+
+	/**
+		The data saved from the view.
+
+		@since 1.0.0
+	**/
 	viewData:Any
 };
 

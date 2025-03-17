@@ -17,6 +17,8 @@ import openfl.display.DisplayObject;
 
 	@see `feathers.controls.TextArea`
 	@see `feathers.controls.TextInput`
+
+	@since 1.3.0
 **/
 class TextInputMultiSkin extends MultiSkin {
 	/**

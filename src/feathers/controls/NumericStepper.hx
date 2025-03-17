@@ -58,6 +58,8 @@ import openfl.ui.Multitouch;
 	changes.
 
 	@see [How to use the NumericStepper component](https://feathersui.com/learn/haxe-openfl/numeric-stepper/)
+
+	@since 1.0.0
 **/
 @:event(openfl.events.Event.CHANGE)
 class NumericStepper extends FeathersControl implements IRange implements IStageFocusDelegate {

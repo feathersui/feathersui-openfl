@@ -709,36 +709,50 @@ class ResponsiveGridLayout extends EventDispatcher implements ILayout {
 }
 
 /**
-	Breakpoints used by `ResponsiveGridLayout`
+	Breakpoints used by `ResponsiveGridLayout`.
+
+	@since 1.0.0
 **/
 enum Breakpoint {
 	/**
 		Extra small breakpoint. Default: < 576 pixels.
+
+		@since 1.0.0
 	**/
 	XS;
 
 	/**
 		Small breakpoint. Default: >= 576 pixels.
+
+		@since 1.0.0
 	**/
 	SM;
 
 	/**
 		Medium breakpoint. Default: >= 768 pixels.
+
+		@since 1.0.0
 	**/
 	MD;
 
 	/**
 		Large breakpoint. Default: >= 992 pixels.
+
+		@since 1.0.0
 	**/
 	LG;
 
 	/**
 		Extra large breakpoint. Default: >= 1200 pixels.
+
+		@since 1.0.0
 	**/
 	XL;
 
 	/**
 		Extra extra large breakpoint. Default: >= 1400 pixels.
+
+		@since 1.0.0
 	**/
 	XXL;
 }

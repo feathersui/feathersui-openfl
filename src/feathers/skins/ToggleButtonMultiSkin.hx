@@ -17,6 +17,8 @@ import openfl.display.DisplayObject;
 
 	@see `feathers.controls.ToggleButton`
 	@see `feathers.controls.dataRenderers.ItemRenderer`
+
+	@since 1.3.0
 **/
 class ToggleButtonMultiSkin extends MultiSkin {
 	/**

@@ -13,6 +13,8 @@ import openfl.display.InteractiveObject;
 /**
 	Allows a different interactive display object to receive stage focus when
 	this object receives focus from a focus manager.
+
+	@since 1.0.0
 **/
 interface IStageFocusDelegate extends IFocusObject {
 	/**

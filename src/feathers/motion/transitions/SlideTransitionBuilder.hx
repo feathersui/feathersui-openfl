@@ -27,6 +27,8 @@ import openfl.errors.RangeError;
 	up, down, right, or left (or at an arbitrary angle).
 
 	@see [Transitions for Feathers UI navigators](https://feathersui.com/learn/haxe-openfl/navigator-transitions/)
+
+	@since 1.0.0
 **/
 class SlideTransitionBuilder {
 	private static final VIEW_REQUIRED_ERROR:String = "Cannot transition if both old view and new view are null.";

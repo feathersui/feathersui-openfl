@@ -16,6 +16,8 @@ import openfl.display.DisplayObject;
 	Utility functions for use with the `Measurements` class.
 
 	@see `feathers.layout.Meaesurements`
+
+	@since 1.0.0
 **/
 final class MeasurementsUtil {
 	/**

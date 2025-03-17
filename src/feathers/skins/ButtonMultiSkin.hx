@@ -16,6 +16,8 @@ import openfl.display.DisplayObject;
 	`feathers.controls.ButtonState`.
 
 	@see `feathers.controls.Button`
+
+	@since 1.3.0
 **/
 class ButtonMultiSkin extends MultiSkin {
 	/**
