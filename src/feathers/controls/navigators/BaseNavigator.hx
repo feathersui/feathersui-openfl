@@ -166,10 +166,10 @@ class BaseNavigator extends FeathersControl implements IFocusContainer {
 		navigator.autoSizeMode = CONTENT;
 		```
 
-		@default `feathers.controls.AutoSizeMode.STAGE`
+		@default `feathers.layout.AutoSizeMode.STAGE`
 
-		@see `feathers.controls.AutoSizeMode.STAGE`
-		@see `feathers.controls.AutoSizeMode.CONTENT`
+		@see `feathers.layout.AutoSizeMode.STAGE`
+		@see `feathers.layout.AutoSizeMode.CONTENT`
 
 		@since 1.0.0
 	**/

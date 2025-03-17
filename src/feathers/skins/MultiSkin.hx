@@ -100,7 +100,7 @@ class MultiSkin extends ProgrammaticSkin {
 		The view that is displayed when the state context is selected. To use
 		this skin, the state context must implement the `IToggle` interface.
 
-		@see `feathers.core.IToggle.selected`
+		@see `feathers.controls.IToggle.selected`
 
 		@since 1.0.0
 	**/

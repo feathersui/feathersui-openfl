@@ -1052,7 +1052,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		gridView.sortableColumns = true;
 		```
 
-		@see `feathers.controls.GridViewColumn.sortOrder`
+		@see `feathers.controls.GridView.sortOrder`
+		@see `feathers.controls.GridViewColumn.defaultSortOrder`
 		@see `feathers.controls.GridViewColumn.sortCompareFunction`
 
 		@default false

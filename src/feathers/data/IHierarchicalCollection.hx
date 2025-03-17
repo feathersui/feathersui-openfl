@@ -70,7 +70,7 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 		};
 		```
 
-		@see `feathers.data.HierarchicalCollectionEvent.FILTER_CHANGE`
+		@see `feathers.events.HierarchicalCollectionEvent.FILTER_CHANGE`
 
 		@since 1.0.0
 	**/
@@ -100,7 +100,7 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 		};
 		```
 
-		@see `feathers.data.HierarchicalCollectionEvent.SORT_CHANGE`
+		@see `feathers.events.HierarchicalCollectionEvent.SORT_CHANGE`
 
 		@since 1.0.0
 	**/
@@ -141,7 +141,7 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 		collection.set(location, object);
 		```
 
-		@see `feathers.data.HierarchicalCollectionEvent.REPLACE_ITEM`
+		@see `feathers.events.HierarchicalCollectionEvent.REPLACE_ITEM`
 
 		@since 1.0.0
 	**/
@@ -228,7 +228,7 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 		collection.addAt(item, location);
 		```
 
-		@see `feathers.data.HierarchicalCollectionEvent.ADD_ITEM`
+		@see `feathers.events.HierarchicalCollectionEvent.ADD_ITEM`
 
 		@since 1.0.0
 	**/
@@ -244,7 +244,7 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 		collection.remove(item);
 		```
 
-		@see `feathers.data.HierarchicalCollectionEvent.REMOVE_ITEM`
+		@see `feathers.events.HierarchicalCollectionEvent.REMOVE_ITEM`
 
 		@since 1.0.0
 	**/
@@ -261,7 +261,7 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 		collection.removeAt(location);
 		```
 
-		@see `feathers.data.HierarchicalCollectionEvent.REMOVE_ITEM`
+		@see `feathers.events.HierarchicalCollectionEvent.REMOVE_ITEM`
 
 		@since 1.0.0
 	**/
@@ -278,7 +278,7 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 		collection.removeAll();
 		```
 
-		@see `feathers.data.HierarchicalCollectionEvent.REMOVE_ALL`
+		@see `feathers.events.HierarchicalCollectionEvent.REMOVE_ALL`
 
 		@since 1.0.0
 	**/
@@ -296,7 +296,7 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 		```
 
 		@see `IHierarchicalCollection.updateAll`
-		@see `feathers.data.HierarchicalCollectionEvent.UPDATE_ITEM`
+		@see `feathers.events.HierarchicalCollectionEvent.UPDATE_ITEM`
 
 		@since 1.0.0
 	**/
@@ -313,7 +313,7 @@ interface IHierarchicalCollection<T> extends IEventDispatcher {
 		```
 
 		@see `IHierarchicalCollection.updateAt`
-		@see `feathers.data.HierarchicalCollectionEvent.UPDATE_ALL`
+		@see `feathers.events.HierarchicalCollectionEvent.UPDATE_ALL`
 
 		@since 1.0.0
 	**/

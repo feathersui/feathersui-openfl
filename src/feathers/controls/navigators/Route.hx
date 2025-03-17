@@ -40,7 +40,7 @@ import openfl.events.Event;
 	include the base path. It will be handled automatically.
 
 	@see [Tutorial: How to use the RouterNavigator component](https://feathersui.com/learn/haxe-openfl/router-navigator/)
-	@see `feathers.controls.RouterNavigator`
+	@see `feathers.controls.navigators.RouterNavigator`
 
 	@since 1.0.0
 **/

@@ -181,7 +181,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 	}
 
 	/**
-		@see `feathers.controls.ITextControl.baseline`
+		@see `feathers.core.ITextControl.baseline`
 	**/
 	public var baseline(get, never):Float;
 

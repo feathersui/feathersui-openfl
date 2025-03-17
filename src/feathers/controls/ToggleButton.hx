@@ -182,7 +182,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 	}
 
 	/**
-		@see `feathers.controls.ITextControl.baseline`
+		@see `feathers.core.ITextControl.baseline`
 	**/
 	public var baseline(get, never):Float;
 

@@ -221,7 +221,7 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 	}
 
 	/**
-		@see `feathers.controls.ITextControl.baseline`
+		@see `feathers.core.ITextControl.baseline`
 	**/
 	public var baseline(get, never):Float;
 

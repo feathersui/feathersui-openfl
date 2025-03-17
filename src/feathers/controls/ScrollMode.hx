@@ -11,7 +11,7 @@ package feathers.controls;
 /**
 	Methods of updating the scrolling view port in containers.
 
-	@see `feathers.controls.BaseScrollContainer`
+	@see `feathers.controls.supportClasses.BaseScrollContainer`
 
 	@since 1.0.0
 **/

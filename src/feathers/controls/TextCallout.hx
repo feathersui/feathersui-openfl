@@ -171,7 +171,7 @@ class TextCallout extends Callout implements ITextControl implements IHTMLTextCo
 	}
 
 	/**
-		@see `feathers.controls.ITextControl.baseline`
+		@see `feathers.core.ITextControl.baseline`
 	**/
 	public var baseline(get, never):Float;
 

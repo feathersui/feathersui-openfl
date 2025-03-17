@@ -385,7 +385,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	private var _focusManager:IFocusManager = null;
 
 	/**
-		@see `feathers.layout.IFocusObject.focusManager`
+		@see `feathers.core.IFocusObject.focusManager`
 	**/
 	public var focusManager(get, set):IFocusManager;
 
@@ -407,7 +407,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	private var _focusOwner:IFocusObject;
 
 	/**
-		@see `feathers.layout.IFocusObject.focusOwner`
+		@see `feathers.core.IFocusObject.focusOwner`
 	**/
 	public var focusOwner(get, set):IFocusObject;
 
@@ -433,7 +433,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	private var _focusEnabled:Bool = true;
 
 	/**
-		@see `feathers.layout.IFocusObject.focusEnabled`
+		@see `feathers.core.IFocusObject.focusEnabled`
 	**/
 	public var focusEnabled(get, set):Bool;
 

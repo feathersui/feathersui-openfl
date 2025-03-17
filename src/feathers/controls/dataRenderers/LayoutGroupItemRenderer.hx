@@ -110,7 +110,7 @@ class LayoutGroupItemRenderer extends LayoutGroup implements IStateContext<Toggl
 	private var _selected:Bool = false;
 
 	/**
-		@see `feathers.core.IToggle.selected`
+		@see `feathers.controls.IToggle.selected`
 	**/
 	@:bindable("change")
 	public var selected(get, set):Bool;

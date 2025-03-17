@@ -13,7 +13,7 @@ import openfl.net.URLVariables;
 /**
 	Represents the current state of a `RouterNavigator` view.
 
-	@see `feathers.controls.RouterNavigator`
+	@see `feathers.controls.navigators.RouterNavigator`
 
 	@since 1.0.0
 **/
