@@ -11,7 +11,7 @@ package feathers.motion.effects;
 /**
 	Constants for determining how an effect behaves when it is interrupted.
 
-	@see `feathers.motion.effectClasses.IEffectContext.interrupt()`
+	@see `feathers.motion.effects.IEffectContext.interrupt()`
 	@see [Effects and animation for Feathers UI components](https://feathersui.com/learn/haxe-openfl/effects-and-animation/)
 
 	@since 1.0.0
