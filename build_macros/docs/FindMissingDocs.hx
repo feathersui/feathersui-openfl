@@ -6,6 +6,8 @@
 	accordance with the terms of the accompanying license agreement.
  */
 
+import haxe.macro.Type.EnumField;
+import haxe.macro.Type.EnumType;
 #if macro
 import haxe.macro.Context;
 import haxe.macro.Expr.Position;
@@ -29,6 +31,29 @@ class FindMissingDocs {
 								if (abstractType.doc == null || abstractType.doc.length == 0) {
 									result.push({symbol: '${abstractType.name}', pos: abstractType.pos});
 								}
+								if (abstractType.doc != null
+									&& abstractType.doc.indexOf("@since ") == -1
+									&& !StringTools.startsWith(StringTools.trim(abstractType.doc), "@see ")) {
+									result.push({symbol: '${abstractType.name}', pos: abstractType.pos, tag: "since"});
+								}
+							}
+						}
+					case TEnum(t, params):
+						var enumType = t.get();
+						var enumPack = enumType.pack.join(".");
+						if (packStart == null || (enumPack != null && StringTools.startsWith(enumType.pack.join("."), packStart))) {
+							if (!enumType.isPrivate && !isHiddenByMetadata(enumType.meta)) {
+								if (enumType.doc == null || enumType.doc.length == 0) {
+									result.push({symbol: '${enumType.name}', pos: enumType.pos});
+								}
+								if (enumType.doc != null
+									&& enumType.doc.indexOf("@since ") == -1
+									&& !StringTools.startsWith(StringTools.trim(enumType.doc), "@see ")) {
+									result.push({symbol: '${enumType.name}', pos: enumType.pos, tag: "since"});
+								}
+								for (name => construct in enumType.constructs) {
+									checkEnumField(enumType, construct, result);
+								}
 							}
 						}
 					case TInst(t, params):
@@ -39,11 +64,31 @@ class FindMissingDocs {
 								if (classType.doc == null || classType.doc.length == 0) {
 									result.push({symbol: '${classType.name}', pos: classType.pos});
 								}
+								if (classType.doc != null
+									&& classType.doc.indexOf("@since ") == -1
+									&& !StringTools.startsWith(StringTools.trim(classType.doc), "@see ")) {
+									result.push({symbol: '${classType.name}', pos: classType.pos, tag: "since"});
+								}
 								if (classType.constructor != null) {
 									checkField(classType, classType.constructor.get(), result);
 								}
 								var overrideNames = classType.overrides.map(field -> field.get().name);
 								checkFields(classType, classType.fields.get().filter(field -> overrideNames.indexOf(field.name) == -1), result);
+							}
+						}
+					case TType(t, params):
+						var typedefType = t.get();
+						var typedefPack = typedefType.pack.join(".");
+						if (packStart == null || (typedefPack != null && StringTools.startsWith(typedefType.pack.join("."), packStart))) {
+							if (!typedefType.isPrivate && !isHiddenByMetadata(typedefType.meta)) {
+								if (typedefType.doc == null || typedefType.doc.length == 0) {
+									result.push({symbol: '${typedefType.name}', pos: typedefType.pos});
+								}
+								if (typedefType.doc != null
+									&& typedefType.doc.indexOf("@since ") == -1
+									&& !StringTools.startsWith(StringTools.trim(typedefType.doc), "@see ")) {
+									result.push({symbol: '${typedefType.name}', pos: typedefType.pos, tag: "since"});
+								}
 							}
 						}
 					default: // skip
@@ -100,6 +145,17 @@ class FindMissingDocs {
 				continue;
 			}
 			checkField(classType, field, result);
+		}
+	}
+
+	private static function checkEnumField(enumType:EnumType, field:EnumField, result:Array<SymbolAndPosition>):Void {
+		if (field.doc == null || field.doc.length == 0) {
+			if (isHiddenByMetadata(field.meta)) {
+				return;
+			}
+			result.push({symbol: '${enumType.name}.${field.name}', pos: field.pos});
+		} else if (field.doc.indexOf("@since ") == -1 && !StringTools.startsWith(StringTools.trim(field.doc), "@see ")) {
+			result.push({symbol: '${enumType.name}.${field.name}', pos: field.pos, tag: "since"});
 		}
 	}
 }
