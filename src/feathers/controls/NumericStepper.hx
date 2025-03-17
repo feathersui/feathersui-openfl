@@ -538,6 +538,8 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		Note: This property may not return the correct value when the control is
 		in an invalid state. To be safe, call `validateNow()` before accessing
 		this value.
+
+		@since 1.4.0
 	**/
 	public var baseline(get, never):Float;
 

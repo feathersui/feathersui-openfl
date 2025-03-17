@@ -576,6 +576,8 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		Note: This property may not return the correct value when the control is
 		in an invalid state. To be safe, call `validateNow()` before accessing
 		this value.
+
+		@since 1.4.0
 	**/
 	public var baseline(get, never):Float;
 
