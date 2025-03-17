@@ -126,4 +126,4 @@ jobs:
         haxelib run lime config AIR_SDK ${{ env.AIR_HOME }}
     - name: Run Tests
       working-directory: test
-      run: haxelib run openfl test air
+      run: haxelib run openfl test air --haxedef=ci
