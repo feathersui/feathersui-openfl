@@ -17,7 +17,6 @@ import feathers.controls.GridViewColumn;
 	@see `feathers.controls.GridView`
 	@see `feathers.controls.GridView.headerRendererRecycler`
 	@see `feathers.controls.GridViewColumn`
-	@see `feathers.controls.GridViewColumn.headerRendererRecycler`
 
 	@since 1.0.0
 **/
