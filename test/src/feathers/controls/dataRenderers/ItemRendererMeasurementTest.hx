@@ -15,7 +15,7 @@ import utest.Assert;
 import utest.Test;
 
 @:keep
-@:access(feathers.controls.ItemRenderer)
+@:access(feathers.controls.dataRenderers.ItemRenderer)
 class ItemRendererMeasurementTest extends Test {
 	private static final BACKGROUND_WIDTH = 30.0;
 	private static final BACKGROUND_HEIGHT = 32.0;
