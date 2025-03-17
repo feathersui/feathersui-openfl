@@ -24,8 +24,6 @@ import openfl.events.EventDispatcher;
 	@event openfl.events.Event.COMPLETE Dispatched when the effect has
 	completed.
 
-	@see [Effects and animation for Feathers UI components](https://feathersui.com/learn/haxe-openfl/effects-and-animation/)
-
 	@since 1.0.0
 **/
 @:event(openfl.events.Event.CHANGE)
