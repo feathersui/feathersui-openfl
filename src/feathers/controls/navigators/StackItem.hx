@@ -37,7 +37,7 @@ import openfl.events.Event;
 	```
 
 	@see [Tutorial: How to use the StackNavigator component](https://feathersui.com/learn/haxe-openfl/stack-navigator/)
-	@see `feathers.controls.StackNavigator`
+	@see `feathers.controls.navigators.StackNavigator`
 
 	@since 1.0.0
 **/
@@ -167,7 +167,7 @@ class StackItem {
 
 		@default `null`
 
-		@see `feathers.controls.StackNavigator.pushTransition`
+		@see `feathers.controls.navigators.StackNavigator.pushTransition`
 		@see [Transitions for Feathers UI navigators](https://feathersui.com/learn/haxe-openfl/navigator-transitions/)
 
 		@since 1.0.0
@@ -205,7 +205,7 @@ class StackItem {
 
 		@default `null`
 
-		@see `feathers.controls.StackNavigator.pushTransition`
+		@see `feathers.controls.navigators.StackNavigator.pushTransition`
 		@see [Transitions for Feathers UI navigators](https://feathersui.com/learn/haxe-openfl/navigator-transitions/)
 
 		@since 1.0.0

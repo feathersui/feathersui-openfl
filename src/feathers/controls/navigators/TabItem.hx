@@ -28,7 +28,7 @@ import openfl.display.DisplayObject;
 	```
 
 	@see [Tutorial: How to use the TabNavigator component](https://feathersui.com/learn/haxe-openfl/tab-navigator/)
-	@see `feathers.controls.TabNavigator`
+	@see `feathers.controls.navigators.TabNavigator`
 
 	@since 1.0.0
 **/

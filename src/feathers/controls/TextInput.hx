@@ -428,7 +428,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	}
 
 	/**
-		@see `feathers.controls.ITextControl.baseline`
+		@see `feathers.core.ITextControl.baseline`
 	**/
 	public var baseline(get, never):Float;
 

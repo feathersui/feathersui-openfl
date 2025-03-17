@@ -27,7 +27,7 @@ import openfl.display.DisplayObject;
 	```
 
 	@see [Tutorial: How to use the PageNavigator component](https://feathersui.com/learn/haxe-openfl/page-navigator/)
-	@see `feathers.controls.PageNavigator`
+	@see `feathers.controls.navigators.PageNavigator`
 
 	@since 1.0.0
 **/

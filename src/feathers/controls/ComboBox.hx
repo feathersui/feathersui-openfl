@@ -351,7 +351,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	}
 
 	/**
-		@see `feathers.core.IndexSelector.maxSelectedIndex`
+		@see `feathers.core.IIndexSelector.maxSelectedIndex`
 	**/
 	public var maxSelectedIndex(get, never):Int;
 

@@ -109,7 +109,7 @@ class TextFieldViewPort extends FeathersControl implements IViewPort implements 
 	}
 
 	/**
-		@see `feathers.controls.ITextControl.baseline`
+		@see `feathers.core.ITextControl.baseline`
 	**/
 	public var baseline(get, never):Float;
 

@@ -150,7 +150,7 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 	}
 
 	/**
-		@see `feathers.controls.ITextControl.baseline`
+		@see `feathers.core.ITextControl.baseline`
 	**/
 	public var baseline(get, never):Float;
 

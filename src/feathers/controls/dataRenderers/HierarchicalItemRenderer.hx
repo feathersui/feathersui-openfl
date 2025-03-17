@@ -157,7 +157,7 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 	private var _showHierarchy:Bool = true;
 
 	/**
-		@see `feathers.controls.dataRenderers.IOptionaHierarchyItemRenderer.showHierarchy`
+		@see `feathers.controls.dataRenderers.IOptionalHierarchyItemRenderer.showHierarchy`
 	**/
 	public var showHierarchy(get, set):Bool;
 
