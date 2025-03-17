@@ -1,6 +1,6 @@
 /*
 	Feathers UI
-	Copyright 2024 Bowler Hat LLC. All Rights Reserved.
+	Copyright 2025 Bowler Hat LLC. All Rights Reserved.
 
 	This program is free software. You can redistribute and/or modify it in
 	accordance with the terms of the accompanying license agreement.
@@ -304,7 +304,6 @@ class LayoutGroup extends FeathersControl {
 	#else
 	override public function removeChild(child:DisplayObject):DisplayObject
 	#end
-
 	{
 		if (child == null || child.parent != this) {
 			return child;
@@ -335,6 +334,7 @@ class LayoutGroup extends FeathersControl {
 		}
 		return result;
 	}
+
 	private function _removeChild(child:DisplayObject):DisplayObject {
 		#if flash
 		var oldIgnoreFlashRemovedEvent = this._ignoreFlashRemovedEvent;

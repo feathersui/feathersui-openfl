@@ -1,6 +1,6 @@
 /*
 	Feathers UI
-	Copyright 2024 Bowler Hat LLC. All Rights Reserved.
+	Copyright 2025 Bowler Hat LLC. All Rights Reserved.
 
 	This program is free software. You can redistribute and/or modify it in
 	accordance with the terms of the accompanying license agreement.
@@ -95,7 +95,18 @@ import openfl._internal.utils.ObjectPool;
 class DatePicker extends FeathersControl implements IDateSelector implements IFocusObject {
 	#if ((!flash && openfl < "9.2.0") || neko)
 	private static final DEFAULT_MONTH_NAMES = [
-		"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+		"January",
+		"February",
+		"March",
+		"April",
+		"May",
+		"June",
+		"July",
+		"August",
+		"September",
+		"October",
+		"November",
+		"December"
 	];
 
 	private var DEFAULT_WEEKDAY_NAMES = ["S", "M", "T", "W", "T", "F", "S"];
