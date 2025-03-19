@@ -8,6 +8,7 @@
 
 package feathers.motion.transitions;
 
+import feathers.utils.MathUtil;
 import feathers.motion.effects.EffectInterruptBehavior;
 import feathers.motion.effects.IEffectContext;
 import feathers.motion.effects.actuate.ActuateEffectContext;
@@ -195,44 +196,47 @@ class SlideTransitionBuilder {
 				// c = b / cos(α)
 				// a = -sqrt(c^2 - b^2()
 				var hy = width / Math.cos(angle * Math.PI / 180.0);
-				endY = -Math.sqrt(hy * hy - width * width);
+				// floating point precision can result in an extremely small
+				// negative value instead of zero here, so account for that
+				// because we don't want Math.sqrt() to return NaN
+				endY = -Math.sqrt(Math.max(0.0, hy * hy - width * width));
 			} else if (angle >= 45.0 && angle < 90.0) {
 				// NE to N
 				endY = -height;
 				// c = a / sin(α)
 				// b = sqrt(c^2 - a^2)
 				var hy = height / Math.sin(angle * Math.PI / 180.0);
-				endX = Math.sqrt(hy * hy - height * height);
+				endX = Math.sqrt(Math.max(0.0, hy * hy - height * height));
 			} else if (angle >= 90.0 && angle < 135.0) {
 				// N to NW
 				endY = -height;
 				var hy = height / Math.cos((angle - 90.0) * Math.PI / 180.0);
-				endX = -Math.sqrt(hy * hy - height * height);
+				endX = -Math.sqrt(Math.max(0.0, hy * hy - height * height));
 			} else if (angle >= 135.0 && angle < 180.0) {
 				// NW to W
 				endX = -width;
 				var hy = width / Math.sin((angle - 90.0) * Math.PI / 180.0);
-				endY = -Math.sqrt(hy * hy - width * width);
+				endY = -Math.sqrt(Math.max(0.0, hy * hy - width * width));
 			} else if (angle >= 180.0 && angle < 225.0) {
 				// W to SW
 				endX = -width;
 				var hy = width / Math.cos((angle - 180.0) * Math.PI / 180.0);
-				endY = Math.sqrt(hy * hy - width * width);
+				endY = Math.sqrt(Math.max(0.0, hy * hy - width * width));
 			} else if (angle >= 225.0 && angle < 270.0) {
 				// SW to S
 				endY = height;
 				var hy = height / Math.sin((angle - 180.0) * Math.PI / 180.0);
-				endX = -Math.sqrt(hy * hy - height * height);
+				endX = -Math.sqrt(Math.max(0.0, hy * hy - height * height));
 			} else if (angle >= 270.0 && angle < 315.0) {
 				// S to SE
 				endY = height;
 				var hy = height / Math.cos((angle - 270.0) * Math.PI / 180.0);
-				endX = Math.sqrt(hy * hy - height * height);
+				endX = Math.sqrt(Math.max(0.0, hy * hy - height * height));
 			} else { // angle >= 315.0 && angle < 360.0
 				// SE to E
 				endX = width;
 				var hy = width / Math.sin((angle - 270.0) * Math.PI / 180.0);
-				endY = Math.sqrt(hy * hy - width * width);
+				endY = Math.sqrt(Math.max(0.0, hy * hy - width * width));
 			}
 			if (newView != null) {
 				newView.x = -endX;
