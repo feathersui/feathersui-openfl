@@ -693,6 +693,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			cellRenderer.removeEventListener(TouchEvent.TOUCH_TAP, gridViewRowRenderer_cellRenderer_touchTapHandler);
 			cellRenderer.removeEventListener(TriggerEvent.TRIGGER, gridViewRowRenderer_cellRenderer_triggerHandler);
 			cellRenderer.removeEventListener(Event.CHANGE, gridViewRowRenderer_cellRenderer_changeHandler);
+			cellRenderer.removeEventListener(Event.RESIZE, gridViewRowRenderer_cellRenderer_resizeHandler);
 			this.resetCellRenderer(cellRenderer, state, storage);
 			if (storage.measurements != null) {
 				storage.measurements.restore(cellRenderer);
