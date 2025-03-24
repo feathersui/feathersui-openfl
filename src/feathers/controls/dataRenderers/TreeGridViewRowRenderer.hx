@@ -1103,10 +1103,13 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 			// ignore the primary one because MouseEvent.CLICK will catch it
 			return;
 		}
+		var cellRenderer = cast(event.currentTarget, DisplayObject);
+		if (cellRenderer.parent != this) {
+			return;
+		}
 		if (!this.customHitTest(event.stageX, event.stageY)) {
 			return;
 		}
-		var cellRenderer = cast(event.currentTarget, DisplayObject);
 		var state = this._cellRendererToCellState.get(cellRenderer);
 		TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.CELL_TRIGGER, state);
 		TriggerEvent.dispatchFromTouchEvent(this, event);
@@ -1116,10 +1119,13 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 		if (!this._enabled) {
 			return;
 		}
+		var cellRenderer = cast(event.currentTarget, DisplayObject);
+		if (cellRenderer.parent != this) {
+			return;
+		}
 		if (!this.customHitTest(event.stageX, event.stageY)) {
 			return;
 		}
-		var cellRenderer = cast(event.currentTarget, DisplayObject);
 		var state = this._cellRendererToCellState.get(cellRenderer);
 		TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.CELL_TRIGGER, state);
 		TriggerEvent.dispatchFromMouseEvent(this, event);
@@ -1129,10 +1135,13 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 		if (!this._enabled) {
 			return;
 		}
+		var cellRenderer = cast(event.currentTarget, DisplayObject);
+		if (cellRenderer.parent != this) {
+			return;
+		}
 		if (!this.customHitTest(event.stageX, event.stageY)) {
 			return;
 		}
-		var cellRenderer = cast(event.currentTarget, DisplayObject);
 		var state = this._cellRendererToCellState.get(cellRenderer);
 		TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.CELL_TRIGGER, state);
 		this.dispatchEvent(event);
@@ -1140,6 +1149,10 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 
 	private function treeGridViewRowRenderer_cellRenderer_resizeHandler(event:Event):Void {
 		if (this._validating) {
+			return;
+		}
+		var cellRenderer = cast(event.currentTarget, DisplayObject);
+		if (cellRenderer.parent != this) {
 			return;
 		}
 		this.setInvalid(LAYOUT);
@@ -1150,6 +1163,9 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 			return;
 		}
 		var cellRenderer = cast(event.currentTarget, DisplayObject);
+		if (cellRenderer.parent != this) {
+			return;
+		}
 		var toggleCellRenderer = cast(cellRenderer, IToggle);
 		var state = this._cellRendererToCellState.get(cellRenderer);
 		if (toggleCellRenderer.selected == state.selected) {
@@ -1165,11 +1181,19 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 		if (this._ignoreOpenedChange) {
 			return;
 		}
+		var cellRenderer = cast(event.currentTarget, DisplayObject);
+		if (cellRenderer.parent != this) {
+			return;
+		}
 		this.dispatchEvent(event.clone());
 	}
 
 	private function treeGridViewRowRenderer_cellRenderer_closeHandler(event:Event):Void {
 		if (this._ignoreOpenedChange) {
+			return;
+		}
+		var cellRenderer = cast(event.currentTarget, DisplayObject);
+		if (cellRenderer.parent != this) {
 			return;
 		}
 		this.dispatchEvent(event.clone());

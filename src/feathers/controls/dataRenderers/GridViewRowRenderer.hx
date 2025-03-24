@@ -948,10 +948,13 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			// ignore the primary one because MouseEvent.CLICK will catch it
 			return;
 		}
+		var cellRenderer = cast(event.currentTarget, DisplayObject);
+		if (cellRenderer.parent != this) {
+			return;
+		}
 		if (!this.customHitTest(event.stageX, event.stageY)) {
 			return;
 		}
-		var cellRenderer = cast(event.currentTarget, DisplayObject);
 		var state = this._cellRendererToCellState.get(cellRenderer);
 		GridViewEvent.dispatchForCell(this, GridViewEvent.CELL_TRIGGER, state);
 		TriggerEvent.dispatchFromTouchEvent(this, event);
@@ -961,10 +964,13 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		if (!this._enabled) {
 			return;
 		}
+		var cellRenderer = cast(event.currentTarget, DisplayObject);
+		if (cellRenderer.parent != this) {
+			return;
+		}
 		if (!this.customHitTest(event.stageX, event.stageY)) {
 			return;
 		}
-		var cellRenderer = cast(event.currentTarget, DisplayObject);
 		var state = this._cellRendererToCellState.get(cellRenderer);
 		GridViewEvent.dispatchForCell(this, GridViewEvent.CELL_TRIGGER, state);
 		TriggerEvent.dispatchFromMouseEvent(this, event);
@@ -974,10 +980,13 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		if (!this._enabled) {
 			return;
 		}
+		var cellRenderer = cast(event.currentTarget, DisplayObject);
+		if (cellRenderer.parent != this) {
+			return;
+		}
 		if (!this.customHitTest(event.stageX, event.stageY)) {
 			return;
 		}
-		var cellRenderer = cast(event.currentTarget, DisplayObject);
 		var state = this._cellRendererToCellState.get(cellRenderer);
 		GridViewEvent.dispatchForCell(this, GridViewEvent.CELL_TRIGGER, state);
 		this.dispatchEvent(event);
@@ -985,6 +994,10 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 
 	private function gridViewRowRenderer_cellRenderer_resizeHandler(event:Event):Void {
 		if (this._validating) {
+			return;
+		}
+		var cellRenderer = cast(event.currentTarget, DisplayObject);
+		if (cellRenderer.parent != this) {
 			return;
 		}
 		this.setInvalid(LAYOUT);
@@ -995,6 +1008,9 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			return;
 		}
 		var cellRenderer = cast(event.currentTarget, DisplayObject);
+		if (cellRenderer.parent != this) {
+			return;
+		}
 		var toggleCellRenderer = cast(cellRenderer, IToggle);
 		var state = this._cellRendererToCellState.get(cellRenderer);
 		if (toggleCellRenderer.selected == state.selected) {

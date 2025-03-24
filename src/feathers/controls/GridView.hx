@@ -3560,6 +3560,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 
 		var headerRenderer = cast(event.currentTarget, DisplayObject);
+		if (headerRenderer.parent != this._headerContainer) {
+			return;
+		}
 		var state = this.headerRendererToHeaderState.get(headerRenderer);
 		this.updateSortedColumn(state.column);
 		GridViewEvent.dispatchForHeader(this, GridViewEvent.HEADER_TRIGGER, state);
@@ -3571,6 +3574,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 
 		var headerRenderer = cast(event.currentTarget, DisplayObject);
+		if (headerRenderer.parent != this._headerContainer) {
+			return;
+		}
 		var state = this.headerRendererToHeaderState.get(headerRenderer);
 		this.updateSortedColumn(state.column);
 		GridViewEvent.dispatchForHeader(this, GridViewEvent.HEADER_TRIGGER, state);
@@ -3582,6 +3588,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 
 		var headerRenderer = cast(event.currentTarget, DisplayObject);
+		if (headerRenderer.parent != this._headerContainer) {
+			return;
+		}
 		var state = this.headerRendererToHeaderState.get(headerRenderer);
 		this.updateSortedColumn(state.column);
 		GridViewEvent.dispatchForHeader(this, GridViewEvent.HEADER_TRIGGER, state);
@@ -3589,6 +3598,10 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private function gridView_headerRenderer_resizeHandler(event:Event):Void {
 		if (this._validating) {
+			return;
+		}
+		var headerRenderer = cast(event.currentTarget, DisplayObject);
+		if (headerRenderer.parent != this._headerContainer) {
 			return;
 		}
 		this.setInvalid(LAYOUT);
