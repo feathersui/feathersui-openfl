@@ -2100,7 +2100,13 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		}
 
 		var dateRenderer = cast(event.currentTarget, DisplayObject);
+		if (dateRenderer.parent != this.dateContainer) {
+			return;
+		}
 		var state = this.dateRendererToItemState.get(dateRenderer);
+		if (state == null) {
+			return;
+		}
 		DatePickerEvent.dispatch(this, DatePickerEvent.ITEM_TRIGGER, state);
 
 		if (!this._selectable || !this.pointerSelectionEnabled) {
@@ -2117,7 +2123,13 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		}
 
 		var dateRenderer = cast(event.currentTarget, DisplayObject);
+		if (dateRenderer.parent != this.dateContainer) {
+			return;
+		}
 		var state = this.dateRendererToItemState.get(dateRenderer);
+		if (state == null) {
+			return;
+		}
 		DatePickerEvent.dispatch(this, DatePickerEvent.ITEM_TRIGGER, state);
 
 		if (!this._selectable || !this.pointerSelectionEnabled) {
@@ -2134,7 +2146,13 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		}
 
 		var dateRenderer = cast(event.currentTarget, DisplayObject);
+		if (dateRenderer.parent != this.dateContainer) {
+			return;
+		}
 		var state = this.dateRendererToItemState.get(dateRenderer);
+		if (state == null) {
+			return;
+		}
 		DatePickerEvent.dispatch(this, DatePickerEvent.ITEM_TRIGGER, state);
 
 		if (!this._selectable) {
@@ -2150,8 +2168,14 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 			return;
 		}
 		var dateRenderer = cast(event.currentTarget, DisplayObject);
-		var toggleDateRenderer = cast(dateRenderer, IToggle);
+		if (dateRenderer.parent != this.dateContainer) {
+			return;
+		}
 		var state = this.dateRendererToItemState.get(dateRenderer);
+		if (state == null) {
+			return;
+		}
+		var toggleDateRenderer = cast(dateRenderer, IToggle);
 		if (toggleDateRenderer.selected == state.selected) {
 			// nothing has changed
 			return;

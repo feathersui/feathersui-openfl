@@ -2156,7 +2156,13 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		}
 
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
+		if (itemRenderer.parent != this.groupViewPort) {
+			return;
+		}
 		var state = this.itemRendererToItemState.get(itemRenderer);
+		if (state == null) {
+			return;
+		}
 		GroupListViewEvent.dispatch(this, GroupListViewEvent.ITEM_TRIGGER, state);
 
 		if (!this._selectable || !this.pointerSelectionEnabled) {
@@ -2171,7 +2177,13 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		}
 
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
+		if (itemRenderer.parent != this.groupViewPort) {
+			return;
+		}
 		var state = this.itemRendererToItemState.get(itemRenderer);
+		if (state == null) {
+			return;
+		}
 		GroupListViewEvent.dispatch(this, GroupListViewEvent.ITEM_TRIGGER, state);
 
 		if (!this._selectable || !this.pointerSelectionEnabled) {
@@ -2186,7 +2198,13 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		}
 
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
+		if (itemRenderer.parent != this.groupViewPort) {
+			return;
+		}
 		var state = this.itemRendererToItemState.get(itemRenderer);
+		if (state == null) {
+			return;
+		}
 		GroupListViewEvent.dispatch(this, GroupListViewEvent.ITEM_TRIGGER, state);
 
 		if (!this._selectable) {
@@ -2199,6 +2217,10 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		if (this._validating) {
 			return;
 		}
+		var itemRenderer = cast(event.currentTarget, DisplayObject);
+		if (itemRenderer.parent != this.groupViewPort) {
+			return;
+		}
 		this.setInvalid(LAYOUT);
 	}
 
@@ -2207,8 +2229,14 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			return;
 		}
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
-		var toggleItemRenderer = cast(itemRenderer, IToggle);
+		if (itemRenderer.parent != this.groupViewPort) {
+			return;
+		}
 		var state = this.itemRendererToItemState.get(itemRenderer);
+		if (state == null) {
+			return;
+		}
+		var toggleItemRenderer = cast(itemRenderer, IToggle);
 		if (toggleItemRenderer.selected == state.selected) {
 			// nothing has changed
 			return;

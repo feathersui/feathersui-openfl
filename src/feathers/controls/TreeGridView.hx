@@ -2736,7 +2736,13 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			return;
 		}
 		var rowRenderer = cast(event.currentTarget, TreeGridViewRowRenderer);
+		if (rowRenderer.parent != this.treeGridViewPort) {
+			return;
+		}
 		var state = this.rowRendererToRowState.get(rowRenderer);
+		if (state == null) {
+			return;
+		}
 		// use the setter
 		this.selectedLocation = state.rowLocation.copy();
 		if (this._selectedLocation != null) {
@@ -2745,6 +2751,10 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	}
 
 	private function treeGridView_rowRenderer_cellTriggerHandler(event:TreeGridViewEvent<TreeGridViewCellState>):Void {
+		var rowRenderer = cast(event.currentTarget, TreeGridViewRowRenderer);
+		if (rowRenderer.parent != this.treeGridViewPort) {
+			return;
+		}
 		this.dispatchEvent(event.clone());
 	}
 
@@ -2753,7 +2763,13 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			return;
 		}
 		var rowRenderer = cast(event.currentTarget, TreeGridViewRowRenderer);
+		if (rowRenderer.parent != this.treeGridViewPort) {
+			return;
+		}
 		var state = this.rowRendererToRowState.get(rowRenderer);
+		if (state == null) {
+			return;
+		}
 		this.toggleBranch(state.data, true);
 	}
 
@@ -2762,7 +2778,13 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			return;
 		}
 		var rowRenderer = cast(event.currentTarget, TreeGridViewRowRenderer);
+		if (rowRenderer.parent != this.treeGridViewPort) {
+			return;
+		}
 		var state = this.rowRendererToRowState.get(rowRenderer);
+		if (state == null) {
+			return;
+		}
 		this.toggleBranch(state.data, false);
 	}
 
@@ -3332,6 +3354,9 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			return;
 		}
 		var state = this.headerRendererToHeaderState.get(headerRenderer);
+		if (state == null) {
+			return;
+		}
 		TreeGridViewEvent.dispatchForHeader(this, TreeGridViewEvent.HEADER_TRIGGER, state);
 	}
 
@@ -3345,6 +3370,9 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			return;
 		}
 		var state = this.headerRendererToHeaderState.get(headerRenderer);
+		if (state == null) {
+			return;
+		}
 		TreeGridViewEvent.dispatchForHeader(this, TreeGridViewEvent.HEADER_TRIGGER, state);
 	}
 
@@ -3358,6 +3386,9 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			return;
 		}
 		var state = this.headerRendererToHeaderState.get(headerRenderer);
+		if (state == null) {
+			return;
+		}
 		TreeGridViewEvent.dispatchForHeader(this, TreeGridViewEvent.HEADER_TRIGGER, state);
 	}
 

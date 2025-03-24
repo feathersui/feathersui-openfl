@@ -2097,7 +2097,13 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		}
 
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
+		if (itemRenderer.parent != this.treeViewPort) {
+			return;
+		}
 		var state = this.itemRendererToItemState.get(itemRenderer);
+		if (state == null) {
+			return;
+		}
 		TreeViewEvent.dispatch(this, TreeViewEvent.ITEM_TRIGGER, state);
 
 		if (!this._selectable || !this.pointerSelectionEnabled) {
@@ -2115,7 +2121,13 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			return;
 		}
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
+		if (itemRenderer.parent != this.treeViewPort) {
+			return;
+		}
 		var state = this.itemRendererToItemState.get(itemRenderer);
+		if (state == null) {
+			return;
+		}
 		TreeViewEvent.dispatch(this, TreeViewEvent.ITEM_TRIGGER, state);
 
 		if (!this._selectable || !this.pointerSelectionEnabled) {
@@ -2133,7 +2145,13 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			return;
 		}
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
+		if (itemRenderer.parent != this.treeViewPort) {
+			return;
+		}
 		var state = this.itemRendererToItemState.get(itemRenderer);
+		if (state == null) {
+			return;
+		}
 		TreeViewEvent.dispatch(this, TreeViewEvent.ITEM_TRIGGER, state);
 
 		if (!this._selectable || !this.pointerSelectionEnabled) {
@@ -2150,6 +2168,10 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		if (this._validating) {
 			return;
 		}
+		var itemRenderer = cast(event.currentTarget, DisplayObject);
+		if (itemRenderer.parent != this.treeViewPort) {
+			return;
+		}
 		this.setInvalid(LAYOUT);
 	}
 
@@ -2158,8 +2180,14 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			return;
 		}
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
-		var toggleItemRenderer = cast(itemRenderer, IToggle);
+		if (itemRenderer.parent != this.treeViewPort) {
+			return;
+		}
 		var state = this.itemRendererToItemState.get(itemRenderer);
+		if (state == null) {
+			return;
+		}
+		var toggleItemRenderer = cast(itemRenderer, IToggle);
 		if (toggleItemRenderer.selected == state.selected) {
 			// nothing has changed
 			return;
@@ -2174,7 +2202,13 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			return;
 		}
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
+		if (itemRenderer.parent != this.treeViewPort) {
+			return;
+		}
 		var state = this.itemRendererToItemState.get(itemRenderer);
+		if (state == null) {
+			return;
+		}
 		this.toggleBranch(state.data, true);
 	}
 
@@ -2183,7 +2217,13 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			return;
 		}
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
+		if (itemRenderer.parent != this.treeViewPort) {
+			return;
+		}
 		var state = this.itemRendererToItemState.get(itemRenderer);
+		if (state == null) {
+			return;
+		}
 		this.toggleBranch(state.data, false);
 	}
 

@@ -2937,11 +2937,21 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private function gridView_rowRenderer_triggerHandler(event:TriggerEvent):Void {
 		var rowRenderer = cast(event.currentTarget, GridViewRowRenderer);
+		if (rowRenderer.parent != this.gridViewPort) {
+			return;
+		}
 		var state = this.rowRendererToRowState.get(rowRenderer);
+		if (state == null) {
+			return;
+		}
 		this.handleSelectionChange(state.data, state.rowIndex, event.ctrlKey, event.shiftKey);
 	}
 
 	private function gridView_rowRenderer_cellTriggerHandler(event:GridViewEvent<GridViewCellState>):Void {
+		var rowRenderer = cast(event.currentTarget, GridViewRowRenderer);
+		if (rowRenderer.parent != this.gridViewPort) {
+			return;
+		}
 		this.dispatchEvent(event.clone());
 	}
 
@@ -2950,6 +2960,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			return;
 		}
 		var rowRenderer = cast(event.currentTarget, GridViewRowRenderer);
+		if (rowRenderer.parent != this.gridViewPort) {
+			return;
+		}
 		var state = this.rowRendererToRowState.get(rowRenderer);
 		if (state == null) {
 			return;
@@ -3564,6 +3577,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			return;
 		}
 		var state = this.headerRendererToHeaderState.get(headerRenderer);
+		if (state == null) {
+			return;
+		}
 		this.updateSortedColumn(state.column);
 		GridViewEvent.dispatchForHeader(this, GridViewEvent.HEADER_TRIGGER, state);
 	}
@@ -3578,6 +3594,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			return;
 		}
 		var state = this.headerRendererToHeaderState.get(headerRenderer);
+		if (state == null) {
+			return;
+		}
 		this.updateSortedColumn(state.column);
 		GridViewEvent.dispatchForHeader(this, GridViewEvent.HEADER_TRIGGER, state);
 	}
@@ -3592,6 +3611,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			return;
 		}
 		var state = this.headerRendererToHeaderState.get(headerRenderer);
+		if (state == null) {
+			return;
+		}
 		this.updateSortedColumn(state.column);
 		GridViewEvent.dispatchForHeader(this, GridViewEvent.HEADER_TRIGGER, state);
 	}

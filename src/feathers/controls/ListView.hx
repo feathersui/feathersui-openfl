@@ -1928,7 +1928,13 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
+		if (itemRenderer.parent != this.listViewPort) {
+			return;
+		}
 		var state = this.itemRendererToItemState.get(itemRenderer);
+		if (state == null) {
+			return;
+		}
 		ListViewEvent.dispatch(this, ListViewEvent.ITEM_TRIGGER, state);
 
 		if (!this._selectable || !this.pointerSelectionEnabled) {
@@ -1943,7 +1949,13 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
+		if (itemRenderer.parent != this.listViewPort) {
+			return;
+		}
 		var state = this.itemRendererToItemState.get(itemRenderer);
+		if (state == null) {
+			return;
+		}
 		ListViewEvent.dispatch(this, ListViewEvent.ITEM_TRIGGER, state);
 
 		if (!this._selectable || !this.pointerSelectionEnabled) {
@@ -1958,7 +1970,13 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
+		if (itemRenderer.parent != this.listViewPort) {
+			return;
+		}
 		var state = this.itemRendererToItemState.get(itemRenderer);
+		if (state == null) {
+			return;
+		}
 		ListViewEvent.dispatch(this, ListViewEvent.ITEM_TRIGGER, state);
 
 		if (!this._selectable) {
@@ -1971,6 +1989,10 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._validating) {
 			return;
 		}
+		var itemRenderer = cast(event.currentTarget, DisplayObject);
+		if (itemRenderer.parent != this.listViewPort) {
+			return;
+		}
 		this.setInvalid(LAYOUT);
 	}
 
@@ -1979,8 +2001,14 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			return;
 		}
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
-		var toggleItemRenderer = cast(itemRenderer, IToggle);
+		if (itemRenderer.parent != this.listViewPort) {
+			return;
+		}
 		var state = this.itemRendererToItemState.get(itemRenderer);
+		if (state == null) {
+			return;
+		}
+		var toggleItemRenderer = cast(itemRenderer, IToggle);
 		if (toggleItemRenderer.selected == state.selected) {
 			// nothing has changed
 			return;
@@ -1995,6 +2023,9 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			return;
 		}
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
+		if (itemRenderer.parent != this.listViewPort) {
+			return;
+		}
 		var state = this.itemRendererToItemState.get(itemRenderer);
 		if (state == null) {
 			return;

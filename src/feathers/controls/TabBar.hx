@@ -1234,7 +1234,13 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 
 	private function tabBar_tab_triggerHandler(event:TriggerEvent):Void {
 		var tab = cast(event.currentTarget, ToggleButton);
+		if (tab.parent != this) {
+			return;
+		}
 		var state = this.tabToItemState.get(tab);
+		if (state == null) {
+			return;
+		}
 		TabBarEvent.dispatch(this, TabBarEvent.ITEM_TRIGGER, state);
 	}
 
@@ -1243,12 +1249,18 @@ class TabBar extends FeathersControl implements IIndexSelector implements IDataS
 			return;
 		}
 		var tab = cast(event.currentTarget, ToggleButton);
+		if (tab.parent != this) {
+			return;
+		}
+		var state = this.tabToItemState.get(tab);
+		if (state == null) {
+			return;
+		}
 		if (!tab.selected) {
 			// no toggle off!
 			tab.selected = true;
 			return;
 		}
-		var state = this.tabToItemState.get(tab);
 		// use the setter
 		this.selectedItem = state.data;
 	}

@@ -1035,7 +1035,13 @@ class ButtonBar extends FeathersControl {
 
 	private function buttonBar_button_triggerHandler(event:TriggerEvent):Void {
 		var button = cast(event.currentTarget, Button);
+		if (button.parent != this) {
+			return;
+		}
 		var state = this.buttonToItemState.get(button);
+		if (state == null) {
+			return;
+		}
 		ButtonBarEvent.dispatch(this, ButtonBarEvent.ITEM_TRIGGER, state);
 	}
 

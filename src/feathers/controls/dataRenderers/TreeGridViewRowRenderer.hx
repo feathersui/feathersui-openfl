@@ -1107,10 +1107,13 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 		if (cellRenderer.parent != this) {
 			return;
 		}
+		var state = this._cellRendererToCellState.get(cellRenderer);
+		if (state == null) {
+			return;
+		}
 		if (!this.customHitTest(event.stageX, event.stageY)) {
 			return;
 		}
-		var state = this._cellRendererToCellState.get(cellRenderer);
 		TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.CELL_TRIGGER, state);
 		TriggerEvent.dispatchFromTouchEvent(this, event);
 	}
@@ -1123,10 +1126,13 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 		if (cellRenderer.parent != this) {
 			return;
 		}
+		var state = this._cellRendererToCellState.get(cellRenderer);
+		if (state == null) {
+			return;
+		}
 		if (!this.customHitTest(event.stageX, event.stageY)) {
 			return;
 		}
-		var state = this._cellRendererToCellState.get(cellRenderer);
 		TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.CELL_TRIGGER, state);
 		TriggerEvent.dispatchFromMouseEvent(this, event);
 	}
@@ -1139,10 +1145,13 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 		if (cellRenderer.parent != this) {
 			return;
 		}
+		var state = this._cellRendererToCellState.get(cellRenderer);
+		if (state == null) {
+			return;
+		}
 		if (!this.customHitTest(event.stageX, event.stageY)) {
 			return;
 		}
-		var state = this._cellRendererToCellState.get(cellRenderer);
 		TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.CELL_TRIGGER, state);
 		this.dispatchEvent(event);
 	}
@@ -1166,8 +1175,11 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 		if (cellRenderer.parent != this) {
 			return;
 		}
-		var toggleCellRenderer = cast(cellRenderer, IToggle);
 		var state = this._cellRendererToCellState.get(cellRenderer);
+		if (state == null) {
+			return;
+		}
+		var toggleCellRenderer = cast(cellRenderer, IToggle);
 		if (toggleCellRenderer.selected == state.selected) {
 			// nothing has changed
 			return;
@@ -1185,6 +1197,10 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 		if (cellRenderer.parent != this) {
 			return;
 		}
+		var state = this._cellRendererToCellState.get(cellRenderer);
+		if (state == null) {
+			return;
+		}
 		this.dispatchEvent(event.clone());
 	}
 
@@ -1194,6 +1210,10 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 		}
 		var cellRenderer = cast(event.currentTarget, DisplayObject);
 		if (cellRenderer.parent != this) {
+			return;
+		}
+		var state = this._cellRendererToCellState.get(cellRenderer);
+		if (state == null) {
 			return;
 		}
 		this.dispatchEvent(event.clone());
