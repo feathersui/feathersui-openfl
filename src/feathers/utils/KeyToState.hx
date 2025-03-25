@@ -11,6 +11,7 @@ package feathers.utils;
 import feathers.core.IFocusObject;
 import feathers.core.IStateContext;
 import openfl.display.InteractiveObject;
+import openfl.display.Stage;
 import openfl.events.Event;
 import openfl.events.FocusEvent;
 import openfl.events.KeyboardEvent;
@@ -64,7 +65,6 @@ class KeyToState<T> {
 			this._target.removeEventListener(Event.REMOVED_FROM_STAGE, keyToState_target_removedFromStageHandler);
 			this._target.removeEventListener(FocusEvent.FOCUS_OUT, keyToState_target_focusOutHandler);
 			this._target.removeEventListener(KeyboardEvent.KEY_DOWN, keyToState_target_keyDownHandler);
-			this._target.removeEventListener(KeyboardEvent.KEY_UP, keyToState_target_keyUpHandler);
 		}
 		this._target = value;
 		if (this._target != null) {
@@ -72,10 +72,11 @@ class KeyToState<T> {
 			this._target.addEventListener(Event.REMOVED_FROM_STAGE, keyToState_target_removedFromStageHandler);
 			this._target.addEventListener(FocusEvent.FOCUS_OUT, keyToState_target_focusOutHandler);
 			this._target.addEventListener(KeyboardEvent.KEY_DOWN, keyToState_target_keyDownHandler);
-			this._target.addEventListener(KeyboardEvent.KEY_UP, keyToState_target_keyUpHandler);
 		}
 		return this._target;
 	}
+
+	private var _keyDownStage:Stage = null;
 
 	private var _callback:(T) -> Void = null;
 
@@ -205,6 +206,9 @@ class KeyToState<T> {
 			// not down, don't do anything
 			return;
 		}
+		if (this._keyDownStage != null) {
+			this._keyDownStage.removeEventListener(KeyboardEvent.KEY_UP, keyToState_stage_keyUpHandler);
+		}
 		this._downKeyCode = null;
 		this.changeState(this._upState);
 	}
@@ -218,6 +222,12 @@ class KeyToState<T> {
 	}
 
 	private function keyToState_target_keyDownHandler(event:KeyboardEvent):Void {
+		if (!this._enabled
+			|| this._downKeyCode != null
+			|| this._target.stage == null
+			|| (event.keyCode != Keyboard.SPACE && event.keyCode != Keyboard.ENTER)) {
+			return;
+		}
 		if ((this._target is IFocusObject)) {
 			var focusObject:IFocusObject = cast this._target;
 			var focusManager = focusObject.focusManager;
@@ -225,14 +235,16 @@ class KeyToState<T> {
 				return;
 			}
 		}
-		if (!this._enabled || this._downKeyCode != null || (event.keyCode != Keyboard.SPACE && event.keyCode != Keyboard.ENTER)) {
-			return;
-		}
 		this._downKeyCode = event.keyCode;
+		// we don't listen to KeyboardEvent.KEY_UP on the target because the
+		// target might not actually have focus anymore, but we need to know
+		// when the key is back up. the stage will always get KEY_UP events.
+		this._keyDownStage = this._target.stage;
+		this._keyDownStage.addEventListener(KeyboardEvent.KEY_UP, keyToState_stage_keyUpHandler, false, 0, true);
 		this.changeState(this._downState);
 	}
 
-	private function keyToState_target_keyUpHandler(event:KeyboardEvent):Void {
+	private function keyToState_stage_keyUpHandler(event:KeyboardEvent):Void {
 		if (event.keyCode != this._downKeyCode) {
 			return;
 		}
