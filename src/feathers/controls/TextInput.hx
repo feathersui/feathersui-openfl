@@ -1624,6 +1624,9 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 				this.removeChild(this.promptTextField);
 				this.promptTextField = null;
 			}
+			this._previousPrompt = null;
+			this._previousPromptTextFormat = null;
+			this._previousPromptSimpleTextFormat = null;
 			return;
 		}
 		if (this.promptTextField == null) {
