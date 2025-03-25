@@ -639,6 +639,9 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 				this.removeChild(this.onTextField);
 				this.onTextField = null;
 			}
+			this._previousOnText = null;
+			this._previousOnTextFormat = null;
+			this._previousOnSimpleTextFormat = null;
 		} else if (this.onTextField == null) {
 			var index = 0;
 			if (this._currentSecondaryTrackSkin != null) {
@@ -654,6 +657,9 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 				this.removeChild(this.offTextField);
 				this.offTextField = null;
 			}
+			this._previousOffText = null;
+			this._previousOffTextFormat = null;
+			this._previousOffSimpleTextFormat = null;
 		} else if (this.offTextField == null) {
 			var index = 0;
 			if (this._currentSecondaryTrackSkin != null) {

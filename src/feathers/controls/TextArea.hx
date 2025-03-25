@@ -115,7 +115,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 	private var _previousSimpleTextFormat:openfl.text.TextFormat = null;
 	private var _previousPrompt:String = null;
 	private var _previousPromptTextFormat:TextFormat = null;
-	private var _previousSimplePromptTextFormat:openfl.text.TextFormat = null;
+	private var _previousPromptSimpleTextFormat:openfl.text.TextFormat = null;
 	private var _updatedPromptStyles = false;
 	private var _promptTextMeasuredWidth:Float;
 	private var _promptTextMeasuredHeight:Float;
@@ -1108,6 +1108,9 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 				this.removeChild(this.promptTextField);
 				this.promptTextField = null;
 			}
+			this._previousPrompt = null;
+			this._previousPromptTextFormat = null;
+			this._previousPromptSimpleTextFormat = null;
 			return;
 		}
 		if (this.promptTextField == null) {
@@ -1167,7 +1170,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 		}
 		var textFormat = this.getCurrentPromptTextFormat();
 		var simpleTextFormat = textFormat != null ? textFormat.toSimpleTextFormat() : null;
-		if (simpleTextFormat == this._previousSimplePromptTextFormat) {
+		if (simpleTextFormat == this._previousPromptSimpleTextFormat) {
 			// nothing to refresh
 			return;
 		}
@@ -1180,7 +1183,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 			this._updatedPromptStyles = true;
 		}
 		this._previousPromptTextFormat = textFormat;
-		this._previousSimplePromptTextFormat = simpleTextFormat;
+		this._previousPromptSimpleTextFormat = simpleTextFormat;
 	}
 
 	private function getCurrentPromptTextFormat():TextFormat {
