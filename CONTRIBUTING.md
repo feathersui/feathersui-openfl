@@ -2,6 +2,10 @@
 
 These styles and conventions described below must be followed in any commit or pull request created for [feathersui-openfl](https://github.com/feathersui/feathersui-openfl). Feel free to adopt these rules for other projects if you are using Feathers UI, but keep in mind that some of these rules are intentionally more strict than most projects require. As a library, Feathers UI needs to meet the needs of a variety of use-cases, and its coding practices are often designed to prevent conflicts that not all projects will necessarily encounter.
 
+## Use of generative AI
+
+No contributions to source code, documentation, or artwork may be created using generative AI tools. This includes Large Language Models (LLMs) and chatbots. This policy is to limit negative influence on code quality and to avoid potential copyright violations.
+
 ## Code Style
 
 ### Haxe 4 Syntax
