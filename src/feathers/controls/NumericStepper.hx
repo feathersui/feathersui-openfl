@@ -46,8 +46,8 @@ import openfl.ui.Multitouch;
 
 	```haxe
 	var stepper = new NumericStepper();
-	stepper.minimum = 0.o;
-	stepper.maximum = 100.o;
+	stepper.minimum = 0.0;
+	stepper.maximum = 100.0;
 	stepper.step = 1.0;
 	stepper.value = 12.0;
 	stepper.addEventListener(Event.CHANGE, stepper_changeHandler);
@@ -406,7 +406,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		The following example disables editing:
 
 		```haxe
-		textInput.editable = false;
+		stepper.editable = false;
 		```
 
 		@since 1.0.0
@@ -440,7 +440,7 @@ class NumericStepper extends FeathersControl implements IRange implements IStage
 		The following example disables the buttons at range limits
 
 		```haxe
-		textInput.enableButtonsAtRangeLimits = false;
+		stepper.enableButtonsAtRangeLimits = false;
 		```
 
 		@since 1.2.0
