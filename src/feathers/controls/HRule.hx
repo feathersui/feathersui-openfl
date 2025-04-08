@@ -12,6 +12,7 @@ import openfl.display.DisplayObject;
 /**
 	Renders a horizontal line for use as a divider between sections.
 
+	@see [Tutorial: How to use the HRule and VRule components](https://feathersui.com/learn/haxe-openfl/rule/)
 	@see `feathers.controls.VRule`
 
 	@since 1.4.0
