@@ -73,12 +73,12 @@ import lime.ui.KeyCode;
 	```haxe
 	var menu = new Menu();
 
-	menu.dataProvider = new ArrayCollection([
-		{ text: "Milk" },
-		{ text: "Eggs" },
-		{ text: "Bread" },
-		{ text: "Chicken" },
-	]);
+	menu.dataProvider = new ArrayHierarhicalCollection([
+		{ text: "New" },
+		{ text: "Open" },
+		{ text: "Save" },
+		{ text: "Quit" }
+	], (item:Dynamic) -> item.children);
 
 	menu.itemToText = (item:Dynamic) -> {
 		return item.text;
@@ -86,7 +86,7 @@ import lime.ui.KeyCode;
 
 	menu.addEventListener(MenuEvent.ITEM_TRIGGER, (event:MenuEvent) -> {
 		var menu = cast(event.currentTarget, Menu);
-		trace("Menu item triggered: " + event.state.index + " " + menu.state.text);
+		trace("Menu item triggered: " + event.state.index + " " + event.state.text);
 	});
 
 	menu.showAtPosition(10.0, 20.0);

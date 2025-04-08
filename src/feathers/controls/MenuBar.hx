@@ -74,7 +74,7 @@ import lime.ui.KeyCode;
 				{ text: "About" }
 			]
 		}
-	], item -> item.children);
+	], (item:Dynamic) -> item.children);
 
 	menuBar.itemToText = (item:Dynamic) -> {
 		return item.text;
