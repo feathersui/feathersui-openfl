@@ -1,3 +1,4 @@
+import com.feathersui.components.views.MenuScreen;
 import com.feathersui.components.ViewPaths;
 import com.feathersui.components.views.ActivityIndicatorScreen;
 import com.feathersui.components.views.AlertScreen;
@@ -25,6 +26,7 @@ import com.feathersui.components.views.LayoutGroupScreen;
 import com.feathersui.components.views.LeftAndRightBorderSkinScreen;
 import com.feathersui.components.views.ListViewScreen;
 import com.feathersui.components.views.MainMenu;
+import com.feathersui.components.views.MenuBarScreen;
 import com.feathersui.components.views.NumericStepperScreen;
 import com.feathersui.components.views.PageIndicatorScreen;
 import com.feathersui.components.views.PageNavigatorScreen;
@@ -177,6 +179,12 @@ class Main extends Application {
 
 		var listView = Route.withClass(ViewPaths.LIST_VIEW, ListViewScreen, [Event.COMPLETE => GoBack()]);
 		this._navigator.addRoute(listView);
+
+		var menu = Route.withClass(ViewPaths.MENU, MenuScreen, [Event.COMPLETE => GoBack()]);
+		this._navigator.addRoute(menu);
+
+		var menuBar = Route.withClass(ViewPaths.MENU_BAR, MenuBarScreen, [Event.COMPLETE => GoBack()]);
+		this._navigator.addRoute(menuBar);
 
 		var numericStepper = Route.withClass(ViewPaths.NUMERIC_STEPPER, NumericStepperScreen, [Event.COMPLETE => GoBack()]);
 		this._navigator.addRoute(numericStepper);

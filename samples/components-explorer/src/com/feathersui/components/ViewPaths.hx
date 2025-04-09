@@ -39,6 +39,10 @@ class ViewPaths {
 	public static final TREE_VIEW = "/tree-view";
 	public static final POP_UP_LIST_VIEW = "/pop-up-list-view";
 
+	// menus
+	public static final MENU = "/menu";
+	public static final MENU_BAR = "/menu-bar";
+
 	// navigators
 	public static final PAGE_NAVIGATOR = "/page-navigator";
 	public static final STACK_NAVIGATOR = "/stack-navigator";

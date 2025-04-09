@@ -69,6 +69,10 @@ class MainMenu extends Panel {
 				new MenuItem("Tree Grid View", ViewPaths.TREE_GRID_VIEW),
 				new MenuItem("Tree View", ViewPaths.TREE_VIEW),
 			]),
+			new MenuItem("Menus", null, [
+				new MenuItem("Menu", ViewPaths.MENU),
+				new MenuItem("Menu Bar", ViewPaths.MENU_BAR),
+			]),
 			new MenuItem("Navigators", null, [
 				new MenuItem("Page Navigator", ViewPaths.PAGE_NAVIGATOR),
 				new MenuItem("Stack Navigator", ViewPaths.STACK_NAVIGATOR),
