@@ -73,15 +73,21 @@ import lime.ui.KeyCode;
 	```haxe
 	var menu = new Menu();
 
-	menu.dataProvider = new ArrayHierarhicalCollection([
+	menu.dataProvider = new ArrayHierarhicalCollection<MenuItemData>([
 		{ text: "New" },
 		{ text: "Open" },
+		{ separator: true },
 		{ text: "Save" },
+		{ separator: true },
 		{ text: "Quit" }
-	], (item:Dynamic) -> item.children);
+	], (item:MenuItemData) -> item.children);
 
-	menu.itemToText = (item:Dynamic) -> {
+	menu.itemToText = (item:MenuItemData) -> {
 		return item.text;
+	};
+
+	menu.itemToSeparator = (item:MenuItemData) -> {
+		return item.separator;
 	};
 
 	menu.addEventListener(MenuEvent.ITEM_TRIGGER, (event:MenuEvent) -> {
@@ -90,6 +96,16 @@ import lime.ui.KeyCode;
 	});
 
 	menu.showAtPosition(10.0, 20.0);
+	```
+
+	The example above uses the following custom [Haxe typedef](https://haxe.org/manual/type-system-typedef.html).
+
+	```haxe
+	typedef MenuItemData = {
+		?text:String,
+		?children:Array<MenuItemData>,
+		?separator:Bool
+	}
 	```
 
 	@event feathers.events.MenuEvent.ITEM_TRIGGER Dispatched when the user

@@ -57,12 +57,13 @@ import lime.ui.KeyCode;
 
 	```haxe
 	var menuBar = new MenuBar();
-	menuBar.dataProvider = new ArrayHierarchicalCollection([
+	menuBar.dataProvider = new ArrayHierarchicalCollection<MenuItemData>([
 		{
 			text: "File",
 			children: [
 				{ text: "New" },
 				{ text: "Open" },
+				{ separator: true },
 				{ text: "Save" },
 				{ text: "Quit" }
 			]
@@ -74,15 +75,29 @@ import lime.ui.KeyCode;
 				{ text: "About" }
 			]
 		}
-	], (item:Dynamic) -> item.children);
+	], (item:MenuItemData) -> item.children);
 
-	menuBar.itemToText = (item:Dynamic) -> {
+	menuBar.itemToText = (item:MenuItemData) -> {
 		return item.text;
+	};
+
+	menuBar.itemToSeparator = (item:MenuItemData) -> {
+		return item.separator;
 	};
 
 	menuBar.addEventListener(MenuEvent.ITEM_TRIGGER, menuBar_itemTriggerHandler);
 
 	this.addChild(menuBar);
+	```
+
+	The example above uses the following custom [Haxe typedef](https://haxe.org/manual/type-system-typedef.html).
+
+	```haxe
+	typedef MenuItemData = {
+		?text:String,
+		?children:Array<MenuItemData>,
+		?separator:Bool
+	}
 	```
 
 	@event feathers.events.MenuEvent.ITEM_TRIGGER Dispatched when the user
