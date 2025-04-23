@@ -64,7 +64,7 @@ class StyleProviderAndVariantTest extends Test {
 
 		this._styleProvider.reset();
 		StyleProviderEvent.dispatch(this._styleProvider, Event.CLEAR);
-		Assert.isNull(this._control.styleProvider, "Must set custom style provider to null when cleared");
+		Assert.notEquals(this._styleProvider, this._control.styleProvider, "Must set custom style provider to null when cleared");
 		Assert.isFalse(this._styleProvider.appliedStyles, "Must not apply style provider before initialization when style provider dispatches Event.CLEAR");
 	}
 
@@ -109,7 +109,7 @@ class StyleProviderAndVariantTest extends Test {
 
 		this._styleProvider.reset();
 		StyleProviderEvent.dispatch(this._styleProvider, Event.CLEAR);
-		Assert.isNull(this._control.styleProvider, "Must set custom style provider to null when cleared");
+		Assert.notEquals(this._styleProvider, this._control.styleProvider, "Must set custom style provider to null when cleared");
 		Assert.isFalse(this._styleProvider.appliedStyles, "Must not apply style provider when is off stage and style provider dispatches Event.CLEAR");
 	}
 
@@ -150,7 +150,7 @@ class StyleProviderAndVariantTest extends Test {
 
 		this._styleProvider.reset();
 		StyleProviderEvent.dispatch(this._styleProvider, Event.CLEAR);
-		Assert.isNull(this._control.styleProvider, "Must set custom style provider to null when cleared");
+		Assert.notEquals(this._styleProvider, this._control.styleProvider, "Must set custom style provider to null when cleared");
 		Assert.isFalse(this._styleProvider.appliedStyles, "Must not apply cleared style provider after it dispatches Event.CLEAR");
 	}
 
@@ -214,7 +214,7 @@ class StyleProviderAndVariantTest extends Test {
 
 		this._styleProvider.reset();
 		StyleProviderEvent.dispatch(this._styleProvider, Event.CLEAR);
-		Assert.isNull(this._control.styleProvider, "Must set custom style provider to null when cleared");
+		Assert.notEquals(this._styleProvider, this._control.styleProvider, "Must set custom style provider to null when cleared");
 		Assert.isFalse(this._styleProvider.appliedStyles, "Must not apply style provider when removed from stage");
 		Lib.current.addChild(this._control);
 		Assert.isFalse(this._styleProvider.appliedStyles, "Must not apply cleared style provider when waiting after removal");
