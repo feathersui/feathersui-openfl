@@ -38,6 +38,10 @@ class SteelComboBoxStyles {
 
 		var styleProvider = theme.styleProvider;
 
+		if (styleProvider.getStyleFunction(ComboBox, null) == null) {
+			styleProvider.setStyleFunction(ComboBox, null, function(comboBox:ComboBox):Void {});
+		}
+
 		if (styleProvider.getStyleFunction(Button, ComboBox.CHILD_VARIANT_BUTTON) == null) {
 			styleProvider.setStyleFunction(Button, ComboBox.CHILD_VARIANT_BUTTON, function(button:Button):Void {
 				if (button.backgroundSkin == null) {

@@ -790,6 +790,22 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		return this._listViewFactory;
 	}
 
+	/**
+		The space, measured in pixels, between the combo box's text input and
+		its button.
+
+		The following example creates a gap of 20 pixels between the text input
+		and the button:
+
+		```haxe
+		comboBox.gap = 20.0;
+		```
+
+		@since 1.4.0
+	**/
+	@:style
+	public var gap:Float = 0.0;
+
 	private var _pendingSelectionAnchorIndex:Int = -1;
 
 	/**
@@ -1258,7 +1274,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		var newWidth = this.explicitWidth;
 		if (needsWidth) {
-			newWidth = this.button.width + this.textInput.width;
+			newWidth = this.button.width + this.textInput.width + this.gap;
 		}
 
 		var newHeight = this.explicitHeight;
@@ -1268,7 +1284,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 		var newMinWidth = this.explicitMinWidth;
 		if (needsMinWidth) {
-			newMinWidth = this.button.minWidth + this.textInput.minWidth;
+			newMinWidth = this.button.minWidth + this.textInput.minWidth + this.gap;
 		}
 
 		var newMinHeight = this.explicitMinHeight;
@@ -1288,7 +1304,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		}
 		this.textInput.x = 0.0;
 		this.textInput.y = 0.0;
-		var textInputWidth = this.actualWidth - this.button.width;
+		var textInputWidth = this.actualWidth - this.button.width - this.gap;
 		if (textInputWidth < 0.0) {
 			textInputWidth = 0.0;
 		}
