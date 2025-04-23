@@ -35,6 +35,13 @@ class SteelCollapsibleStyles {
 		}
 
 		var styleProvider = theme.styleProvider;
+		if (styleProvider.getStyleFunction(Collapsible, null) == null) {
+			// sometimes, custom themes want to use default styles, so provide
+			// an empty function so that something like this will work without
+			// checking for null first.
+			// styleProvider.getStyleFunction(ComponentType, null)(instance);
+			styleProvider.setStyleFunction(Collapsible, null, function(collapsible:Collapsible):Void {});
+		}
 
 		if (styleProvider.getStyleFunction(ToggleButton, Collapsible.CHILD_VARIANT_HEADER) == null) {
 			styleProvider.setStyleFunction(ToggleButton, Collapsible.CHILD_VARIANT_HEADER, function(button:ToggleButton):Void {

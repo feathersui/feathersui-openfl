@@ -39,6 +39,10 @@ class SteelComboBoxStyles {
 		var styleProvider = theme.styleProvider;
 
 		if (styleProvider.getStyleFunction(ComboBox, null) == null) {
+			// sometimes, custom themes want to use default styles, so provide
+			// an empty function so that something like this will work without
+			// checking for null first.
+			// styleProvider.getStyleFunction(ComponentType, null)(instance);
 			styleProvider.setStyleFunction(ComboBox, null, function(comboBox:ComboBox):Void {});
 		}
 

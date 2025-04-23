@@ -38,6 +38,14 @@ class SteelPopUpDatePickerStyles {
 		}
 
 		var styleProvider = theme.styleProvider;
+		if (styleProvider.getStyleFunction(PopUpDatePicker, null) == null) {
+			// sometimes, custom themes want to use default styles, so provide
+			// an empty function so that something like this will work without
+			// checking for null first.
+			// styleProvider.getStyleFunction(ComponentType, null)(instance);
+			styleProvider.setStyleFunction(PopUpDatePicker, null, function(datePicker:PopUpDatePicker):Void {});
+		}
+
 		if (styleProvider.getStyleFunction(Button, PopUpDatePicker.CHILD_VARIANT_BUTTON) == null) {
 			styleProvider.setStyleFunction(Button, PopUpDatePicker.CHILD_VARIANT_BUTTON, function(button:Button):Void {
 				var isDesktop = DeviceUtil.isDesktop();

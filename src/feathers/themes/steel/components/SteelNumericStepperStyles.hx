@@ -36,6 +36,13 @@ class SteelNumericStepperStyles {
 		}
 
 		var styleProvider = theme.styleProvider;
+		if (styleProvider.getStyleFunction(NumericStepper, null) == null) {
+			// sometimes, custom themes want to use default styles, so provide
+			// an empty function so that something like this will work without
+			// checking for null first.
+			// styleProvider.getStyleFunction(ComponentType, null)(instance);
+			styleProvider.setStyleFunction(NumericStepper, null, function(stepper:NumericStepper):Void {});
+		}
 
 		if (styleProvider.getStyleFunction(Button, NumericStepper.CHILD_VARIANT_DECREMENT_BUTTON) == null) {
 			styleProvider.setStyleFunction(Button, NumericStepper.CHILD_VARIANT_DECREMENT_BUTTON, function(button:Button):Void {

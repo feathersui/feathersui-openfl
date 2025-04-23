@@ -30,6 +30,10 @@ class SteelBitmapImageStyles {
 
 		var styleProvider = theme.styleProvider;
 		if (styleProvider.getStyleFunction(BitmapImage, null) == null) {
+			// sometimes, custom themes want to use default styles, so provide
+			// an empty function so that something like this will work without
+			// checking for null first.
+			// styleProvider.getStyleFunction(ComponentType, null)(instance);
 			styleProvider.setStyleFunction(BitmapImage, null, function(loader:BitmapImage):Void {});
 		}
 	}

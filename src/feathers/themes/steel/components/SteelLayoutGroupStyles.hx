@@ -32,6 +32,14 @@ class SteelLayoutGroupStyles {
 		}
 
 		var styleProvider = theme.styleProvider;
+		if (styleProvider.getStyleFunction(LayoutGroup, null) == null) {
+			// sometimes, custom themes want to use default styles, so provide
+			// an empty function so that something like this will work without
+			// checking for null first.
+			// styleProvider.getStyleFunction(ComponentType, null)(instance);
+			styleProvider.setStyleFunction(LayoutGroup, null, function(group:LayoutGroup):Void {});
+		}
+
 		if (styleProvider.getStyleFunction(LayoutGroup, LayoutGroup.VARIANT_TOOL_BAR) == null) {
 			styleProvider.setStyleFunction(LayoutGroup, LayoutGroup.VARIANT_TOOL_BAR, function(group:LayoutGroup):Void {
 				var isDesktop = DeviceUtil.isDesktop();
