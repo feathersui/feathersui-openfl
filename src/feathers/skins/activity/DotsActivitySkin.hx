@@ -152,6 +152,7 @@ class DotsActivitySkin extends ProgrammaticSkin implements IIndeterminateSkin {
 
 		@since 1.1.0
 	**/
+	@:inspectable(format = "Color", verbose = "1")
 	public var dotColor(get, set):UInt;
 
 	private function get_dotColor():UInt {
@@ -177,6 +178,7 @@ class DotsActivitySkin extends ProgrammaticSkin implements IIndeterminateSkin {
 
 		@see `DotsActivitySkin.dotColor`
 	**/
+	@:inspectable(format = "Color", verbose = "1")
 	public var endDotColor(get, set):Null<UInt>;
 
 	private function get_endDotColor():Null<UInt> {
@@ -199,6 +201,7 @@ class DotsActivitySkin extends ProgrammaticSkin implements IIndeterminateSkin {
 
 		@since 1.1.0
 	**/
+	@:inspectable(minValue = "0.0", maxValue = "1.0", verbose = "1")
 	public var dotAlpha(get, set):Float;
 
 	private function get_dotAlpha():Float {
@@ -224,6 +227,7 @@ class DotsActivitySkin extends ProgrammaticSkin implements IIndeterminateSkin {
 
 		@see `DotsActivitySkin.dotAlpha`
 	**/
+	@:inspectable(minValue = "0.0", maxValue = "1.0", verbose = "1")
 	public var endDotAlpha(get, set):Null<Float>;
 
 	private function get_endDotAlpha():Null<Float> {

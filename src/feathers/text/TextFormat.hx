@@ -86,6 +86,7 @@ class TextFormat extends EventDispatcher {
 		@see [`openfl.text.TextFormat.color`](https://api.openfl.org/openfl/text/TextFormat.html#color)
 	**/
 	@:bindable("change")
+	@:inspectable(format = "Color")
 	public var color(get, set):Null<Int>;
 
 	private function get_color():Null<Int> {
