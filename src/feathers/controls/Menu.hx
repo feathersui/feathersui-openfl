@@ -200,7 +200,18 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 		}
 	}
 
+	/**
+		If not `null`, this menu was created as a submenu of another `Menu`.
+
+		@since 1.4.0
+	**/
 	public var menuOwner:Menu = null;
+
+	/**
+		If not `null`, this menu was created in a `MenuBar`.
+
+		@since 1.4.0
+	**/
 	public var menuBarOwner:MenuBar = null;
 
 	private var _subMenu:Menu;
