@@ -563,6 +563,42 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 	public var embedFonts:Bool = false;
 
 	/**
+		Configures the `alpha` value of the text area's text.
+
+		In the following example, the text area's text alpha is customized:
+
+		```haxe
+		textArea.textAlpha = 0.5;
+		```
+
+		@see `TextArea.textFormat`
+		@see `TextArea.disabledTextAlpha`
+
+		@since 1.4.0
+	**/
+	@:style
+	@:inspectable(minValue = "0.0", maxValue = "1.0", verbose = "1")
+	public var textAlpha:Float = 1.0;
+
+	/**
+		When `disabledTextAlpha` is not `null`, sets the `alpha` property of the
+		text to this value when the the `enabled` property is set to `false`.
+
+		In the following example, the text area's disabled text alpha is customized:
+
+		```haxe
+		textArea.disabledTextAlpha = 0.5;
+		```
+
+		@see `TextArea.textAlpha`
+
+		@since 1.4.0
+	**/
+	@:style
+	@:inspectable(minValue = "0.0", maxValue = "1.0", verbose = "1")
+	public var disabledTextAlpha:Null<Float> = null;
+
+	/**
 		Determines the type of anti-aliasing used for embedded fonts.
 
 		In the following example, the text area uses advanced anti-aliasing:
@@ -1019,6 +1055,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 
 		if (stylesInvalid) {
 			this.refreshTextStyles();
+			this.textFieldViewPort.alpha = this.textAlpha;
 			this.textFieldViewPort.embedFonts = this.embedFonts;
 			this.textFieldViewPort.antiAliasType = this.antiAliasType;
 			this.textFieldViewPort.gridFitType = this.gridFitType;
@@ -1168,6 +1205,7 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 			this.promptTextField.gridFitType = this.gridFitType;
 			this._updatedPromptStyles = true;
 		}
+		this.promptTextField.alpha = this.getCurrentTextAlpha();
 		var textFormat = this.getCurrentPromptTextFormat();
 		var simpleTextFormat = textFormat != null ? textFormat.toSimpleTextFormat() : null;
 		if (simpleTextFormat == this._previousPromptSimpleTextFormat) {
@@ -1195,6 +1233,13 @@ class TextArea extends BaseScrollContainer implements IStateContext<TextInputSta
 			textFormat = this.textFormat;
 		}
 		return textFormat;
+	}
+
+	private function getCurrentTextAlpha():Float {
+		if (!this._enabled && this.disabledTextAlpha != null) {
+			return this.disabledTextAlpha;
+		}
+		return this.textAlpha;
 	}
 
 	private function refreshErrorString():Void {

@@ -327,6 +327,42 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 	public var embedFonts:Bool = false;
 
 	/**
+		Configures the `alpha` value of the button's text.
+
+		In the following example, the button's text alpha is customized:
+
+		```haxe
+		button.textAlpha = 0.5;
+		```
+
+		@see `Button.textFormat`
+		@see `Button.disabledTextAlpha`
+
+		@since 1.4.0
+	**/
+	@:style
+	@:inspectable(minValue = "0.0", maxValue = "1.0", verbose = "1")
+	public var textAlpha:Float = 1.0;
+
+	/**
+		When `disabledTextAlpha` is not `null`, sets the `alpha` property of the
+		text to this value when the the `enabled` property is set to `false`.
+
+		In the following example, the button's disabled text alpha is customized:
+
+		```haxe
+		button.disabledTextAlpha = 0.5;
+		```
+
+		@see `Button.textAlpha`
+
+		@since 1.4.0
+	**/
+	@:style
+	@:inspectable(minValue = "0.0", maxValue = "1.0", verbose = "1")
+	public var disabledTextAlpha:Null<Float> = null;
+
+	/**
 		Determines the type of anti-aliasing used for embedded fonts.
 
 		In the following example, the button uses advanced anti-aliasing:
@@ -1102,6 +1138,7 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 			this.textField.gridFitType = this.gridFitType;
 			this._updatedTextStyles = true;
 		}
+		this.textField.alpha = this.getCurrentTextAlpha();
 		#if (openfl >= "9.2.0" || flash)
 		if (this.textField.styleSheet != this.styleSheet) {
 			this.textField.styleSheet = this.styleSheet;
@@ -1198,6 +1235,13 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 			return this.disabledTextFormat;
 		}
 		return this.textFormat;
+	}
+
+	private function getCurrentTextAlpha():Float {
+		if (!this._enabled && this.disabledTextAlpha != null) {
+			return this.disabledTextAlpha;
+		}
+		return this.textAlpha;
 	}
 
 	override private function layoutContent():Void {

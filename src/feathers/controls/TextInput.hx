@@ -673,6 +673,42 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 	public var embedFonts:Bool = false;
 
 	/**
+		Configures the `alpha` value of the text input's text.
+
+		In the following example, the text input's text alpha is customized:
+
+		```haxe
+		input.textAlpha = 0.5;
+		```
+
+		@see `TextInput.textFormat`
+		@see `TextInput.disabledTextAlpha`
+
+		@since 1.4.0
+	**/
+	@:style
+	@:inspectable(minValue = "0.0", maxValue = "1.0", verbose = "1")
+	public var textAlpha:Float = 1.0;
+
+	/**
+		When `disabledTextAlpha` is not `null`, sets the `alpha` property of the
+		text to this value when the the `enabled` property is set to `false`.
+
+		In the following example, the text input's disabled text alpha is customized:
+
+		```haxe
+		input.disabledTextAlpha = 0.5;
+		```
+
+		@see `TextInput.textAlpha`
+
+		@since 1.4.0
+	**/
+	@:style
+	@:inspectable(minValue = "0.0", maxValue = "1.0", verbose = "1")
+	public var disabledTextAlpha:Null<Float> = null;
+
+	/**
 		Determines the type of anti-aliasing used for embedded fonts.
 
 		In the following example, the text input uses advanced anti-aliasing:
@@ -1647,6 +1683,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			this.textField.displayAsPassword = this._displayAsPassword;
 			this._updatedTextStyles = true;
 		}
+		this.textField.alpha = this.getCurrentTextAlpha();
 		var textFormat = this.getCurrentTextFormat();
 		var simpleTextFormat = textFormat != null ? textFormat.toSimpleTextFormat() : null;
 		if (simpleTextFormat == this._previousSimpleTextFormat) {
@@ -1726,6 +1763,7 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			this.promptTextField.gridFitType = this.gridFitType;
 			this._updatedPromptStyles = true;
 		}
+		this.promptTextField.alpha = this.getCurrentTextAlpha();
 		var textFormat = this.getCurrentPromptTextFormat();
 		var simpleTextFormat = textFormat != null ? textFormat.toSimpleTextFormat() : null;
 		if (simpleTextFormat == this._previousPromptSimpleTextFormat) {
@@ -1820,6 +1858,13 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 			return this.disabledTextFormat;
 		}
 		return this.textFormat;
+	}
+
+	private function getCurrentTextAlpha():Float {
+		if (!this._enabled && this.disabledTextAlpha != null) {
+			return this.disabledTextAlpha;
+		}
+		return this.textAlpha;
 	}
 
 	private function layoutContent():Void {

@@ -280,6 +280,42 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 	public var embedFonts:Bool = false;
 
 	/**
+		Configures the `alpha` value of the toggle switch's text.
+
+		In the following example, the toggle switch's text alpha is customized:
+
+		```haxe
+		toggleSwitch.textAlpha = 0.5;
+		```
+
+		@see `ToggleSwitch.textFormat`
+		@see `ToggleSwitch.disabledTextAlpha`
+
+		@since 1.4.0
+	**/
+	@:style
+	@:inspectable(minValue = "0.0", maxValue = "1.0", verbose = "1")
+	public var textAlpha:Float = 1.0;
+
+	/**
+		When `disabledTextAlpha` is not `null`, sets the `alpha` property of the
+		text to this value when the the `enabled` property is set to `false`.
+
+		In the following example, the toggle switch's disabled text alpha is customized:
+
+		```haxe
+		toggleSwitch.disabledTextAlpha = 0.5;
+		```
+
+		@see `ToggleSwitch.textAlpha`
+
+		@since 1.4.0
+	**/
+	@:style
+	@:inspectable(minValue = "0.0", maxValue = "1.0", verbose = "1")
+	public var disabledTextAlpha:Null<Float> = null;
+
+	/**
 		Determines the type of anti-aliasing used for embedded fonts.
 
 		In the following example, the toggle switch uses advanced anti-aliasing:
@@ -688,6 +724,7 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 				this.offTextField.gridFitType = this.gridFitType;
 				this._updatedOffTextStyles = true;
 			}
+			this.offTextField.alpha = this.getCurrentTextAlpha();
 			if (simpleTextFormat != this._previousOffSimpleTextFormat) {
 				if (this._previousOffTextFormat != null) {
 					this._previousOffTextFormat.removeEventListener(Event.CHANGE, toggleSwitch_offTextFormat_changeHandler);
@@ -720,6 +757,7 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 				this.onTextField.gridFitType = this.gridFitType;
 				this._updatedOnTextStyles = true;
 			}
+			this.onTextField.alpha = this.getCurrentTextAlpha();
 			if (simpleTextFormat != this._previousOnSimpleTextFormat) {
 				if (this._previousOnTextFormat != null) {
 					this._previousOnTextFormat.removeEventListener(Event.CHANGE, toggleSwitch_onTextFormat_changeHandler);
@@ -806,6 +844,13 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 			return this.disabledTextFormat;
 		}
 		return this.textFormat;
+	}
+
+	private function getCurrentTextAlpha():Float {
+		if (!this._enabled && this.disabledTextAlpha != null) {
+			return this.disabledTextAlpha;
+		}
+		return this.textAlpha;
 	}
 
 	private function refreshThumb():Void {

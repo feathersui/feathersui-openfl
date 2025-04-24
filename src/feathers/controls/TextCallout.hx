@@ -200,6 +200,23 @@ class TextCallout extends Callout implements ITextControl implements IHTMLTextCo
 	@:style
 	public var textFormat:AbstractTextFormat = null;
 
+	/**
+		Configures the `alpha` value of the text callout's text.
+
+		In the following example, the text callout's text alpha is customized:
+
+		```haxe
+		callout.textAlpha = 0.5;
+		```
+
+		@see `TextCallout.textFormat`
+
+		@since 1.4.0
+	**/
+	@:style
+	@:inspectable(minValue = "0.0", maxValue = "1.0", verbose = "1")
+	public var textAlpha:Float = 1.0;
+
 	#if (openfl >= "9.2.0" || flash)
 	/**
 		A custom stylesheet to use with `htmlText`.
@@ -329,6 +346,7 @@ class TextCallout extends Callout implements ITextControl implements IHTMLTextCo
 		this.label.styleSheet = this.styleSheet;
 		this.label.condenseWhite = this.condenseWhite;
 		#end
+		this.label.textAlpha = this.textAlpha;
 	}
 
 	private function refreshText():Void {

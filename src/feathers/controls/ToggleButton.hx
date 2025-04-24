@@ -370,6 +370,42 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 	public var embedFonts:Bool = false;
 
 	/**
+		Configures the `alpha` value of the button's text.
+
+		In the following example, the button's text alpha is customized:
+
+		```haxe
+		button.textAlpha = 0.5;
+		```
+
+		@see `ToggleButton.textFormat`
+		@see `ToggleButton.disabledTextAlpha`
+
+		@since 1.4.0
+	**/
+	@:style
+	@:inspectable(minValue = "0.0", maxValue = "1.0", verbose = "1")
+	public var textAlpha:Float = 1.0;
+
+	/**
+		When `disabledTextAlpha` is not `null`, sets the `alpha` property of the
+		text to this value when the the `enabled` property is set to `false`.
+
+		In the following example, the toggle button's disabled text alpha is customized:
+
+		```haxe
+		button.disabledTextAlpha = 0.5;
+		```
+
+		@see `ToggleButton.textAlpha`
+
+		@since 1.4.0
+	**/
+	@:style
+	@:inspectable(minValue = "0.0", maxValue = "1.0", verbose = "1")
+	public var disabledTextAlpha:Null<Float> = null;
+
+	/**
 		Determines the type of anti-aliasing used for embedded fonts.
 
 		In the following example, the button uses advanced anti-aliasing:
@@ -1191,6 +1227,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 			this._updatedTextStyles = true;
 		}
 		#end
+		this.textField.alpha = this.getCurrentTextAlpha();
 		var textFormat = this.getCurrentTextFormat();
 		var simpleTextFormat = textFormat != null ? textFormat.toSimpleTextFormat() : null;
 		if (simpleTextFormat == this._previousSimpleTextFormat) {
@@ -1280,6 +1317,13 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 			return this.selectedTextFormat;
 		}
 		return this.textFormat;
+	}
+
+	private function getCurrentTextAlpha():Float {
+		if (!this._enabled && this.disabledTextAlpha != null) {
+			return this.disabledTextAlpha;
+		}
+		return this.textAlpha;
 	}
 
 	override private function layoutContent():Void {

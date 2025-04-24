@@ -225,6 +225,42 @@ class Header extends FeathersControl implements ITextControl {
 	public var embedFonts:Bool = false;
 
 	/**
+		Configures the `alpha` value of the header's text.
+
+		In the following example, the header's text alpha is customized:
+
+		```haxe
+		header.textAlpha = 0.5;
+		```
+
+		@see `Header.textFormat`
+		@see `Header.disabledTextAlpha`
+
+		@since 1.4.0
+	**/
+	@:style
+	@:inspectable(minValue = "0.0", maxValue = "1.0", verbose = "1")
+	public var textAlpha:Float = 1.0;
+
+	/**
+		When `disabledTextAlpha` is not `null`, sets the `alpha` property of the
+		text to this value when the the `enabled` property is set to `false`.
+
+		In the following example, the header's disabled text alpha is customized:
+
+		```haxe
+		header.disabledTextAlpha = 0.5;
+		```
+
+		@see `Header.textAlpha`
+
+		@since 1.4.0
+	**/
+	@:style
+	@:inspectable(minValue = "0.0", maxValue = "1.0", verbose = "1")
+	public var disabledTextAlpha:Null<Float> = null;
+
+	/**
 		Determines the type of anti-aliasing used for embedded fonts.
 
 		In the following example, the header uses advanced anti-aliasing:
@@ -707,6 +743,7 @@ class Header extends FeathersControl implements ITextControl {
 			this.textField.gridFitType = this.gridFitType;
 			this._updatedTextStyles = true;
 		}
+		this.textField.alpha = this.getCurrentTextAlpha();
 		#if (openfl >= "9.2.0" || flash)
 		if (this.textField.styleSheet != this.styleSheet) {
 			this.textField.styleSheet = this.styleSheet;
@@ -789,6 +826,13 @@ class Header extends FeathersControl implements ITextControl {
 			return this.disabledTextFormat;
 		}
 		return this.textFormat;
+	}
+
+	private function getCurrentTextAlpha():Float {
+		if (!this._enabled && this.disabledTextAlpha != null) {
+			return this.disabledTextAlpha;
+		}
+		return this.textAlpha;
 	}
 
 	private function refreshBackgroundSkin():Void {

@@ -285,6 +285,42 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 	public var embedFonts:Bool = false;
 
 	/**
+		Configures the `alpha` value of the label's text.
+
+		In the following example, the label's text alpha is customized:
+
+		```haxe
+		label.textAlpha = 0.5;
+		```
+
+		@see `Label.textFormat`
+		@see `Label.disabledTextAlpha`
+
+		@since 1.4.0
+	**/
+	@:style
+	@:inspectable(minValue = "0.0", maxValue = "1.0", verbose = "1")
+	public var textAlpha:Float = 1.0;
+
+	/**
+		When `disabledTextAlpha` is not `null`, sets the `alpha` property of the
+		text to this value when the the `enabled` property is set to `false`.
+
+		In the following example, the label's disabled text alpha is customized:
+
+		```haxe
+		label.disabledTextAlpha = 0.5;
+		```
+
+		@see `Label.textAlpha`
+
+		@since 1.4.0
+	**/
+	@:style
+	@:inspectable(minValue = "0.0", maxValue = "1.0", verbose = "1")
+	public var disabledTextAlpha:Null<Float> = null;
+
+	/**
 		Determines the type of anti-aliasing used for embedded fonts.
 
 		In the following example, the label uses advanced anti-aliasing:
@@ -771,6 +807,7 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 			this._updatedTextStyles = true;
 		}
 		#end
+		this.textField.alpha = this.getCurrentTextAlpha();
 		var textFormat = this.getCurrentTextFormat();
 		var simpleTextFormat = textFormat != null ? textFormat.toSimpleTextFormat() : null;
 		if (simpleTextFormat == this._previousSimpleTextFormat) {
@@ -887,6 +924,13 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 			return this.disabledTextFormat;
 		}
 		return this.textFormat;
+	}
+
+	private function getCurrentTextAlpha():Float {
+		if (!this._enabled && this.disabledTextAlpha != null) {
+			return this.disabledTextAlpha;
+		}
+		return this.textAlpha;
 	}
 
 	private function refreshBackgroundSkin():Void {
