@@ -7,4 +7,11 @@
 	<log error="OpenFL version ${openfl} is not compatible with Feathers UI ${feathersui} when targeting flash or air with Haxe 4.3+ (expected OpenFL version 9.2.2+)"
 		if="${haxe_ver >= 4.3} ${openfl < 9.2.2} flash"/>
 
+	<haxeflag name="--macro" value="addGlobalMetadata('openfl.display.DisplayObject.alpha', '@:inspectable(verbose=&quot;1&quot;,minValue=&quot;0.0&quot;,maxValue=&quot;1.0&quot;,defaultValue=&quot;1.0&quot;)', false, false, true)"/>
+	<haxeflag name="--macro" value="addGlobalMetadata('openfl.display.DisplayObject.scaleX', '@:inspectable(verbose=&quot;1&quot;,defaultValue=&quot;1.0&quot;)', false, false, true)"/>
+	<haxeflag name="--macro" value="addGlobalMetadata('openfl.display.DisplayObject.scaleY', '@:inspectable(verbose=&quot;1&quot;,defaultValue=&quot;1.0&quot;)', false, false, true)"/>
+	<haxeflag name="--macro" value="addGlobalMetadata('flash.display.DisplayObject.alpha', '@:inspectable(verbose=&quot;1&quot;,minValue=&quot;0.0&quot;,maxValue=&quot;1.0&quot;,defaultValue=&quot;1.0&quot;)', false, false, true)" if="flash"/>
+	<haxeflag name="--macro" value="addGlobalMetadata('flash.display.DisplayObject.scaleX', '@:inspectable(verbose=&quot;1&quot;,defaultValue=&quot;1.0&quot;)', false, false, true)" if="flash"/>
+	<haxeflag name="--macro" value="addGlobalMetadata('flash.display.DisplayObject.scaleY', '@:inspectable(verbose=&quot;1&quot;,defaultValue=&quot;1.0&quot;)', false, false, true)" if="flash"/>
+
 </project>
