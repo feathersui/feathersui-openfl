@@ -1223,6 +1223,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 
 	private function refreshTextInputData():Void {
 		this.textInput.prompt = this._prompt;
+		this.textInput.errorString = this._errorString;
 	}
 
 	private function refreshSelection():Void {
@@ -1239,7 +1240,6 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		} else {
 			this.textInput.text = "";
 		}
-		this.textInput.errorString = this._errorString;
 		this._ignoreTextInputChange = oldIgnoreTextInputChange;
 	}
 
