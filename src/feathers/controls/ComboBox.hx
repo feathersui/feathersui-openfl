@@ -402,6 +402,13 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 				this._selectedIndex = -1;
 				this._selectedItem = null;
 				this._customSelectedItem = value;
+				if (this.open) {
+					// when the list view is open, closing it will cause the
+					// text that the user has typed to become the custom
+					// selected item. but we don't want that in this case. this
+					// value should replace what the user has typed.
+					this._filterText = value;
+				}
 				this.setInvalid(SELECTION);
 				FeathersEvent.dispatch(this, Event.CHANGE);
 				return this._customSelectedItem;
@@ -1622,11 +1629,13 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		if (this._dataProvider != null) {
 			this._dataProvider.refresh();
 		}
-		if (customSelectedItem != null) {
-			this._customSelectedItem = customSelectedItem;
-			this._selectedItem = null;
-			this._selectedIndex = -1;
-			FeathersEvent.dispatch(this, Event.CHANGE);
+		if (this._allowCustomUserValue && customSelectedItem != null) {
+			if (this._customSelectedItem != customSelectedItem) {
+				this._customSelectedItem = customSelectedItem;
+				this._selectedItem = null;
+				this._selectedIndex = -1;
+				FeathersEvent.dispatch(this, Event.CHANGE);
+			}
 		} else if (newSelectedItem != null) {
 			// use the setter
 			this.selectedItem = newSelectedItem;

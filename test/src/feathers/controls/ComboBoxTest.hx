@@ -8,10 +8,12 @@
 
 package feathers.controls;
 
-import openfl.errors.RangeError;
+import openfl.text.TextField;
 import feathers.data.ArrayCollection;
 import openfl.Lib;
+import openfl.errors.RangeError;
 import openfl.events.Event;
+import openfl.events.TextEvent;
 import utest.Assert;
 import utest.Test;
 
@@ -611,6 +613,33 @@ class ComboBoxTest extends Test {
 		Assert.equals("Four", this._comboBox.selectedItem);
 	}
 
+	public function testCustomSelectedItemFromUserFilter():Void {
+		this._comboBox.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._comboBox.allowCustomUserValue = true;
+		this._comboBox.validateNow();
+
+		this._comboBox.stage.focus = this._comboBox;
+		this._comboBox.openListView();
+
+		var changeDispatched = false;
+		this._comboBox.addEventListener(Event.CHANGE, event -> {
+			changeDispatched = true;
+		});
+		Assert.isFalse(changeDispatched);
+
+		// ensure that the filter text has been populated
+		var textField = cast(this._comboBox.stage.focus, TextField);
+		textField.text = "abc";
+		textField.dispatchEvent(new Event(Event.CHANGE));
+
+		Assert.isFalse(changeDispatched);
+
+		this._comboBox.closeListView();
+		Assert.isTrue(changeDispatched);
+		Assert.equals(-1, this._comboBox.selectedIndex);
+		Assert.equals("abc", this._comboBox.selectedItem);
+	}
+
 	public function testClearCustomSelectedItem():Void {
 		this._comboBox.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		this._comboBox.allowCustomUserValue = true;
@@ -641,6 +670,45 @@ class ComboBoxTest extends Test {
 		Assert.isFalse(changeDispatched);
 		this._comboBox.allowCustomUserValue = false;
 		Assert.isTrue(changeDispatched);
+		Assert.equals(-1, this._comboBox.selectedIndex);
+		Assert.isNull(this._comboBox.selectedItem);
+	}
+
+	public function testClearCustomSelectedItemWhenOpenedAndFiltered():Void {
+		this._comboBox.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._comboBox.allowCustomUserValue = true;
+		this._comboBox.selectedItem = "Four";
+		this._comboBox.validateNow();
+
+		this._comboBox.stage.focus = this._comboBox;
+		this._comboBox.openListView();
+
+		// ensure that the filter text has been populated
+		var textField = cast(this._comboBox.stage.focus, TextField);
+		textField.text = "abc";
+		textField.dispatchEvent(new Event(Event.CHANGE));
+
+		// filtering should not change the selected item right away
+		// wait until the pop-up list view is closed
+		Assert.equals(-1, this._comboBox.selectedIndex);
+		Assert.equals("Four", this._comboBox.selectedItem);
+
+		var changeDispatched = false;
+		this._comboBox.addEventListener(Event.CHANGE, event -> {
+			changeDispatched = true;
+		});
+		Assert.isFalse(changeDispatched);
+
+		this._comboBox.selectedItem = null;
+		Assert.isTrue(changeDispatched);
+		Assert.equals(-1, this._comboBox.selectedIndex);
+		Assert.isNull(this._comboBox.selectedItem);
+
+		// since we cleared the selected item while the list view was opened,
+		// that should take precedence over the text typed by the user.
+		changeDispatched = false;
+		this._comboBox.closeListView();
+		Assert.isFalse(changeDispatched);
 		Assert.equals(-1, this._comboBox.selectedIndex);
 		Assert.isNull(this._comboBox.selectedItem);
 	}
