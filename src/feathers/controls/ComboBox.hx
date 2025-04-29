@@ -384,7 +384,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	}
 
 	private function set_selectedItem(value:Dynamic):Dynamic {
-		if (value == null || this._dataProvider == null) {
+		if ((value == null && !this._allowCustomUserValue) || this._dataProvider == null) {
 			// use the setter
 			this.selectedIndex = -1;
 			return this._selectedItem;
