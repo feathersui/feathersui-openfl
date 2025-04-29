@@ -22,8 +22,13 @@ class MathUtil {
 		@since 1.0.0
 	**/
 	public static function roundDownToNearest(number:Float, nearest:Float = 1.0):Float {
-		if (nearest == 0) {
+		if (nearest == 0.0) {
 			return number;
+		}
+		if (nearest > -1.0 && nearest < 1.0) {
+			// this seems to be more accurate for nearest fractions
+			var multiplier = 1.0 / nearest;
+			return Math.ffloor(multiplier * number) / multiplier;
 		}
 		return Math.ffloor(MathUtil.roundToPrecision(number / nearest, 10)) * nearest;
 	}
@@ -44,8 +49,13 @@ class MathUtil {
 		@since 1.0.0
 	**/
 	public static function roundUpToNearest(number:Float, nearest:Float = 1.0):Float {
-		if (nearest == 0) {
+		if (nearest == 0.0) {
 			return number;
+		}
+		if (nearest > -1.0 && nearest < 1.0) {
+			// this seems to be more accurate for nearest fractions
+			var multiplier = 1.0 / nearest;
+			return Math.fceil(multiplier * number) / multiplier;
 		}
 		return Math.fceil(MathUtil.roundToPrecision(number / nearest, 10)) * nearest;
 	}
@@ -66,8 +76,13 @@ class MathUtil {
 		@since 1.0.0
 	**/
 	public static function roundToNearest(number:Float, nearest:Float = 1.0):Float {
-		if (nearest == 0) {
+		if (nearest == 0.0) {
 			return number;
+		}
+		if (nearest > -1.0 && nearest < 1.0) {
+			// this seems to be more accurate for nearest fractions
+			var multiplier = 1.0 / nearest;
+			return Math.fround(multiplier * number) / multiplier;
 		}
 		return Math.fround(MathUtil.roundToPrecision(number / nearest, 10)) * nearest;
 	}
