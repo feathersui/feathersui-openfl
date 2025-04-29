@@ -304,6 +304,13 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			return this._allowCustomUserValue;
 		}
 		this._allowCustomUserValue = value;
+		if (!this._allowCustomUserValue && this._customSelectedItem != null) {
+			this._customSelectedItem = null;
+			this._selectedIndex = -1;
+			this._selectedItem = null;
+			this.setInvalid(SELECTION);
+			FeathersEvent.dispatch(this, Event.CHANGE);
+		}
 		return this._allowCustomUserValue;
 	}
 

@@ -627,4 +627,21 @@ class ComboBoxTest extends Test {
 		Assert.equals(-1, this._comboBox.selectedIndex);
 		Assert.isNull(this._comboBox.selectedItem);
 	}
+
+	public function testClearAllowCustomUserValue():Void {
+		this._comboBox.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._comboBox.allowCustomUserValue = true;
+		this._comboBox.selectedItem = "Four";
+		Assert.equals(-1, this._comboBox.selectedIndex);
+		Assert.equals("Four", this._comboBox.selectedItem);
+		var changeDispatched = false;
+		this._comboBox.addEventListener(Event.CHANGE, event -> {
+			changeDispatched = true;
+		});
+		Assert.isFalse(changeDispatched);
+		this._comboBox.allowCustomUserValue = false;
+		Assert.isTrue(changeDispatched);
+		Assert.equals(-1, this._comboBox.selectedIndex);
+		Assert.isNull(this._comboBox.selectedItem);
+	}
 }
