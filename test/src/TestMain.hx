@@ -116,6 +116,7 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.style.ThemeTest());
 		runner.addCase(new feathers.themes.DefaultThemeTest());
 		runner.addCase(new feathers.utils.ExclusivePointerTest());
+		runner.addCase(new feathers.utils.MathUtilTest());
 		runner.addCase(new feathers.utils.PointerTriggerTest());
 		runner.addCase(new feathers.utils.PopUpUtilTest());
 		#if (html5 && !headless_html5)
