@@ -104,6 +104,10 @@ class VScrollBar extends BaseScrollBar {
 		if (trackScrollableHeight < 0.0) {
 			trackScrollableHeight = 0.0;
 		}
+		if (trackScrollableHeight == 0.0) {
+			// we don't want to divide by zero
+			return this._minimum;
+		}
 		var yOffset = y - this._pointerStartY;
 		var yPosition = Math.min(Math.max(0.0, this._thumbStartY + yOffset - minYPosition), trackScrollableHeight);
 		percentage = yPosition / trackScrollableHeight;
