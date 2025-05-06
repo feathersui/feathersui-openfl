@@ -897,6 +897,9 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 			this.removeChild(oldSkin);
 		}
 		if (this._currentTrackSkin != null) {
+			if ((this._currentTrackSkin is IFocusObject)) {
+				(cast this._currentTrackSkin : IFocusObject).focusEnabled = false;
+			}
 			if ((this._currentTrackSkin is IUIControl)) {
 				(cast this._currentTrackSkin : IUIControl).initializeNow();
 			}
@@ -928,6 +931,9 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 			this.removeChild(oldSkin);
 		}
 		if (this._currentSecondaryTrackSkin != null) {
+			if ((this._currentSecondaryTrackSkin is IFocusObject)) {
+				(cast this._currentSecondaryTrackSkin : IFocusObject).focusEnabled = false;
+			}
 			if ((this._currentSecondaryTrackSkin is IUIControl)) {
 				(cast this._currentSecondaryTrackSkin : IUIControl).initializeNow();
 			}
