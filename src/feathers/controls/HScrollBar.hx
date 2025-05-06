@@ -104,6 +104,10 @@ class HScrollBar extends BaseScrollBar {
 		if (trackScrollableWidth < 0.0) {
 			trackScrollableWidth = 0.0;
 		}
+		if (trackScrollableWidth == 0.0) {
+			// we don't want to divide by zero
+			return this._minimum;
+		}
 		var xOffset = x - this._pointerStartX;
 		var xPosition = Math.min(Math.max(0.0, this._thumbStartX + xOffset - minXPosition), trackScrollableWidth);
 		percentage = xPosition / trackScrollableWidth;
