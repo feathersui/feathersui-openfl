@@ -311,6 +311,9 @@ class VScrollBar extends BaseScrollBar {
 			contentWidth = 0.0;
 		}
 		var contentHeight = this.actualHeight - this.paddingTop - this.paddingBottom;
+		if (this.showDecrementAndIncrementButtons) {
+			contentHeight -= (this.decrementButton.height + this.incrementButton.height);
+		}
 		if (contentHeight < 0.0) {
 			contentHeight = 0.0;
 		}

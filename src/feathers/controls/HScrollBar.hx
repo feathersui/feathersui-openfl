@@ -307,6 +307,9 @@ class HScrollBar extends BaseScrollBar {
 		}
 
 		var contentWidth = this.actualWidth - this.paddingLeft - this.paddingRight;
+		if (this.showDecrementAndIncrementButtons) {
+			contentWidth -= (this.decrementButton.width + this.incrementButton.width);
+		}
 		if (contentWidth < 0.0) {
 			contentWidth = 0.0;
 		}
