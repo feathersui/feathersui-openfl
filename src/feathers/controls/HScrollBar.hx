@@ -343,7 +343,12 @@ class HScrollBar extends BaseScrollBar {
 					thumbWidth = measureSkin.minWidth;
 				}
 			}
-			if (thumbWidth < 0.0) {
+			if (thumbWidth > contentWidth) {
+				// we try to respect the min size, but if it's simply too large
+				// for the available space, we have no choice but to go below
+				// the minimum
+				thumbWidth = contentWidth;
+			} else if (thumbWidth < 0.0) {
 				thumbWidth = 0.0;
 			}
 			this._currentThumbSkin.width = thumbWidth;
