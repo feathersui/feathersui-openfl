@@ -233,8 +233,8 @@ class VSlider extends BaseSlider {
 			return;
 		}
 		var thumbLocation = this.valueToLocation(this._value);
-		this._currentThumbSkin.x = (this.actualWidth - this._currentThumbSkin.width) / 2.0;
-		this._currentThumbSkin.y = thumbLocation;
+		this._currentThumbSkin.x = this.thumbOffsetX + (this.actualWidth - this._currentThumbSkin.width) / 2.0;
+		this._currentThumbSkin.y = this.thumbOffsetY + thumbLocation;
 	}
 
 	private function vSlider_keyDownHandler(event:KeyboardEvent):Void {

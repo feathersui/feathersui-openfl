@@ -388,6 +388,40 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 	@:style
 	public var maximumPadding:Float = 0.0;
 
+	/**
+		Offets the horizontal position of the thumb by a specific number of
+		pixels.
+
+		In the following example, horizontal thumb offset is set to 6 pixels:
+
+		```haxe
+		slider.thumbOffsetX = 6.0;
+		```
+
+		@see `BaseSlider.thumbOffsetY`
+
+		@since 1.4.0
+	**/
+	@:style
+	public var thumbOffsetX:Float = 0.0;
+
+	/**
+		Offets the vertical position of the thumb by a specific number of
+		pixels.
+
+		In the following example, vertical thumb offset is set to 6 pixels:
+
+		```haxe
+		slider.thumbOffsetY = 6.0;
+		```
+
+		@see `BaseSlider.thumbOffsetX`
+
+		@since 1.4.0
+	**/
+	@:style
+	public var thumbOffsetY:Float = 0.0;
+
 	private var _dragging:Bool = false;
 	private var _pointerStartX:Float = 0.0;
 	private var _pointerStartY:Float = 0.0;
@@ -644,8 +678,8 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 		this.stage.addEventListener(MouseEvent.MOUSE_MOVE, thumbSkin_stage_mouseMoveHandler, false, 0, true);
 		this.stage.addEventListener(MouseEvent.MOUSE_UP, thumbSkin_stage_mouseUpHandler, false, 0, true);
 
-		this._thumbStartX = this._currentThumbSkin.x;
-		this._thumbStartY = this._currentThumbSkin.y;
+		this._thumbStartX = this._currentThumbSkin.x - this.thumbOffsetX;
+		this._thumbStartY = this._currentThumbSkin.y - this.thumbOffsetY;
 		this._pointerStartX = this.mouseX;
 		this._pointerStartY = this.mouseY;
 		this._dragging = true;

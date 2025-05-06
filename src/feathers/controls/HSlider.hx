@@ -230,8 +230,8 @@ class HSlider extends BaseSlider {
 			return;
 		}
 		var thumbLocation = this.valueToLocation(this._value);
-		this._currentThumbSkin.x = thumbLocation;
-		this._currentThumbSkin.y = (this.actualHeight - this.thumbSkin.height) / 2.0;
+		this._currentThumbSkin.x = this.thumbOffsetX + thumbLocation;
+		this._currentThumbSkin.y = this.thumbOffsetY + (this.actualHeight - this.thumbSkin.height) / 2.0;
 	}
 
 	private function hSlider_keyDownHandler(event:KeyboardEvent):Void {
