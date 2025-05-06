@@ -9,6 +9,7 @@
 package feathers.controls.supportClasses;
 
 import feathers.core.FeathersControl;
+import feathers.core.IFocusObject;
 import feathers.core.IUIControl;
 import feathers.core.InvalidationFlag;
 import feathers.events.FeathersEvent;
@@ -852,6 +853,9 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 			this.removeChild(oldSkin);
 		}
 		if (this._currentThumbSkin != null) {
+			if ((this._currentThumbSkin is IFocusObject)) {
+				(cast this._currentThumbSkin : IFocusObject).focusEnabled = false;
+			}
 			if ((this._currentThumbSkin is IUIControl)) {
 				(cast this._currentThumbSkin : IUIControl).initializeNow();
 			}
@@ -885,6 +889,9 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 			oldSkin.removeEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
 		}
 		if (this._currentTrackSkin != null) {
+			if ((this._currentTrackSkin is IFocusObject)) {
+				(cast this._currentTrackSkin : IFocusObject).focusEnabled = false;
+			}
 			if ((this._currentTrackSkin is IUIControl)) {
 				(cast this._currentTrackSkin : IUIControl).initializeNow();
 			}
@@ -918,6 +925,9 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 			oldSkin.removeEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
 		}
 		if (this._currentSecondaryTrackSkin != null) {
+			if ((this._currentSecondaryTrackSkin is IFocusObject)) {
+				(cast this._currentSecondaryTrackSkin : IFocusObject).focusEnabled = false;
+			}
 			if ((this._currentSecondaryTrackSkin is IUIControl)) {
 				(cast this._currentSecondaryTrackSkin : IUIControl).initializeNow();
 			}
@@ -1003,6 +1013,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 			}
 			this.decrementButton.variant = defaultVariant;
 		}
+		this.decrementButton.focusEnabled = false;
 		this.decrementButton.addEventListener(MouseEvent.MOUSE_DOWN, baseScrollBar_decrementButton_mouseDownHandler);
 		this.decrementButton.addEventListener(TouchEvent.TOUCH_BEGIN, baseScrollBar_decrementButton_touchBeginHandler);
 		this.decrementButton.initializeNow();
@@ -1043,6 +1054,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 			}
 			this.incrementButton.variant = defaultVariant;
 		}
+		this.incrementButton.focusEnabled = false;
 		this.incrementButton.addEventListener(MouseEvent.MOUSE_DOWN, baseScrollBar_incrementButton_mouseDownHandler);
 		this.incrementButton.addEventListener(TouchEvent.TOUCH_BEGIN, baseScrollBar_incrementButton_touchBeginHandler);
 		this.incrementButton.initializeNow();
