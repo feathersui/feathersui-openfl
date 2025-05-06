@@ -501,6 +501,9 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 			oldSkin.removeEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
 		}
 		if (this._currentTrackSkin != null) {
+			if ((this._currentTrackSkin is IFocusObject)) {
+				(cast this._currentTrackSkin : IFocusObject).focusEnabled = false;
+			}
 			if ((this._currentTrackSkin is IUIControl)) {
 				(cast this._currentTrackSkin : IUIControl).initializeNow();
 			}
@@ -534,6 +537,9 @@ class BaseSlider extends FeathersControl implements IRange implements IFocusObje
 			oldSkin.removeEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);
 		}
 		if (this._currentSecondaryTrackSkin != null) {
+			if ((this._currentSecondaryTrackSkin is IFocusObject)) {
+				(cast this._currentSecondaryTrackSkin : IFocusObject).focusEnabled = false;
+			}
 			if ((this._currentSecondaryTrackSkin is IUIControl)) {
 				(cast this._currentSecondaryTrackSkin : IUIControl).initializeNow();
 			}
