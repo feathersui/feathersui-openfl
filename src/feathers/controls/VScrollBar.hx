@@ -343,7 +343,12 @@ class VScrollBar extends BaseScrollBar {
 					thumbHeight = measureSkin.minHeight;
 				}
 			}
-			if (thumbHeight < 0.0) {
+			if (thumbHeight > contentHeight) {
+				// we try to respect the min size, but if it's simply too large
+				// for the available space, we have no choice but to go below
+				// the minimum
+				thumbHeight = contentHeight;
+			} else if (thumbHeight < 0.0) {
 				thumbHeight = 0.0;
 			}
 			this._currentThumbSkin.height = thumbHeight;
