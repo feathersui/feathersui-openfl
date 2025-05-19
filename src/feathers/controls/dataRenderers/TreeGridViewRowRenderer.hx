@@ -1201,6 +1201,11 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 		if (state == null) {
 			return;
 		}
+		// keep the cell state in line with the cell renderer so that if the
+		// opened property gets changed between now and update, the cell
+		// renderer will be updated properly
+		state.opened = true;
+		this.setInvalid(DATA);
 		this.dispatchEvent(event.clone());
 	}
 
@@ -1216,6 +1221,11 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 		if (state == null) {
 			return;
 		}
+		// keep the cell state in line with the cell renderer so that if the
+		// opened property gets changed between now and update, the cell
+		// renderer will be updated properly
+		state.opened = false;
+		this.setInvalid(DATA);
 		this.dispatchEvent(event.clone());
 	}
 
