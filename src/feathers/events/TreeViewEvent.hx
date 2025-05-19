@@ -52,6 +52,22 @@ class TreeViewEvent extends Event {
 	**/
 	public static inline var BRANCH_CLOSE:EventType<TreeViewEvent> = "branchClose";
 
+	/**
+		The `TreeViewEvent.BRANCH_OPENING` event type is dispatched before a
+		branch opens.
+
+		@since 1.4.0
+	**/
+	public static inline var BRANCH_OPENING:EventType<TreeViewEvent> = "branchOpening";
+
+	/**
+		The `TreeViewEvent.BRANCH_CLOSING` event type is dispatched before a
+		branch closes.
+
+		@since 1.4.0
+	**/
+	public static inline var BRANCH_CLOSING:EventType<TreeViewEvent> = "branchClosing";
+
 	#if !flash
 	private static var _pool = new ObjectPool<TreeViewEvent>(() -> return new TreeViewEvent(null, null), (event) -> {
 		event.target = null;
@@ -72,14 +88,15 @@ class TreeViewEvent extends Event {
 
 		@since 1.0.0
 	**/
-	public static function dispatch(dispatcher:IEventDispatcher, type:String, state:TreeViewItemState):Bool {
+	public static function dispatch(dispatcher:IEventDispatcher, type:String, state:TreeViewItemState, cancelable:Bool = false):Bool {
 		#if flash
-		var event = new TreeViewEvent(type, state);
+		var event = new TreeViewEvent(type, state, cancelable);
 		return dispatcher.dispatchEvent(event);
 		#else
 		var event = _pool.get();
 		event.type = type;
 		event.state = state;
+		event.cancelable = cancelable;
 		var result = dispatcher.dispatchEvent(event);
 		_pool.release(event);
 		return result;
@@ -93,8 +110,8 @@ class TreeViewEvent extends Event {
 
 		@since 1.0.0
 	**/
-	public function new(type:String, state:TreeViewItemState) {
-		super(type, false, false);
+	public function new(type:String, state:TreeViewItemState, cancelable:Bool = false) {
+		super(type, false, cancelable);
 		this.state = state;
 	}
 
@@ -106,6 +123,6 @@ class TreeViewEvent extends Event {
 	public var state:TreeViewItemState;
 
 	override public function clone():Event {
-		return new TreeViewEvent(this.type, this.state);
+		return new TreeViewEvent(this.type, this.state, this.cancelable);
 	}
 }

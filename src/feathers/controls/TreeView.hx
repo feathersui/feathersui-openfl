@@ -2027,23 +2027,39 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		state.layoutIndex = layoutIndex;
 		var alreadyOpen = this.openBranches.indexOf(branch) != -1;
 		if (open && !alreadyOpen) {
-			this.openBranches.push(branch);
 			this.populateCurrentItemState(branch, location, layoutIndex, state, true);
-			layoutIndex = insertChildrenIntoVirtualCache(location, layoutIndex);
-			if (itemRenderer != null) {
+			var result = TreeViewEvent.dispatch(this, TreeViewEvent.BRANCH_OPENING, state, true);
+			if (result) {
+				this.openBranches.push(branch);
+				this.populateCurrentItemState(branch, location, layoutIndex, state, true);
+				layoutIndex = insertChildrenIntoVirtualCache(location, layoutIndex);
+				if (itemRenderer != null) {
+					var storage = this.itemStateToStorage(state);
+					this.updateItemRenderer(itemRenderer, state, storage);
+				}
+				TreeViewEvent.dispatch(this, TreeViewEvent.BRANCH_OPEN, state);
+			} else if (itemRenderer != null) {
 				var storage = this.itemStateToStorage(state);
+				// if the item renderer triggered the change, it needs to be set
+				// to closed
 				this.updateItemRenderer(itemRenderer, state, storage);
 			}
-			TreeViewEvent.dispatch(this, TreeViewEvent.BRANCH_OPEN, state);
 		} else if (!open && alreadyOpen) {
-			this.openBranches.remove(branch);
 			this.populateCurrentItemState(branch, location, layoutIndex, state, true);
-			removeChildrenFromVirtualCache(location, layoutIndex);
-			if (itemRenderer != null) {
+			var result = TreeViewEvent.dispatch(this, TreeViewEvent.BRANCH_CLOSING, state, true);
+			if (result) {
+				this.openBranches.remove(branch);
+				this.populateCurrentItemState(branch, location, layoutIndex, state, true);
+				removeChildrenFromVirtualCache(location, layoutIndex);
+				if (itemRenderer != null) {
+					var storage = this.itemStateToStorage(state);
+					this.updateItemRenderer(itemRenderer, state, storage);
+				}
+				TreeViewEvent.dispatch(this, TreeViewEvent.BRANCH_CLOSE, state);
+			} else if (itemRenderer != null) {
 				var storage = this.itemStateToStorage(state);
 				this.updateItemRenderer(itemRenderer, state, storage);
 			}
-			TreeViewEvent.dispatch(this, TreeViewEvent.BRANCH_CLOSE, state);
 		}
 		if (isTemporary) {
 			this.itemStatePool.release(state);

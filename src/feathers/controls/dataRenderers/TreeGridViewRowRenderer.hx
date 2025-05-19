@@ -284,7 +284,7 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 	public var opened(get, set):Bool;
 
 	private function get_opened():Bool {
-		return this._branch;
+		return this._opened;
 	}
 
 	private function set_opened(value:Bool):Bool {
