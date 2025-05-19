@@ -75,6 +75,7 @@ class TreeViewEvent extends Event {
 		event.__preventDefault = false;
 		event.__isCanceled = false;
 		event.__isCanceledNow = false;
+		event.cancelable = false;
 		event.state = null;
 	});
 	#end

@@ -136,6 +136,12 @@ import openfl._internal.utils.ObjectPool;
 	@event feathers.events.TreeViewEvent.BRANCH_CLOSE Dispatched when a branch
 	is closed.
 
+	@event feathers.events.TreeViewEvent.BRANCH_OPENING Dispatched before a
+	branch opens.
+
+	@event feathers.events.TreeViewEvent.BRANCH_CLOSING Dispatched before a
+	branch closes.
+
 	@see [Tutorial: How to use the TreeView component](https://feathersui.com/learn/haxe-openfl/tree-view/)
 
 	@since 1.0.0
@@ -144,6 +150,8 @@ import openfl._internal.utils.ObjectPool;
 @:event(feathers.events.TreeViewEvent.ITEM_TRIGGER)
 @:event(feathers.events.TreeViewEvent.BRANCH_OPEN)
 @:event(feathers.events.TreeViewEvent.BRANCH_CLOSE)
+@:event(feathers.events.TreeViewEvent.BRANCH_OPENING)
+@:event(feathers.events.TreeViewEvent.BRANCH_CLOSING)
 @:access(feathers.data.TreeViewItemState)
 @defaultXmlProperty("dataProvider")
 @:styleContext

@@ -152,6 +152,12 @@ import openfl._internal.utils.ObjectPool;
 	@event feathers.events.TreeViewEvent.BRANCH_CLOSE Dispatched when a branch
 	is closed.
 
+	@event feathers.events.TreeViewEvent.BRANCH_OPENING Dispatched before a
+	branch opens.
+
+	@event feathers.events.TreeViewEvent.BRANCH_CLOSING Dispatched before a
+	branch closes.
+
 	@see [Tutorial: How to use the TreeGridView component](https://feathersui.com/learn/haxe-openfl/tree-grid-view/)
 
 	@since 1.0.0
@@ -161,6 +167,8 @@ import openfl._internal.utils.ObjectPool;
 @:event(feathers.events.TreeGridViewEvent.HEADER_TRIGGER)
 @:event(feathers.events.TreeGridViewEvent.BRANCH_OPEN)
 @:event(feathers.events.TreeGridViewEvent.BRANCH_CLOSE)
+@:event(feathers.events.TreeGridViewEvent.BRANCH_OPENING)
+@:event(feathers.events.TreeGridViewEvent.BRANCH_CLOSING)
 @:access(feathers.data.TreeGridViewHeaderState)
 @defaultXmlProperty("dataProvider")
 @:styleContext
@@ -2649,25 +2657,39 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		state.layoutIndex = layoutIndex;
 		var alreadyOpen = this.openBranches.indexOf(branch) != -1;
 		if (open && !alreadyOpen) {
-			this.openBranches.push(branch);
-			this.populateCurrentRowState(branch, location, layoutIndex, state, true);
-			layoutIndex = insertChildrenIntoVirtualCache(location, layoutIndex);
-			if (rowRenderer != null) {
-				this.updateRowRenderer(rowRenderer, state);
-			}
 			var cellState = new TreeGridViewCellState();
 			this.populateCurrentRowCellState(branch, location, null, -1, layoutIndex, cellState, true);
-			TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.BRANCH_OPEN, cellState);
+			var result = TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.BRANCH_OPENING, cellState, true);
+			if (result) {
+				this.openBranches.push(branch);
+				this.populateCurrentRowState(branch, location, layoutIndex, state, true);
+				layoutIndex = insertChildrenIntoVirtualCache(location, layoutIndex);
+				if (rowRenderer != null) {
+					this.updateRowRenderer(rowRenderer, state);
+				}
+				this.populateCurrentRowCellState(branch, location, null, -1, layoutIndex, cellState, true);
+				TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.BRANCH_OPEN, cellState);
+			} else if (rowRenderer != null) {
+				this.populateCurrentRowState(branch, location, layoutIndex, state, true);
+				this.updateRowRenderer(rowRenderer, state);
+			}
 		} else if (!open && alreadyOpen) {
-			this.openBranches.remove(branch);
-			this.populateCurrentRowState(branch, location, layoutIndex, state, true);
-			removeChildrenFromVirtualCache(location, layoutIndex);
-			if (rowRenderer != null) {
-				this.updateRowRenderer(rowRenderer, state);
-			}
 			var cellState = new TreeGridViewCellState();
 			this.populateCurrentRowCellState(branch, location, null, -1, layoutIndex, cellState, true);
-			TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.BRANCH_CLOSE, cellState);
+			var result = TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.BRANCH_CLOSING, cellState, true);
+			if (result) {
+				this.openBranches.remove(branch);
+				this.populateCurrentRowState(branch, location, layoutIndex, state, true);
+				removeChildrenFromVirtualCache(location, layoutIndex);
+				if (rowRenderer != null) {
+					this.updateRowRenderer(rowRenderer, state);
+				}
+				this.populateCurrentRowCellState(branch, location, null, -1, layoutIndex, cellState, true);
+				TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.BRANCH_CLOSE, cellState);
+			} else if (rowRenderer != null) {
+				this.populateCurrentRowState(branch, location, layoutIndex, state, true);
+				this.updateRowRenderer(rowRenderer, state);
+			}
 		}
 		if (isTemporary) {
 			this.rowStatePool.release(state);
