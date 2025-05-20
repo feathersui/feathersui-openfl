@@ -290,18 +290,126 @@ class GridViewTest extends Test {
 		Assert.isTrue(changed);
 	}
 
-	public function testSelectedItemAfterSetSelectedIndex():Void {
-		this._gridView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
-		Assert.isNull(this._gridView.selectedItem);
-		this._gridView.selectedIndex = 1;
-		Assert.equals(this._gridView.dataProvider.get(1), this._gridView.selectedItem);
-	}
-
-	public function testSelectedIndexAfterSetSelectedItem():Void {
+	public function testSelectionPropertiesAfterSetSelectedIndex():Void {
 		this._gridView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		Assert.equals(-1, this._gridView.selectedIndex);
+		Assert.isNull(this._gridView.selectedItem);
+		Assert.notNull(this._gridView.selectedIndices);
+		Assert.equals(0, this._gridView.selectedIndices.length);
+		Assert.notNull(this._gridView.selectedItems);
+		Assert.equals(0, this._gridView.selectedItems.length);
+		this._gridView.selectedIndex = 1;
+		Assert.equals(1, this._gridView.selectedIndex);
+		Assert.equals(this._gridView.dataProvider.get(1), this._gridView.selectedItem);
+		Assert.notNull(this._gridView.selectedIndices);
+		Assert.equals(1, this._gridView.selectedIndices.length);
+		Assert.equals(1, this._gridView.selectedIndices[0]);
+		Assert.notNull(this._gridView.selectedItems);
+		Assert.equals(1, this._gridView.selectedItems.length);
+		Assert.equals(this._gridView.dataProvider.get(1), this._gridView.selectedItems[0]);
+	}
+
+	public function testSelectionPropertiesAfterSetSelectedItem():Void {
+		this._gridView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		Assert.equals(-1, this._gridView.selectedIndex);
+		Assert.isNull(this._gridView.selectedItem);
+		Assert.notNull(this._gridView.selectedIndices);
+		Assert.equals(0, this._gridView.selectedIndices.length);
+		Assert.notNull(this._gridView.selectedItems);
+		Assert.equals(0, this._gridView.selectedItems.length);
 		this._gridView.selectedItem = this._gridView.dataProvider.get(1);
 		Assert.equals(1, this._gridView.selectedIndex);
+		Assert.equals(this._gridView.dataProvider.get(1), this._gridView.selectedItem);
+		Assert.notNull(this._gridView.selectedIndices);
+		Assert.equals(1, this._gridView.selectedIndices.length);
+		Assert.equals(1, this._gridView.selectedIndices[0]);
+		Assert.notNull(this._gridView.selectedItems);
+		Assert.equals(1, this._gridView.selectedItems.length);
+		Assert.equals(this._gridView.dataProvider.get(1), this._gridView.selectedItems[0]);
+	}
+
+	public function testSelectionPropertiesAfterSetSelectedIndices():Void {
+		this._gridView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._gridView.allowMultipleSelection = true;
+		Assert.equals(-1, this._gridView.selectedIndex);
+		Assert.isNull(this._gridView.selectedItem);
+		Assert.notNull(this._gridView.selectedIndices);
+		Assert.equals(0, this._gridView.selectedIndices.length);
+		Assert.notNull(this._gridView.selectedItems);
+		Assert.equals(0, this._gridView.selectedItems.length);
+		this._gridView.selectedIndices = [1, 2];
+		Assert.equals(1, this._gridView.selectedIndex);
+		Assert.equals(this._gridView.dataProvider.get(1), this._gridView.selectedItem);
+		Assert.notNull(this._gridView.selectedIndices);
+		Assert.equals(2, this._gridView.selectedIndices.length);
+		Assert.equals(1, this._gridView.selectedIndices[0]);
+		Assert.equals(2, this._gridView.selectedIndices[1]);
+		Assert.notNull(this._gridView.selectedItems);
+		Assert.equals(2, this._gridView.selectedItems.length);
+		Assert.equals(this._gridView.dataProvider.get(1), this._gridView.selectedItems[0]);
+		Assert.equals(this._gridView.dataProvider.get(2), this._gridView.selectedItems[1]);
+	}
+
+	public function testSelectionPropertiesAfterSetSelectedItems():Void {
+		this._gridView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._gridView.allowMultipleSelection = true;
+		Assert.equals(-1, this._gridView.selectedIndex);
+		Assert.isNull(this._gridView.selectedItem);
+		Assert.notNull(this._gridView.selectedIndices);
+		Assert.equals(0, this._gridView.selectedIndices.length);
+		Assert.notNull(this._gridView.selectedItems);
+		Assert.equals(0, this._gridView.selectedItems.length);
+		this._gridView.selectedItems = [this._gridView.dataProvider.get(1), this._gridView.dataProvider.get(2)];
+		Assert.equals(1, this._gridView.selectedIndex);
+		Assert.equals(this._gridView.dataProvider.get(1), this._gridView.selectedItem);
+		Assert.notNull(this._gridView.selectedIndices);
+		Assert.equals(2, this._gridView.selectedIndices.length);
+		Assert.equals(1, this._gridView.selectedIndices[0]);
+		Assert.equals(2, this._gridView.selectedIndices[1]);
+		Assert.notNull(this._gridView.selectedItems);
+		Assert.equals(2, this._gridView.selectedItems.length);
+		Assert.equals(this._gridView.dataProvider.get(1), this._gridView.selectedItems[0]);
+		Assert.equals(this._gridView.dataProvider.get(2), this._gridView.selectedItems[1]);
+	}
+
+	public function testSelectMultipleIndicesWithAllowMultipleSelectionDisabled():Void {
+		this._gridView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._gridView.allowMultipleSelection = false;
+		Assert.equals(-1, this._gridView.selectedIndex);
+		Assert.isNull(this._gridView.selectedItem);
+		Assert.notNull(this._gridView.selectedIndices);
+		Assert.equals(0, this._gridView.selectedIndices.length);
+		Assert.notNull(this._gridView.selectedItems);
+		Assert.equals(0, this._gridView.selectedItems.length);
+		this._gridView.selectedIndices = [1, 2];
+		Assert.equals(1, this._gridView.selectedIndex);
+		Assert.equals(this._gridView.dataProvider.get(1), this._gridView.selectedItem);
+		Assert.notNull(this._gridView.selectedIndices);
+		Assert.equals(1, this._gridView.selectedIndices.length);
+		Assert.equals(1, this._gridView.selectedIndices[0]);
+		Assert.notNull(this._gridView.selectedItems);
+		Assert.equals(1, this._gridView.selectedItems.length);
+		Assert.equals(this._gridView.dataProvider.get(1), this._gridView.selectedItems[0]);
+	}
+
+	public function testSelectMultipleItemsWithAllowMultipleSelectionDisabled():Void {
+		this._gridView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._gridView.allowMultipleSelection = false;
+		Assert.equals(-1, this._gridView.selectedIndex);
+		Assert.isNull(this._gridView.selectedItem);
+		Assert.notNull(this._gridView.selectedIndices);
+		Assert.equals(0, this._gridView.selectedIndices.length);
+		Assert.notNull(this._gridView.selectedItems);
+		Assert.equals(0, this._gridView.selectedItems.length);
+		this._gridView.selectedItems = [this._gridView.dataProvider.get(1), this._gridView.dataProvider.get(2)];
+		Assert.equals(1, this._gridView.selectedIndex);
+		Assert.equals(this._gridView.dataProvider.get(1), this._gridView.selectedItem);
+		Assert.notNull(this._gridView.selectedIndices);
+		Assert.equals(1, this._gridView.selectedIndices.length);
+		Assert.equals(1, this._gridView.selectedIndices[0]);
+		Assert.notNull(this._gridView.selectedItems);
+		Assert.equals(1, this._gridView.selectedItems.length);
+		Assert.equals(this._gridView.dataProvider.get(1), this._gridView.selectedItems[0]);
 	}
 
 	public function testDeselectAllOnNullDataProvider():Void {
