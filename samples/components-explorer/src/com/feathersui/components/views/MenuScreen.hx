@@ -80,7 +80,7 @@ class MenuScreen extends Panel {
 			return item.text;
 		};
 		menu.itemToSeparator = (item:MenuItemData) -> {
-			return item.separator;
+			return item.separator != null && item.separator == true;
 		}
 		menu.addEventListener(MenuEvent.ITEM_TRIGGER, menu_itemTriggerHandler);
 		menu.showAtOrigin(this.button);

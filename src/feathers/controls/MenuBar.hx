@@ -82,7 +82,7 @@ import lime.ui.KeyCode;
 	};
 
 	menuBar.itemToSeparator = (item:MenuItemData) -> {
-		return item.separator;
+		return item.separator != null && item.separator == true;
 	};
 
 	menuBar.addEventListener(MenuEvent.ITEM_TRIGGER, menuBar_itemTriggerHandler);
@@ -545,7 +545,7 @@ class MenuBar extends FeathersControl implements IDataSelector<Dynamic> implemen
 		For example, consider the following item:
 
 		```haxe
-		var fileItems:Array<Dynamic> = [
+		var fileItems:Array<MenuItemData> = [
 			{ text: "Open" },
 			{ separator: true },
 			{ text: "Quit" },
@@ -556,9 +556,19 @@ class MenuBar extends FeathersControl implements IDataSelector<Dynamic> implemen
 		implementation of `itemToSeparator()` might look like this:
 
 		```haxe
-		menuBar.itemToSeparator = (item:Dynamic) -> {
-			return Reflect.hasField(item, "separator") && Reflect.field(item, "separator") == true;
+		menuBar.itemToSeparator = (item:MenuItemData) -> {
+			return item.separator != null && item.separator == true;
 		};
+		```
+
+		The example above uses the following custom [Haxe typedef](https://haxe.org/manual/type-system-typedef.html).
+
+		```haxe
+		typedef MenuItemData = {
+			?text:String,
+			?children:Array<MenuItemData>,
+			?separator:Bool
+		}
 		```
 
 		@since 1.4.0

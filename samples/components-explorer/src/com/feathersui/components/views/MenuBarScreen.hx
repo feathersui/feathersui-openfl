@@ -66,7 +66,7 @@ class MenuBarScreen extends Panel {
 			return item.text;
 		};
 		this.menuBar.itemToSeparator = (item:MenuItemData) -> {
-			return item.separator;
+			return item.separator != null && item.separator == true;
 		}
 		this.menuBar.layoutData = AnchorLayoutData.topCenter(10.0);
 		this.menuBar.addEventListener(MenuEvent.ITEM_TRIGGER, menuBar_itemTriggerHandler);

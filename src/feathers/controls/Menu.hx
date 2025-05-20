@@ -87,7 +87,7 @@ import lime.ui.KeyCode;
 	};
 
 	menu.itemToSeparator = (item:MenuItemData) -> {
-		return item.separator;
+		return item.separator != null && item.separator == true;
 	};
 
 	menu.addEventListener(MenuEvent.ITEM_TRIGGER, (event:MenuEvent) -> {
@@ -714,7 +714,7 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 		For example, consider the following item:
 
 		```haxe
-		var fileItems:Array<Dynamic> = [
+		var fileItems:Array<MenuItemData> = [
 			{ text: "Open" },
 			{ separator: true },
 			{ text: "Quit" },
@@ -725,9 +725,19 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 		implementation of `itemToSeparator()` might look like this:
 
 		```haxe
-		menu.itemToSeparator = (item:Dynamic) -> {
-			return Reflect.hasField(item, "separator") && Reflect.field(item, "separator") == true;
+		menu.itemToSeparator = (item:MenuItemData) -> {
+			return item.separator != null && item.separator == true;
 		};
+		```
+
+		The example above uses the following custom [Haxe typedef](https://haxe.org/manual/type-system-typedef.html).
+
+		```haxe
+		typedef MenuItemData = {
+			?text:String,
+			?children:Array<MenuItemData>,
+			?separator:Bool
+		}
 		```
 
 		@since 1.4.0
