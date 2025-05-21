@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import openfl.errors.ArgumentError;
 import feathers.events.TriggerEvent;
 import openfl.events.TouchEvent;
 import openfl.events.MouseEvent;
@@ -101,6 +102,22 @@ import utest.Test;
 		}, RangeError);
 	}
 
+	public function testExceptionOnInvalidTooLargeSelectedLocation2():Void {
+		var collection = new ArrayHierarchicalCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._treeView.dataProvider = collection;
+		Assert.raises(() -> {
+			this._treeView.selectedLocation = [1, 0];
+		}, RangeError);
+	}
+
+	public function testExceptionOnInvalidArrayTooSmallSelectionLocation():Void {
+		var collection = new ArrayHierarchicalCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._treeView.dataProvider = collection;
+		Assert.raises(() -> {
+			this._treeView.selectedLocation = [];
+		}, RangeError);
+	}
+
 	public function testItemToItemRenderer():Void {
 		var collection = new ArrayHierarchicalCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		this._treeView.dataProvider = collection;
@@ -190,6 +207,316 @@ import utest.Test;
 		Assert.isTrue(scrolled);
 		Assert.equals(0.0, this._treeView.scrollX);
 		Assert.equals(0.0, this._treeView.scrollY);
+	}
+
+	public function testSelectionPropertiesAfterSetSelectedLocation():Void {
+		var collection = new ArrayHierarchicalCollection([
+			{text: "One"},
+			{text: "Two", children: [{text: "2-A"}, {text: "2-B"}]},
+			{text: "Three"}
+		], (item:Dynamic) -> item.children);
+		this._treeView.dataProvider = collection;
+		Assert.isNull(this._treeView.selectedLocation);
+		Assert.isNull(this._treeView.selectedItem);
+		Assert.notNull(this._treeView.selectedLocations);
+		Assert.equals(0, this._treeView.selectedLocations.length);
+		Assert.notNull(this._treeView.selectedItems);
+		Assert.equals(0, this._treeView.selectedItems.length);
+		this._treeView.selectedLocation = [1, 0];
+		Assert.notNull(this._treeView.selectedLocation);
+		Assert.equals(2, this._treeView.selectedLocation.length);
+		Assert.equals(1, this._treeView.selectedLocation[0]);
+		Assert.equals(0, this._treeView.selectedLocation[1]);
+		Assert.equals(collection.get([1, 0]), this._treeView.selectedItem);
+		Assert.notNull(this._treeView.selectedLocations);
+		Assert.equals(1, this._treeView.selectedLocations.length);
+		Assert.equals(2, this._treeView.selectedLocations[0].length);
+		Assert.equals(1, this._treeView.selectedLocations[0][0]);
+		Assert.equals(0, this._treeView.selectedLocations[0][1]);
+		Assert.notNull(this._treeView.selectedItems);
+		Assert.equals(1, this._treeView.selectedItems.length);
+		Assert.equals(collection.get([1, 0]), this._treeView.selectedItems[0]);
+
+		var itemState10 = this._treeView.itemToItemState(collection.get([1, 0]));
+		Assert.notNull(itemState10);
+		Assert.equals(0, CompareLocations.compareLocations([1, 0], itemState10.location));
+		Assert.equals(collection.get([1, 0]), itemState10.data);
+		Assert.isTrue(itemState10.selected);
+		var itemState11 = this._treeView.itemToItemState(collection.get([1, 1]));
+		Assert.notNull(itemState11);
+		Assert.equals(0, CompareLocations.compareLocations([1, 1], itemState11.location));
+		Assert.equals(collection.get([1, 1]), itemState11.data);
+		Assert.isFalse(itemState11.selected);
+	}
+
+	public function testSelectionPropertiesAfterSetSelectedItem():Void {
+		var collection = new ArrayHierarchicalCollection([
+			{text: "One"},
+			{text: "Two", children: [{text: "2-A"}, {text: "2-B"}]},
+			{text: "Three"}
+		], (item:Dynamic) -> item.children);
+		this._treeView.dataProvider = collection;
+		Assert.isNull(this._treeView.selectedLocation);
+		Assert.isNull(this._treeView.selectedItem);
+		Assert.notNull(this._treeView.selectedLocations);
+		Assert.equals(0, this._treeView.selectedLocations.length);
+		Assert.notNull(this._treeView.selectedItems);
+		Assert.equals(0, this._treeView.selectedItems.length);
+		this._treeView.selectedItem = collection.get([1, 0]);
+		Assert.notNull(this._treeView.selectedLocation);
+		Assert.equals(2, this._treeView.selectedLocation.length);
+		Assert.equals(1, this._treeView.selectedLocation[0]);
+		Assert.equals(0, this._treeView.selectedLocation[1]);
+		Assert.equals(collection.get([1, 0]), this._treeView.selectedItem);
+		Assert.notNull(this._treeView.selectedLocations);
+		Assert.equals(1, this._treeView.selectedLocations.length);
+		Assert.equals(2, this._treeView.selectedLocations[0].length);
+		Assert.equals(1, this._treeView.selectedLocations[0][0]);
+		Assert.equals(0, this._treeView.selectedLocations[0][1]);
+		Assert.notNull(this._treeView.selectedItems);
+		Assert.equals(1, this._treeView.selectedItems.length);
+		Assert.equals(collection.get([1, 0]), this._treeView.selectedItems[0]);
+
+		var itemState10 = this._treeView.itemToItemState(collection.get([1, 0]));
+		Assert.notNull(itemState10);
+		Assert.equals(0, CompareLocations.compareLocations([1, 0], itemState10.location));
+		Assert.equals(collection.get([1, 0]), itemState10.data);
+		Assert.isTrue(itemState10.selected);
+		var itemState11 = this._treeView.itemToItemState(collection.get([1, 1]));
+		Assert.notNull(itemState11);
+		Assert.equals(0, CompareLocations.compareLocations([1, 1], itemState11.location));
+		Assert.equals(collection.get([1, 1]), itemState11.data);
+		Assert.isFalse(itemState11.selected);
+	}
+
+	public function testSelectionPropertiesAfterSetSelectedLocations():Void {
+		var collection = new ArrayHierarchicalCollection([
+			{text: "One"},
+			{text: "Two", children: [{text: "2-A"}, {text: "2-B"}]},
+			{text: "Three"}
+		], (item:Dynamic) -> item.children);
+		this._treeView.dataProvider = collection;
+		this._treeView.allowMultipleSelection = true;
+		Assert.isNull(this._treeView.selectedLocation);
+		Assert.isNull(this._treeView.selectedItem);
+		Assert.notNull(this._treeView.selectedLocations);
+		Assert.equals(0, this._treeView.selectedLocations.length);
+		Assert.notNull(this._treeView.selectedItems);
+		Assert.equals(0, this._treeView.selectedItems.length);
+		this._treeView.selectedLocations = [[1, 0], [2]];
+		Assert.notNull(this._treeView.selectedLocation);
+		Assert.equals(2, this._treeView.selectedLocation.length);
+		Assert.equals(1, this._treeView.selectedLocation[0]);
+		Assert.equals(0, this._treeView.selectedLocation[1]);
+		Assert.equals(collection.get([1, 0]), this._treeView.selectedItem);
+		Assert.notNull(this._treeView.selectedLocations);
+		Assert.equals(2, this._treeView.selectedLocations.length);
+		Assert.equals(2, this._treeView.selectedLocations[0].length);
+		Assert.equals(1, this._treeView.selectedLocations[0][0]);
+		Assert.equals(0, this._treeView.selectedLocations[0][1]);
+		Assert.equals(1, this._treeView.selectedLocations[1].length);
+		Assert.equals(2, this._treeView.selectedLocations[1][0]);
+		Assert.notNull(this._treeView.selectedItems);
+		Assert.equals(2, this._treeView.selectedItems.length);
+		Assert.equals(collection.get([1, 0]), this._treeView.selectedItems[0]);
+		Assert.equals(collection.get([2]), this._treeView.selectedItems[1]);
+
+		var itemState0 = this._treeView.itemToItemState(collection.get([0]));
+		Assert.notNull(itemState0);
+		Assert.equals(0, CompareLocations.compareLocations([0], itemState0.location));
+		Assert.equals(collection.get([0]), itemState0.data);
+		Assert.isFalse(itemState0.selected);
+		var itemState1 = this._treeView.itemToItemState(collection.get([1]));
+		Assert.notNull(itemState1);
+		Assert.equals(0, CompareLocations.compareLocations([1], itemState1.location));
+		Assert.equals(collection.get([1]), itemState1.data);
+		Assert.isFalse(itemState1.selected);
+		var itemState10 = this._treeView.itemToItemState(collection.get([1, 0]));
+		Assert.notNull(itemState10);
+		Assert.equals(0, CompareLocations.compareLocations([1, 0], itemState10.location));
+		Assert.equals(collection.get([1, 0]), itemState10.data);
+		Assert.isTrue(itemState10.selected);
+		var itemState11 = this._treeView.itemToItemState(collection.get([1, 1]));
+		Assert.notNull(itemState11);
+		Assert.equals(0, CompareLocations.compareLocations([1, 1], itemState11.location));
+		Assert.equals(collection.get([1, 1]), itemState11.data);
+		Assert.isFalse(itemState11.selected);
+		var itemState2 = this._treeView.itemToItemState(collection.get([2]));
+		Assert.notNull(itemState2);
+		Assert.equals(0, CompareLocations.compareLocations([2], itemState2.location));
+		Assert.equals(collection.get([2]), itemState2.data);
+		Assert.isTrue(itemState2.selected);
+	}
+
+	public function testSelectionPropertiesAfterSetSelectedItems():Void {
+		var collection = new ArrayHierarchicalCollection([
+			{text: "One"},
+			{text: "Two", children: [{text: "2-A"}, {text: "2-B"}]},
+			{text: "Three"}
+		], (item:Dynamic) -> item.children);
+		this._treeView.dataProvider = collection;
+		this._treeView.allowMultipleSelection = true;
+		Assert.isNull(this._treeView.selectedLocation);
+		Assert.isNull(this._treeView.selectedItem);
+		Assert.notNull(this._treeView.selectedLocations);
+		Assert.equals(0, this._treeView.selectedLocations.length);
+		Assert.notNull(this._treeView.selectedItems);
+		Assert.equals(0, this._treeView.selectedItems.length);
+		this._treeView.selectedItems = [collection.get([1, 0]), collection.get([2])];
+		Assert.notNull(this._treeView.selectedLocation);
+		Assert.equals(2, this._treeView.selectedLocation.length);
+		Assert.equals(1, this._treeView.selectedLocation[0]);
+		Assert.equals(0, this._treeView.selectedLocation[1]);
+		Assert.equals(collection.get([1, 0]), this._treeView.selectedItem);
+		Assert.notNull(this._treeView.selectedLocations);
+		Assert.equals(2, this._treeView.selectedLocations.length);
+		Assert.equals(2, this._treeView.selectedLocations[0].length);
+		Assert.equals(1, this._treeView.selectedLocations[0][0]);
+		Assert.equals(0, this._treeView.selectedLocations[0][1]);
+		Assert.equals(1, this._treeView.selectedLocations[1].length);
+		Assert.equals(2, this._treeView.selectedLocations[1][0]);
+		Assert.notNull(this._treeView.selectedItems);
+		Assert.equals(2, this._treeView.selectedItems.length);
+		Assert.equals(collection.get([1, 0]), this._treeView.selectedItems[0]);
+		Assert.equals(collection.get([2]), this._treeView.selectedItems[1]);
+
+		var itemState0 = this._treeView.itemToItemState(collection.get([0]));
+		Assert.notNull(itemState0);
+		Assert.equals(0, CompareLocations.compareLocations([0], itemState0.location));
+		Assert.equals(collection.get([0]), itemState0.data);
+		Assert.isFalse(itemState0.selected);
+		var itemState1 = this._treeView.itemToItemState(collection.get([1]));
+		Assert.notNull(itemState1);
+		Assert.equals(0, CompareLocations.compareLocations([1], itemState1.location));
+		Assert.equals(collection.get([1]), itemState1.data);
+		Assert.isFalse(itemState1.selected);
+		var itemState10 = this._treeView.itemToItemState(collection.get([1, 0]));
+		Assert.notNull(itemState10);
+		Assert.equals(0, CompareLocations.compareLocations([1, 0], itemState10.location));
+		Assert.equals(collection.get([1, 0]), itemState10.data);
+		Assert.isTrue(itemState10.selected);
+		var itemState11 = this._treeView.itemToItemState(collection.get([1, 1]));
+		Assert.notNull(itemState11);
+		Assert.equals(0, CompareLocations.compareLocations([1, 1], itemState11.location));
+		Assert.equals(collection.get([1, 1]), itemState11.data);
+		Assert.isFalse(itemState11.selected);
+		var itemState2 = this._treeView.itemToItemState(collection.get([2]));
+		Assert.notNull(itemState2);
+		Assert.equals(0, CompareLocations.compareLocations([2], itemState2.location));
+		Assert.equals(collection.get([2]), itemState2.data);
+		Assert.isTrue(itemState2.selected);
+	}
+
+	public function testSelectMultipleLocationsWithAllowMultipleSelectionDisabled():Void {
+		var collection = new ArrayHierarchicalCollection([
+			{text: "One"},
+			{text: "Two", children: [{text: "2-A"}, {text: "2-B"}]},
+			{text: "Three"}
+		], (item:Dynamic) -> item.children);
+		this._treeView.dataProvider = collection;
+		this._treeView.allowMultipleSelection = false;
+		Assert.isNull(this._treeView.selectedLocation);
+		Assert.isNull(this._treeView.selectedItem);
+		Assert.notNull(this._treeView.selectedLocations);
+		Assert.equals(0, this._treeView.selectedLocations.length);
+		Assert.notNull(this._treeView.selectedItems);
+		Assert.equals(0, this._treeView.selectedItems.length);
+		this._treeView.selectedLocations = [[1, 0], [2]];
+		Assert.notNull(this._treeView.selectedLocation);
+		Assert.equals(2, this._treeView.selectedLocation.length);
+		Assert.equals(1, this._treeView.selectedLocation[0]);
+		Assert.equals(0, this._treeView.selectedLocation[1]);
+		Assert.equals(collection.get([1, 0]), this._treeView.selectedItem);
+		Assert.notNull(this._treeView.selectedLocations);
+		Assert.equals(1, this._treeView.selectedLocations.length);
+		Assert.equals(2, this._treeView.selectedLocations[0].length);
+		Assert.equals(1, this._treeView.selectedLocations[0][0]);
+		Assert.equals(0, this._treeView.selectedLocations[0][1]);
+		Assert.notNull(this._treeView.selectedItems);
+		Assert.equals(1, this._treeView.selectedItems.length);
+		Assert.equals(collection.get([1, 0]), this._treeView.selectedItems[0]);
+
+		var itemState0 = this._treeView.itemToItemState(collection.get([0]));
+		Assert.notNull(itemState0);
+		Assert.equals(0, CompareLocations.compareLocations([0], itemState0.location));
+		Assert.equals(collection.get([0]), itemState0.data);
+		Assert.isFalse(itemState0.selected);
+		var itemState1 = this._treeView.itemToItemState(collection.get([1]));
+		Assert.notNull(itemState1);
+		Assert.equals(0, CompareLocations.compareLocations([1], itemState1.location));
+		Assert.equals(collection.get([1]), itemState1.data);
+		Assert.isFalse(itemState1.selected);
+		var itemState10 = this._treeView.itemToItemState(collection.get([1, 0]));
+		Assert.notNull(itemState10);
+		Assert.equals(0, CompareLocations.compareLocations([1, 0], itemState10.location));
+		Assert.equals(collection.get([1, 0]), itemState10.data);
+		Assert.isTrue(itemState10.selected);
+		var itemState11 = this._treeView.itemToItemState(collection.get([1, 1]));
+		Assert.notNull(itemState11);
+		Assert.equals(0, CompareLocations.compareLocations([1, 1], itemState11.location));
+		Assert.equals(collection.get([1, 1]), itemState11.data);
+		Assert.isFalse(itemState11.selected);
+		var itemState2 = this._treeView.itemToItemState(collection.get([2]));
+		Assert.notNull(itemState2);
+		Assert.equals(0, CompareLocations.compareLocations([2], itemState2.location));
+		Assert.equals(collection.get([2]), itemState2.data);
+		Assert.isFalse(itemState2.selected);
+	}
+
+	public function testSelectMultipleItemsWithAllowMultipleSelectionDisabled():Void {
+		var collection = new ArrayHierarchicalCollection([
+			{text: "One"},
+			{text: "Two", children: [{text: "2-A"}, {text: "2-B"}]},
+			{text: "Three"}
+		], (item:Dynamic) -> item.children);
+		this._treeView.dataProvider = collection;
+		this._treeView.allowMultipleSelection = false;
+		Assert.isNull(this._treeView.selectedLocation);
+		Assert.isNull(this._treeView.selectedItem);
+		Assert.notNull(this._treeView.selectedLocations);
+		Assert.equals(0, this._treeView.selectedLocations.length);
+		Assert.notNull(this._treeView.selectedItems);
+		Assert.equals(0, this._treeView.selectedItems.length);
+		this._treeView.selectedItems = [collection.get([1, 0]), collection.get([2])];
+		Assert.notNull(this._treeView.selectedLocation);
+		Assert.equals(2, this._treeView.selectedLocation.length);
+		Assert.equals(1, this._treeView.selectedLocation[0]);
+		Assert.equals(0, this._treeView.selectedLocation[1]);
+		Assert.equals(collection.get([1, 0]), this._treeView.selectedItem);
+		Assert.notNull(this._treeView.selectedLocations);
+		Assert.equals(1, this._treeView.selectedLocations.length);
+		Assert.equals(2, this._treeView.selectedLocations[0].length);
+		Assert.equals(1, this._treeView.selectedLocations[0][0]);
+		Assert.equals(0, this._treeView.selectedLocations[0][1]);
+		Assert.notNull(this._treeView.selectedItems);
+		Assert.equals(1, this._treeView.selectedItems.length);
+		Assert.equals(collection.get([1, 0]), this._treeView.selectedItems[0]);
+
+		var itemState0 = this._treeView.itemToItemState(collection.get([0]));
+		Assert.notNull(itemState0);
+		Assert.equals(0, CompareLocations.compareLocations([0], itemState0.location));
+		Assert.equals(collection.get([0]), itemState0.data);
+		Assert.isFalse(itemState0.selected);
+		var itemState1 = this._treeView.itemToItemState(collection.get([1]));
+		Assert.notNull(itemState1);
+		Assert.equals(0, CompareLocations.compareLocations([1], itemState1.location));
+		Assert.equals(collection.get([1]), itemState1.data);
+		Assert.isFalse(itemState1.selected);
+		var itemState10 = this._treeView.itemToItemState(collection.get([1, 0]));
+		Assert.notNull(itemState10);
+		Assert.equals(0, CompareLocations.compareLocations([1, 0], itemState10.location));
+		Assert.equals(collection.get([1, 0]), itemState10.data);
+		Assert.isTrue(itemState10.selected);
+		var itemState11 = this._treeView.itemToItemState(collection.get([1, 1]));
+		Assert.notNull(itemState11);
+		Assert.equals(0, CompareLocations.compareLocations([1, 1], itemState11.location));
+		Assert.equals(collection.get([1, 1]), itemState11.data);
+		Assert.isFalse(itemState11.selected);
+		var itemState2 = this._treeView.itemToItemState(collection.get([2]));
+		Assert.notNull(itemState2);
+		Assert.equals(0, CompareLocations.compareLocations([2], itemState2.location));
+		Assert.equals(collection.get([2]), itemState2.data);
+		Assert.isFalse(itemState2.selected);
 	}
 
 	public function testDeselectAllOnDataProviderRemoveAll():Void {
@@ -400,20 +727,32 @@ import utest.Test;
 		var changed = false;
 		var eventLocation:Array<Int> = null;
 		var eventItem = null;
+		var eventLocations:Array<Array<Int>> = null;
+		var eventItems:Array<Dynamic> = null;
 		this._treeView.addEventListener(Event.CHANGE, function(event:Event):Void {
 			changed = true;
 			eventLocation = this._treeView.selectedLocation;
 			eventItem = this._treeView.selectedItem;
+			eventLocations = this._treeView.selectedLocations.copy();
+			eventItems = this._treeView.selectedItems.copy();
 		});
 		Assert.isFalse(changed);
 		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocation));
 		Assert.equals(item2, this._treeView.selectedItem);
+		Assert.isTrue(this._treeView.selectedLocations.length == 1);
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocations[0]));
+		Assert.isTrue(this._treeView.selectedItems.length == 1);
+		Assert.equals(item2, this._treeView.selectedItems[0]);
 		this._treeView.dataProvider.addAt(item3, [0, 0]);
 		Assert.isTrue(changed);
 		Assert.equals(0, CompareLocations.compareLocations([0, 2], eventLocation));
 		Assert.equals(0, CompareLocations.compareLocations([0, 2], this._treeView.selectedLocation));
 		Assert.equals(item2, eventItem);
 		Assert.equals(item2, this._treeView.selectedItem);
+		Assert.equals(1, eventLocations.length);
+		Assert.equals(0, CompareLocations.compareLocations([0, 2], eventLocations[0]));
+		Assert.equals(1, eventItems.length);
+		Assert.equals(item2, eventItems[0]);
 	}
 
 	public function testAddItemAtSelectedLocation():Void {
@@ -427,20 +766,32 @@ import utest.Test;
 		var changed = false;
 		var eventLocation:Array<Int> = null;
 		var eventItem = null;
+		var eventLocations:Array<Array<Int>> = null;
+		var eventItems:Array<Dynamic> = null;
 		this._treeView.addEventListener(Event.CHANGE, function(event:Event):Void {
 			changed = true;
 			eventLocation = this._treeView.selectedLocation;
 			eventItem = this._treeView.selectedItem;
+			eventLocations = this._treeView.selectedLocations.copy();
+			eventItems = this._treeView.selectedItems.copy();
 		});
 		Assert.isFalse(changed);
 		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocation));
 		Assert.equals(item2, this._treeView.selectedItem);
+		Assert.isTrue(this._treeView.selectedLocations.length == 1);
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocations[0]));
+		Assert.isTrue(this._treeView.selectedItems.length == 1);
+		Assert.equals(item2, this._treeView.selectedItems[0]);
 		this._treeView.dataProvider.addAt(item3, [0, 1]);
 		Assert.isTrue(changed);
 		Assert.equals(0, CompareLocations.compareLocations([0, 2], eventLocation));
 		Assert.equals(0, CompareLocations.compareLocations([0, 2], this._treeView.selectedLocation));
 		Assert.equals(item2, eventItem);
 		Assert.equals(item2, this._treeView.selectedItem);
+		Assert.equals(1, eventLocations.length);
+		Assert.equals(0, CompareLocations.compareLocations([0, 2], eventLocations[0]));
+		Assert.equals(1, eventItems.length);
+		Assert.equals(item2, eventItems[0]);
 	}
 
 	public function testAddItemAfterSelectedLocation():Void {
@@ -454,20 +805,30 @@ import utest.Test;
 		var changed = false;
 		var eventLocation:Array<Int> = null;
 		var eventItem = null;
+		var eventLocations:Array<Array<Int>> = null;
+		var eventItems:Array<Dynamic> = null;
 		this._treeView.addEventListener(Event.CHANGE, function(event:Event):Void {
 			changed = true;
 			eventLocation = this._treeView.selectedLocation;
 			eventItem = this._treeView.selectedItem;
+			eventLocations = this._treeView.selectedLocations.copy();
+			eventItems = this._treeView.selectedItems.copy();
 		});
 		Assert.isFalse(changed);
 		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocation));
 		Assert.equals(item2, this._treeView.selectedItem);
+		Assert.isTrue(this._treeView.selectedLocations.length == 1);
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocations[0]));
+		Assert.isTrue(this._treeView.selectedItems.length == 1);
+		Assert.equals(item2, this._treeView.selectedItems[0]);
 		this._treeView.dataProvider.addAt(item3, [0, 2]);
 		Assert.isFalse(changed);
 		Assert.isNull(eventLocation);
 		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocation));
 		Assert.isNull(eventItem);
 		Assert.equals(item2, this._treeView.selectedItem);
+		Assert.isNull(eventLocations);
+		Assert.isNull(eventItems);
 	}
 
 	public function testRemoveItemBeforeSelectedLocation():Void {
@@ -481,20 +842,32 @@ import utest.Test;
 		var changed = false;
 		var eventLocation:Array<Int> = null;
 		var eventItem = null;
+		var eventLocations:Array<Array<Int>> = null;
+		var eventItems:Array<Dynamic> = null;
 		this._treeView.addEventListener(Event.CHANGE, function(event:Event):Void {
 			changed = true;
 			eventLocation = this._treeView.selectedLocation;
 			eventItem = this._treeView.selectedItem;
+			eventLocations = this._treeView.selectedLocations.copy();
+			eventItems = this._treeView.selectedItems.copy();
 		});
 		Assert.isFalse(changed);
 		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocation));
 		Assert.equals(item2, this._treeView.selectedItem);
+		Assert.isTrue(this._treeView.selectedLocations.length == 1);
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocations[0]));
+		Assert.isTrue(this._treeView.selectedItems.length == 1);
+		Assert.equals(item2, this._treeView.selectedItems[0]);
 		this._treeView.dataProvider.removeAt([0, 0]);
 		Assert.isTrue(changed);
 		Assert.equals(0, CompareLocations.compareLocations([0, 0], eventLocation));
 		Assert.equals(0, CompareLocations.compareLocations([0, 0], this._treeView.selectedLocation));
 		Assert.equals(item2, eventItem);
 		Assert.equals(item2, this._treeView.selectedItem);
+		Assert.equals(1, eventLocations.length);
+		Assert.equals(0, CompareLocations.compareLocations([0, 0], eventLocations[0]));
+		Assert.equals(1, eventItems.length);
+		Assert.equals(item2, eventItems[0]);
 	}
 
 	public function testRemoveItemAtSelectedLocation():Void {
@@ -508,20 +881,30 @@ import utest.Test;
 		var changed = false;
 		var eventLocation:Array<Int> = null;
 		var eventItem = null;
+		var eventLocations:Array<Array<Int>> = null;
+		var eventItems:Array<Dynamic> = null;
 		this._treeView.addEventListener(Event.CHANGE, function(event:Event):Void {
 			changed = true;
 			eventLocation = this._treeView.selectedLocation;
 			eventItem = this._treeView.selectedItem;
+			eventLocations = this._treeView.selectedLocations.copy();
+			eventItems = this._treeView.selectedItems.copy();
 		});
 		Assert.isFalse(changed);
 		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocation));
 		Assert.equals(item2, this._treeView.selectedItem);
+		Assert.isTrue(this._treeView.selectedLocations.length == 1);
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocations[0]));
+		Assert.isTrue(this._treeView.selectedItems.length == 1);
+		Assert.equals(item2, this._treeView.selectedItems[0]);
 		this._treeView.dataProvider.removeAt([0, 1]);
 		Assert.isTrue(changed);
 		Assert.isNull(eventLocation);
 		Assert.isNull(this._treeView.selectedLocation);
 		Assert.isNull(eventItem);
 		Assert.isNull(this._treeView.selectedItem);
+		Assert.equals(0, eventLocations.length);
+		Assert.equals(0, eventItems.length);
 	}
 
 	public function testRemoveItemAfterSelectedLocation():Void {
@@ -535,20 +918,30 @@ import utest.Test;
 		var changed = false;
 		var eventLocation:Array<Int> = null;
 		var eventItem = null;
+		var eventLocations:Array<Array<Int>> = null;
+		var eventItems:Array<Dynamic> = null;
 		this._treeView.addEventListener(Event.CHANGE, function(event:Event):Void {
 			changed = true;
 			eventLocation = this._treeView.selectedLocation;
 			eventItem = this._treeView.selectedItem;
+			eventLocations = this._treeView.selectedLocations.copy();
+			eventItems = this._treeView.selectedItems.copy();
 		});
 		Assert.isFalse(changed);
 		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocation));
 		Assert.equals(item2, this._treeView.selectedItem);
+		Assert.isTrue(this._treeView.selectedLocations.length == 1);
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocations[0]));
+		Assert.isTrue(this._treeView.selectedItems.length == 1);
+		Assert.equals(item2, this._treeView.selectedItems[0]);
 		this._treeView.dataProvider.removeAt([0, 2]);
 		Assert.isFalse(changed);
 		Assert.isNull(eventLocation);
 		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocation));
 		Assert.isNull(eventItem);
 		Assert.equals(item2, this._treeView.selectedItem);
+		Assert.isNull(eventLocations);
+		Assert.isNull(eventItems);
 	}
 
 	public function testReplaceItemBeforeSelectedLocation():Void {
@@ -563,20 +956,30 @@ import utest.Test;
 		var changed = false;
 		var eventLocation:Array<Int> = null;
 		var eventItem = null;
+		var eventLocations:Array<Array<Int>> = null;
+		var eventItems:Array<Dynamic> = null;
 		this._treeView.addEventListener(Event.CHANGE, function(event:Event):Void {
 			changed = true;
 			eventLocation = this._treeView.selectedLocation;
 			eventItem = this._treeView.selectedItem;
+			eventLocations = this._treeView.selectedLocations.copy();
+			eventItems = this._treeView.selectedItems.copy();
 		});
 		Assert.isFalse(changed);
 		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocation));
 		Assert.equals(item2, this._treeView.selectedItem);
+		Assert.isTrue(this._treeView.selectedLocations.length == 1);
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocations[0]));
+		Assert.isTrue(this._treeView.selectedItems.length == 1);
+		Assert.equals(item2, this._treeView.selectedItems[0]);
 		this._treeView.dataProvider.set([0, 0], item4);
 		Assert.isFalse(changed);
 		Assert.isNull(eventLocation);
 		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocation));
 		Assert.isNull(eventItem);
 		Assert.equals(item2, this._treeView.selectedItem);
+		Assert.isNull(eventLocations);
+		Assert.isNull(eventItems);
 	}
 
 	public function testReplaceItemAtSelectedLocation():Void {
@@ -591,20 +994,32 @@ import utest.Test;
 		var changed = false;
 		var eventLocation:Array<Int> = null;
 		var eventItem = null;
+		var eventLocations:Array<Array<Int>> = null;
+		var eventItems:Array<Dynamic> = null;
 		this._treeView.addEventListener(Event.CHANGE, function(event:Event):Void {
 			changed = true;
 			eventLocation = this._treeView.selectedLocation;
 			eventItem = this._treeView.selectedItem;
+			eventLocations = this._treeView.selectedLocations.copy();
+			eventItems = this._treeView.selectedItems.copy();
 		});
 		Assert.isFalse(changed);
 		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocation));
 		Assert.equals(item2, this._treeView.selectedItem);
+		Assert.isTrue(this._treeView.selectedLocations.length == 1);
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocations[0]));
+		Assert.isTrue(this._treeView.selectedItems.length == 1);
+		Assert.equals(item2, this._treeView.selectedItems[0]);
 		this._treeView.dataProvider.set([0, 1], item4);
 		Assert.isTrue(changed);
 		Assert.equals(0, CompareLocations.compareLocations([0, 1], eventLocation));
 		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocation));
 		Assert.equals(item4, eventItem);
 		Assert.equals(item4, this._treeView.selectedItem);
+		Assert.equals(1, eventLocations.length);
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], eventLocations[0]));
+		Assert.equals(1, eventItems.length);
+		Assert.equals(item2, eventItems[0]);
 	}
 
 	public function testReplaceParentOfSelectedLocation():Void {
@@ -619,20 +1034,30 @@ import utest.Test;
 		var changed = false;
 		var eventLocation:Array<Int> = null;
 		var eventItem = null;
+		var eventLocations:Array<Array<Int>> = null;
+		var eventItems:Array<Dynamic> = null;
 		this._treeView.addEventListener(Event.CHANGE, function(event:Event):Void {
 			changed = true;
 			eventLocation = this._treeView.selectedLocation;
 			eventItem = this._treeView.selectedItem;
+			eventLocations = this._treeView.selectedLocations.copy();
+			eventItems = this._treeView.selectedItems.copy();
 		});
 		Assert.isFalse(changed);
 		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocation));
 		Assert.equals(item2, this._treeView.selectedItem);
+		Assert.isTrue(this._treeView.selectedLocations.length == 1);
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocations[0]));
+		Assert.isTrue(this._treeView.selectedItems.length == 1);
+		Assert.equals(item2, this._treeView.selectedItems[0]);
 		this._treeView.dataProvider.set([0], item4);
 		Assert.isTrue(changed);
 		Assert.isNull(eventLocation);
 		Assert.isNull(this._treeView.selectedLocation);
 		Assert.isNull(eventItem);
 		Assert.isNull(this._treeView.selectedItem);
+		Assert.equals(0, eventLocations.length);
+		Assert.equals(0, eventItems.length);
 	}
 
 	public function testReplaceItemAfterSelectedLocation():Void {
@@ -647,20 +1072,30 @@ import utest.Test;
 		var changed = false;
 		var eventLocation:Array<Int> = null;
 		var eventItem = null;
+		var eventLocations:Array<Array<Int>> = null;
+		var eventItems:Array<Dynamic> = null;
 		this._treeView.addEventListener(Event.CHANGE, function(event:Event):Void {
 			changed = true;
 			eventLocation = this._treeView.selectedLocation;
 			eventItem = this._treeView.selectedItem;
+			eventLocations = this._treeView.selectedLocations.copy();
+			eventItems = this._treeView.selectedItems.copy();
 		});
 		Assert.isFalse(changed);
 		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocation));
 		Assert.equals(item2, this._treeView.selectedItem);
+		Assert.isTrue(this._treeView.selectedLocations.length == 1);
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocations[0]));
+		Assert.isTrue(this._treeView.selectedItems.length == 1);
+		Assert.equals(item2, this._treeView.selectedItems[0]);
 		this._treeView.dataProvider.set([0, 2], item4);
 		Assert.isFalse(changed);
 		Assert.isNull(eventLocation);
 		Assert.equals(0, CompareLocations.compareLocations([0, 1], this._treeView.selectedLocation));
 		Assert.isNull(eventItem);
 		Assert.equals(item2, this._treeView.selectedItem);
+		Assert.isNull(eventLocations);
+		Assert.isNull(eventItems);
 	}
 
 	public function testRemoveItemAtOpenedBranch():Void {

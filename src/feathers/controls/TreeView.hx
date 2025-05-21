@@ -470,14 +470,28 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		if (this._selectedLocation == value || this.compareLocations(this._selectedLocation, value) == 0) {
 			return this._selectedLocation;
 		}
-		this._selectedLocation = value;
-		// using variable because if we were to call the selectedItem setter,
-		// then this change wouldn't be saved properly
-		if (this._selectedLocation == null) {
+		if (value == null) {
+			this._selectionAnchorIndex = -1;
 			this._selectedItem = null;
-		} else {
-			this._selectedItem = this._dataProvider.get(this._selectedLocation);
+			this._selectedLocation = null;
+			#if (hl && haxe_ver < 4.3)
+			this._selectedLocations.splice(0, this._selectedLocations.length);
+			this._selectedItems.splice(0, this._selectedItems.length);
+			#else
+			this._selectedLocations.resize(0);
+			this._selectedItems.resize(0);
+			#end
+			this.setInvalid(SELECTION);
+			FeathersEvent.dispatch(this, Event.CHANGE);
+			return this._selectedLocation;
 		}
+		this._selectedLocation = value;
+		this._selectedItem = this._dataProvider.get(this._selectedLocation);
+		this._selectedLocations.resize(1);
+		this._selectedLocations[0] = this._selectedLocation.copy();
+		this._selectedItems.resize(1);
+		this._selectedItems[0] = this._selectedItem;
+		this._selectionAnchorIndex = this.locationToDisplayIndex(this._selectedLocation, false);
 		this.setInvalid(SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._selectedLocation;
@@ -502,14 +516,172 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			return this._selectedItem;
 		}
 		var location = this._dataProvider.locationOf(value);
+		if (location == null) {
+			// use the setter
+			this.selectedLocation = null;
+			return this._selectedItem;
+		}
 		if (this._selectedItem == value && this.compareLocations(this._selectedLocation, location) == 0) {
 			return this._selectedItem;
 		}
 		this._selectedItem = value;
 		this._selectedLocation = location;
+		this._selectedLocations.resize(1);
+		this._selectedLocations[0] = this._selectedLocation;
+		this._selectedItems.resize(1);
+		this._selectedItems[0] = this._selectedItem;
+		this._selectionAnchorIndex = this.locationToDisplayIndex(this._selectedLocation, false);
 		this.setInvalid(SELECTION);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._selectedItem;
+	}
+
+	private var _allowMultipleSelection:Bool = false;
+
+	/**
+		Determines if multiple items may be selected at the same time. Has no
+		effect if `selectable` is `false`.
+
+		In the following example, multiple selection is enabled:
+
+		```haxe
+		treeView.allowMultipleSelection = true;
+		```
+
+		@see `TreeView.selectable`
+		@see `TreeView.selectedLocations`
+		@see `TreeView.selectedItems`
+
+		@since 1.4.0
+	**/
+	public var allowMultipleSelection(get, set):Bool;
+
+	private function get_allowMultipleSelection():Bool {
+		return this._allowMultipleSelection;
+	}
+
+	private function set_allowMultipleSelection(value:Bool):Bool {
+		if (this._allowMultipleSelection == value) {
+			return this._allowMultipleSelection;
+		}
+		this._allowMultipleSelection = value;
+		this.setInvalid(SELECTION);
+		return this._allowMultipleSelection;
+	}
+
+	private var _selectionAnchorIndex:Int = -1;
+
+	private var _selectedLocations:Array<Array<Int>> = [];
+
+	/**
+		Contains all of the locations that are currently selected. The most
+		recently selected location will appear at the beginning of the array. In
+		other words, the locations are in the reverse order that they were
+		selected by the user.
+
+		When the `selectedLocations` array contains multiple items, the
+		`selectedLocation` property will return the first item from
+		`selectedLocations`.
+
+		@see `TreeView.allowMultipleSelection`
+		@see `TreeView.selectedItems`
+
+		@since 1.4.0
+	**/
+	@:bindable("change")
+	public var selectedLocations(get, set):Array<Array<Int>>;
+
+	private function get_selectedLocations():Array<Array<Int>> {
+		return this._selectedLocations;
+	}
+
+	private function set_selectedLocations(value:Array<Array<Int>>):Array<Array<Int>> {
+		if (value == null || value.length == 0 || !this._selectable || this._dataProvider == null) {
+			// use the setter
+			this.selectedLocation = null;
+			return this._selectedLocations;
+		}
+		if (this._selectedLocations == value) {
+			return this._selectedLocations;
+		}
+		if (!this._allowMultipleSelection && value.length > 1) {
+			value.resize(1);
+		}
+		this._selectedLocations = value;
+		this._selectedLocation = this._selectedLocations[0];
+		this._selectedItems.resize(this._selectedLocations.length);
+		for (i in 0...this._selectedLocations.length) {
+			var location = this._selectedLocations[i];
+			this._selectedItems[i] = this._dataProvider.get(location);
+		}
+		this._selectedItem = this._selectedItems[0];
+		this._selectionAnchorIndex = this.locationToDisplayIndex(this._selectedLocation, false);
+		this.setInvalid(SELECTION);
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._selectedLocations;
+	}
+
+	private var _selectedItems:Array<Dynamic> = [];
+
+	/**
+		Contains all of the items that are currently selected. The most
+		recently selected item will appear at the beginning of the array. In
+		other words, the items are in the reverse order that they were
+		selected by the user.
+
+		When the `selectedItems` array contains multiple items, the
+		`selectedItem` property will return the first item from `selectedItems`.
+
+		@see `TreeView.allowMultipleSelection`
+		@see `TreeView.selectedLocations`
+
+		@since 1.4.0
+	**/
+	@:bindable("change")
+	public var selectedItems(get, set):Array<Dynamic>;
+
+	private function get_selectedItems():Array<Dynamic> {
+		return this._selectedItems;
+	}
+
+	private function set_selectedItems(value:Array<Dynamic>):Array<Dynamic> {
+		if (value == null || value.length == 0 || !this._selectable || this._dataProvider == null) {
+			// use the setter
+			this.selectedLocation = null;
+			return this._selectedItems;
+		}
+		if (this._selectedItems == value) {
+			return this._selectedItems;
+		}
+		if (!this._allowMultipleSelection && value.length > 1) {
+			value.resize(1);
+		}
+		var locations:Array<Array<Int>> = [];
+		var i = 0;
+		while (i < value.length) {
+			var item = value[i];
+			var location = this._dataProvider.locationOf(item);
+			if (location == null) {
+				value.splice(i, 1);
+				continue;
+			}
+			locations.push(location);
+			i++;
+		}
+		this._selectedLocations = locations;
+		this._selectedItems = value;
+		if (value.length == 0) {
+			this._selectedLocation = null;
+			this._selectedItem = null;
+			this._selectionAnchorIndex = -1;
+		} else {
+			this._selectedLocation = this._selectedLocations[0];
+			this._selectedItem = this._selectedItems[0];
+			this._selectionAnchorIndex = this.locationToDisplayIndex(this._selectedLocation, false);
+		}
+		this.setInvalid(SELECTION);
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._selectedLocations;
 	}
 
 	private var _previousLayout:ILayout;
@@ -1400,7 +1572,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			state.opened = opened;
 			changed = true;
 		}
-		var selected = item == this._selectedItem;
+		var selected = Lambda.exists(this._selectedLocations, other -> this.compareLocations(other, location) == 0);
 		if (force || state.selected != selected) {
 			state.selected = selected;
 			changed = true;
@@ -2111,6 +2283,65 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		}
 	}
 
+	private function handleSelectionChange(item:Dynamic, location:Array<Int>, layoutIndex:Int, ctrlKey:Bool, shiftKey:Bool):Void {
+		if (location == null || !this._selectable) {
+			// use the setter
+			this.selectedItem = null;
+			return;
+		}
+		var selectionIndex = this._selectedItems.indexOf(item);
+		if (this._allowMultipleSelection && (ctrlKey || shiftKey)) {
+			if (shiftKey) {
+				var anchorIndex = this._selectionAnchorIndex;
+				if (anchorIndex == -1) {
+					anchorIndex = 0;
+				}
+				var selectedLocations:Array<Array<Int>> = [];
+				if (layoutIndex == anchorIndex) {
+					selectedLocations.unshift(location);
+				} else {
+					var i = anchorIndex;
+					do {
+						var locationFromAnchor = this.displayIndexToLocation(i);
+						if (locationFromAnchor != null) {
+							selectedLocations.unshift(locationFromAnchor);
+						}
+						i += (anchorIndex > layoutIndex) ? -1 : 1;
+					} while (i != layoutIndex);
+					if (layoutIndex != anchorIndex) {
+						var locationFromAnchor = this.displayIndexToLocation(layoutIndex);
+						if (locationFromAnchor != null) {
+							selectedLocations.unshift(locationFromAnchor);
+						}
+					}
+				}
+				this.selectedLocations = selectedLocations;
+				// make sure the anchor remains the same as before
+				this._selectionAnchorIndex = anchorIndex;
+			} else {
+				if (selectionIndex == -1) {
+					var selectedItems = this._selectedItems.copy();
+					selectedItems.unshift(item);
+					// use the setter
+					this.selectedItems = selectedItems;
+				} else {
+					var selectedItems = this._selectedItems.copy();
+					selectedItems.splice(selectionIndex, 1);
+					// use the setter
+					this.selectedItems = selectedItems;
+				}
+				// even if deselecting, this is the new anchor
+				this._selectionAnchorIndex = layoutIndex;
+			}
+		} else {
+			// use the setter
+			this.selectedItem = item;
+		}
+		if (location != null) {
+			this.scrollToLocation(location);
+		}
+	}
+
 	private function treeView_itemRenderer_touchTapHandler(event:TouchEvent):Void {
 		if (!this._enabled) {
 			return;
@@ -2133,11 +2364,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		if (!this._selectable || !this.pointerSelectionEnabled) {
 			return;
 		}
-		// use the setter
-		this.selectedLocation = state.location.copy();
-		if (this._selectedLocation != null) {
-			this.scrollToLocation(this._selectedLocation);
-		}
+		this.handleSelectionChange(state.data, state.location, state.layoutIndex, event.ctrlKey, event.shiftKey);
 	}
 
 	private function treeView_itemRenderer_clickHandler(event:MouseEvent):Void {
@@ -2157,11 +2384,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		if (!this._selectable || !this.pointerSelectionEnabled) {
 			return;
 		}
-		// use the setter
-		this.selectedLocation = state.location.copy();
-		if (this._selectedLocation != null) {
-			this.scrollToLocation(this._selectedLocation);
-		}
+		this.handleSelectionChange(state.data, state.location, state.layoutIndex, event.ctrlKey, event.shiftKey);
 	}
 
 	private function treeView_itemRenderer_triggerHandler(event:TriggerEvent):Void {
@@ -2181,11 +2404,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		if (!this._selectable || !this.pointerSelectionEnabled) {
 			return;
 		}
-		// use the setter
-		this.selectedLocation = state.location.copy();
-		if (this._selectedLocation != null) {
-			this.scrollToLocation(this._selectedLocation);
-		}
+		this.handleSelectionChange(state.data, state.location, state.layoutIndex, event.ctrlKey, event.shiftKey);
 	}
 
 	private function treeView_itemRenderer_resizeHandler(event:Event):Void {
