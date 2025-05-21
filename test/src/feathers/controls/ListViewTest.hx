@@ -218,7 +218,8 @@ class ListViewTest extends Test {
 	}
 
 	public function testSelectionPropertiesAfterSetSelectedIndex():Void {
-		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._listView.dataProvider = collection;
 		Assert.equals(-1, this._listView.selectedIndex);
 		Assert.isNull(this._listView.selectedItem);
 		Assert.notNull(this._listView.selectedIndices);
@@ -227,36 +228,60 @@ class ListViewTest extends Test {
 		Assert.equals(0, this._listView.selectedItems.length);
 		this._listView.selectedIndex = 1;
 		Assert.equals(1, this._listView.selectedIndex);
-		Assert.equals(this._listView.dataProvider.get(1), this._listView.selectedItem);
+		Assert.equals(collection.get(1), this._listView.selectedItem);
 		Assert.notNull(this._listView.selectedIndices);
 		Assert.equals(1, this._listView.selectedIndices.length);
 		Assert.equals(1, this._listView.selectedIndices[0]);
 		Assert.notNull(this._listView.selectedItems);
 		Assert.equals(1, this._listView.selectedItems.length);
-		Assert.equals(this._listView.dataProvider.get(1), this._listView.selectedItems[0]);
+		Assert.equals(collection.get(1), this._listView.selectedItems[0]);
+
+		var itemState0 = this._listView.itemToItemState(collection.get(0));
+		Assert.notNull(itemState0);
+		Assert.equals(0, itemState0.index);
+		Assert.equals(collection.get(0), itemState0.data);
+		Assert.isFalse(itemState0.selected);
+		var itemState1 = this._listView.itemToItemState(collection.get(1));
+		Assert.notNull(itemState1);
+		Assert.equals(1, itemState1.index);
+		Assert.equals(collection.get(1), itemState1.data);
+		Assert.isTrue(itemState1.selected);
 	}
 
 	public function testSelectionPropertiesAfterSetSelectedItem():Void {
-		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._listView.dataProvider = collection;
 		Assert.equals(-1, this._listView.selectedIndex);
 		Assert.isNull(this._listView.selectedItem);
 		Assert.notNull(this._listView.selectedIndices);
 		Assert.equals(0, this._listView.selectedIndices.length);
 		Assert.notNull(this._listView.selectedItems);
 		Assert.equals(0, this._listView.selectedItems.length);
-		this._listView.selectedItem = this._listView.dataProvider.get(1);
+		this._listView.selectedItem = collection.get(1);
 		Assert.equals(1, this._listView.selectedIndex);
-		Assert.equals(this._listView.dataProvider.get(1), this._listView.selectedItem);
+		Assert.equals(collection.get(1), this._listView.selectedItem);
 		Assert.notNull(this._listView.selectedIndices);
 		Assert.equals(1, this._listView.selectedIndices.length);
 		Assert.equals(1, this._listView.selectedIndices[0]);
 		Assert.notNull(this._listView.selectedItems);
 		Assert.equals(1, this._listView.selectedItems.length);
-		Assert.equals(this._listView.dataProvider.get(1), this._listView.selectedItems[0]);
+		Assert.equals(collection.get(1), this._listView.selectedItems[0]);
+
+		var itemState0 = this._listView.itemToItemState(collection.get(0));
+		Assert.notNull(itemState0);
+		Assert.equals(0, itemState0.index);
+		Assert.equals(collection.get(0), itemState0.data);
+		Assert.isFalse(itemState0.selected);
+		var itemState1 = this._listView.itemToItemState(collection.get(1));
+		Assert.notNull(itemState1);
+		Assert.equals(1, itemState1.index);
+		Assert.equals(collection.get(1), itemState1.data);
+		Assert.isTrue(itemState1.selected);
 	}
 
 	public function testSelectionPropertiesAfterSetSelectedIndices():Void {
-		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._listView.dataProvider = collection;
 		this._listView.allowMultipleSelection = true;
 		Assert.equals(-1, this._listView.selectedIndex);
 		Assert.isNull(this._listView.selectedItem);
@@ -266,19 +291,36 @@ class ListViewTest extends Test {
 		Assert.equals(0, this._listView.selectedItems.length);
 		this._listView.selectedIndices = [1, 2];
 		Assert.equals(1, this._listView.selectedIndex);
-		Assert.equals(this._listView.dataProvider.get(1), this._listView.selectedItem);
+		Assert.equals(collection.get(1), this._listView.selectedItem);
 		Assert.notNull(this._listView.selectedIndices);
 		Assert.equals(2, this._listView.selectedIndices.length);
 		Assert.equals(1, this._listView.selectedIndices[0]);
 		Assert.equals(2, this._listView.selectedIndices[1]);
 		Assert.notNull(this._listView.selectedItems);
 		Assert.equals(2, this._listView.selectedItems.length);
-		Assert.equals(this._listView.dataProvider.get(1), this._listView.selectedItems[0]);
-		Assert.equals(this._listView.dataProvider.get(2), this._listView.selectedItems[1]);
+		Assert.equals(collection.get(1), this._listView.selectedItems[0]);
+		Assert.equals(collection.get(2), this._listView.selectedItems[1]);
+
+		var itemState0 = this._listView.itemToItemState(collection.get(0));
+		Assert.notNull(itemState0);
+		Assert.equals(0, itemState0.index);
+		Assert.equals(collection.get(0), itemState0.data);
+		Assert.isFalse(itemState0.selected);
+		var itemState1 = this._listView.itemToItemState(collection.get(1));
+		Assert.notNull(itemState1);
+		Assert.equals(1, itemState1.index);
+		Assert.equals(collection.get(1), itemState1.data);
+		Assert.isTrue(itemState1.selected);
+		var itemState2 = this._listView.itemToItemState(collection.get(2));
+		Assert.notNull(itemState2);
+		Assert.equals(2, itemState2.index);
+		Assert.equals(collection.get(2), itemState2.data);
+		Assert.isTrue(itemState2.selected);
 	}
 
 	public function testSelectionPropertiesAfterSetSelectedItems():Void {
-		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._listView.dataProvider = collection;
 		this._listView.allowMultipleSelection = true;
 		Assert.equals(-1, this._listView.selectedIndex);
 		Assert.isNull(this._listView.selectedItem);
@@ -286,21 +328,38 @@ class ListViewTest extends Test {
 		Assert.equals(0, this._listView.selectedIndices.length);
 		Assert.notNull(this._listView.selectedItems);
 		Assert.equals(0, this._listView.selectedItems.length);
-		this._listView.selectedItems = [this._listView.dataProvider.get(1), this._listView.dataProvider.get(2)];
+		this._listView.selectedItems = [collection.get(1), collection.get(2)];
 		Assert.equals(1, this._listView.selectedIndex);
-		Assert.equals(this._listView.dataProvider.get(1), this._listView.selectedItem);
+		Assert.equals(collection.get(1), this._listView.selectedItem);
 		Assert.notNull(this._listView.selectedIndices);
 		Assert.equals(2, this._listView.selectedIndices.length);
 		Assert.equals(1, this._listView.selectedIndices[0]);
 		Assert.equals(2, this._listView.selectedIndices[1]);
 		Assert.notNull(this._listView.selectedItems);
 		Assert.equals(2, this._listView.selectedItems.length);
-		Assert.equals(this._listView.dataProvider.get(1), this._listView.selectedItems[0]);
-		Assert.equals(this._listView.dataProvider.get(2), this._listView.selectedItems[1]);
+		Assert.equals(collection.get(1), this._listView.selectedItems[0]);
+		Assert.equals(collection.get(2), this._listView.selectedItems[1]);
+
+		var itemState0 = this._listView.itemToItemState(collection.get(0));
+		Assert.notNull(itemState0);
+		Assert.equals(0, itemState0.index);
+		Assert.equals(collection.get(0), itemState0.data);
+		Assert.isFalse(itemState0.selected);
+		var itemState1 = this._listView.itemToItemState(collection.get(1));
+		Assert.notNull(itemState1);
+		Assert.equals(1, itemState1.index);
+		Assert.equals(collection.get(1), itemState1.data);
+		Assert.isTrue(itemState1.selected);
+		var itemState2 = this._listView.itemToItemState(collection.get(2));
+		Assert.notNull(itemState2);
+		Assert.equals(2, itemState2.index);
+		Assert.equals(collection.get(2), itemState2.data);
+		Assert.isTrue(itemState2.selected);
 	}
 
 	public function testSelectMultipleIndicesWithAllowMultipleSelectionDisabled():Void {
-		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._listView.dataProvider = collection;
 		this._listView.allowMultipleSelection = false;
 		Assert.equals(-1, this._listView.selectedIndex);
 		Assert.isNull(this._listView.selectedItem);
@@ -310,17 +369,34 @@ class ListViewTest extends Test {
 		Assert.equals(0, this._listView.selectedItems.length);
 		this._listView.selectedIndices = [1, 2];
 		Assert.equals(1, this._listView.selectedIndex);
-		Assert.equals(this._listView.dataProvider.get(1), this._listView.selectedItem);
+		Assert.equals(collection.get(1), this._listView.selectedItem);
 		Assert.notNull(this._listView.selectedIndices);
 		Assert.equals(1, this._listView.selectedIndices.length);
 		Assert.equals(1, this._listView.selectedIndices[0]);
 		Assert.notNull(this._listView.selectedItems);
 		Assert.equals(1, this._listView.selectedItems.length);
-		Assert.equals(this._listView.dataProvider.get(1), this._listView.selectedItems[0]);
+		Assert.equals(collection.get(1), this._listView.selectedItems[0]);
+
+		var itemState0 = this._listView.itemToItemState(collection.get(0));
+		Assert.notNull(itemState0);
+		Assert.equals(0, itemState0.index);
+		Assert.equals(collection.get(0), itemState0.data);
+		Assert.isFalse(itemState0.selected);
+		var itemState1 = this._listView.itemToItemState(collection.get(1));
+		Assert.notNull(itemState1);
+		Assert.equals(1, itemState1.index);
+		Assert.equals(collection.get(1), itemState1.data);
+		Assert.isTrue(itemState1.selected);
+		var itemState2 = this._listView.itemToItemState(collection.get(2));
+		Assert.notNull(itemState2);
+		Assert.equals(2, itemState2.index);
+		Assert.equals(collection.get(2), itemState2.data);
+		Assert.isFalse(itemState2.selected);
 	}
 
 	public function testSelectMultipleItemsWithAllowMultipleSelectionDisabled():Void {
-		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._listView.dataProvider = collection;
 		this._listView.allowMultipleSelection = false;
 		Assert.equals(-1, this._listView.selectedIndex);
 		Assert.isNull(this._listView.selectedItem);
@@ -328,15 +404,31 @@ class ListViewTest extends Test {
 		Assert.equals(0, this._listView.selectedIndices.length);
 		Assert.notNull(this._listView.selectedItems);
 		Assert.equals(0, this._listView.selectedItems.length);
-		this._listView.selectedItems = [this._listView.dataProvider.get(1), this._listView.dataProvider.get(2)];
+		this._listView.selectedItems = [collection.get(1), collection.get(2)];
 		Assert.equals(1, this._listView.selectedIndex);
-		Assert.equals(this._listView.dataProvider.get(1), this._listView.selectedItem);
+		Assert.equals(collection.get(1), this._listView.selectedItem);
 		Assert.notNull(this._listView.selectedIndices);
 		Assert.equals(1, this._listView.selectedIndices.length);
 		Assert.equals(1, this._listView.selectedIndices[0]);
 		Assert.notNull(this._listView.selectedItems);
 		Assert.equals(1, this._listView.selectedItems.length);
-		Assert.equals(this._listView.dataProvider.get(1), this._listView.selectedItems[0]);
+		Assert.equals(collection.get(1), this._listView.selectedItems[0]);
+
+		var itemState0 = this._listView.itemToItemState(collection.get(0));
+		Assert.notNull(itemState0);
+		Assert.equals(0, itemState0.index);
+		Assert.equals(collection.get(0), itemState0.data);
+		Assert.isFalse(itemState0.selected);
+		var itemState1 = this._listView.itemToItemState(collection.get(1));
+		Assert.notNull(itemState1);
+		Assert.equals(1, itemState1.index);
+		Assert.equals(collection.get(1), itemState1.data);
+		Assert.isTrue(itemState1.selected);
+		var itemState2 = this._listView.itemToItemState(collection.get(2));
+		Assert.notNull(itemState2);
+		Assert.equals(2, itemState2.index);
+		Assert.equals(collection.get(2), itemState2.data);
+		Assert.isFalse(itemState2.selected);
 	}
 
 	public function testDeselectAllOnNullDataProvider():Void {

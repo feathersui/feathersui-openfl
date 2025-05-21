@@ -291,7 +291,8 @@ class GridViewTest extends Test {
 	}
 
 	public function testSelectionPropertiesAfterSetSelectedIndex():Void {
-		this._gridView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._gridView.dataProvider = collection;
 		Assert.equals(-1, this._gridView.selectedIndex);
 		Assert.isNull(this._gridView.selectedItem);
 		Assert.notNull(this._gridView.selectedIndices);
@@ -300,36 +301,62 @@ class GridViewTest extends Test {
 		Assert.equals(0, this._gridView.selectedItems.length);
 		this._gridView.selectedIndex = 1;
 		Assert.equals(1, this._gridView.selectedIndex);
-		Assert.equals(this._gridView.dataProvider.get(1), this._gridView.selectedItem);
+		Assert.equals(collection.get(1), this._gridView.selectedItem);
 		Assert.notNull(this._gridView.selectedIndices);
 		Assert.equals(1, this._gridView.selectedIndices.length);
 		Assert.equals(1, this._gridView.selectedIndices[0]);
 		Assert.notNull(this._gridView.selectedItems);
 		Assert.equals(1, this._gridView.selectedItems.length);
-		Assert.equals(this._gridView.dataProvider.get(1), this._gridView.selectedItems[0]);
+		Assert.equals(collection.get(1), this._gridView.selectedItems[0]);
+
+		this._gridView.validateNow();
+		var cellState0 = this._gridView.itemAndColumnToCellState(collection.get(0), this._gridView.columns.get(0));
+		Assert.notNull(cellState0);
+		Assert.equals(0, cellState0.rowIndex);
+		Assert.equals(collection.get(0), cellState0.data);
+		Assert.isFalse(cellState0.selected);
+		var cellState1 = this._gridView.itemAndColumnToCellState(collection.get(1), this._gridView.columns.get(0));
+		Assert.notNull(cellState1);
+		Assert.equals(1, cellState1.rowIndex);
+		Assert.equals(collection.get(1), cellState1.data);
+		Assert.isTrue(cellState1.selected);
 	}
 
 	public function testSelectionPropertiesAfterSetSelectedItem():Void {
-		this._gridView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._gridView.dataProvider = collection;
 		Assert.equals(-1, this._gridView.selectedIndex);
 		Assert.isNull(this._gridView.selectedItem);
 		Assert.notNull(this._gridView.selectedIndices);
 		Assert.equals(0, this._gridView.selectedIndices.length);
 		Assert.notNull(this._gridView.selectedItems);
 		Assert.equals(0, this._gridView.selectedItems.length);
-		this._gridView.selectedItem = this._gridView.dataProvider.get(1);
+		this._gridView.selectedItem = collection.get(1);
 		Assert.equals(1, this._gridView.selectedIndex);
-		Assert.equals(this._gridView.dataProvider.get(1), this._gridView.selectedItem);
+		Assert.equals(collection.get(1), this._gridView.selectedItem);
 		Assert.notNull(this._gridView.selectedIndices);
 		Assert.equals(1, this._gridView.selectedIndices.length);
 		Assert.equals(1, this._gridView.selectedIndices[0]);
 		Assert.notNull(this._gridView.selectedItems);
 		Assert.equals(1, this._gridView.selectedItems.length);
-		Assert.equals(this._gridView.dataProvider.get(1), this._gridView.selectedItems[0]);
+		Assert.equals(collection.get(1), this._gridView.selectedItems[0]);
+
+		this._gridView.validateNow();
+		var cellState0 = this._gridView.itemAndColumnToCellState(collection.get(0), this._gridView.columns.get(0));
+		Assert.notNull(cellState0);
+		Assert.equals(0, cellState0.rowIndex);
+		Assert.equals(collection.get(0), cellState0.data);
+		Assert.isFalse(cellState0.selected);
+		var cellState1 = this._gridView.itemAndColumnToCellState(collection.get(1), this._gridView.columns.get(0));
+		Assert.notNull(cellState1);
+		Assert.equals(1, cellState1.rowIndex);
+		Assert.equals(collection.get(1), cellState1.data);
+		Assert.isTrue(cellState1.selected);
 	}
 
 	public function testSelectionPropertiesAfterSetSelectedIndices():Void {
-		this._gridView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._gridView.dataProvider = collection;
 		this._gridView.allowMultipleSelection = true;
 		Assert.equals(-1, this._gridView.selectedIndex);
 		Assert.isNull(this._gridView.selectedItem);
@@ -339,19 +366,37 @@ class GridViewTest extends Test {
 		Assert.equals(0, this._gridView.selectedItems.length);
 		this._gridView.selectedIndices = [1, 2];
 		Assert.equals(1, this._gridView.selectedIndex);
-		Assert.equals(this._gridView.dataProvider.get(1), this._gridView.selectedItem);
+		Assert.equals(collection.get(1), this._gridView.selectedItem);
 		Assert.notNull(this._gridView.selectedIndices);
 		Assert.equals(2, this._gridView.selectedIndices.length);
 		Assert.equals(1, this._gridView.selectedIndices[0]);
 		Assert.equals(2, this._gridView.selectedIndices[1]);
 		Assert.notNull(this._gridView.selectedItems);
 		Assert.equals(2, this._gridView.selectedItems.length);
-		Assert.equals(this._gridView.dataProvider.get(1), this._gridView.selectedItems[0]);
-		Assert.equals(this._gridView.dataProvider.get(2), this._gridView.selectedItems[1]);
+		Assert.equals(collection.get(1), this._gridView.selectedItems[0]);
+		Assert.equals(collection.get(2), this._gridView.selectedItems[1]);
+
+		this._gridView.validateNow();
+		var cellState0 = this._gridView.itemAndColumnToCellState(collection.get(0), this._gridView.columns.get(0));
+		Assert.notNull(cellState0);
+		Assert.equals(0, cellState0.rowIndex);
+		Assert.equals(collection.get(0), cellState0.data);
+		Assert.isFalse(cellState0.selected);
+		var cellState1 = this._gridView.itemAndColumnToCellState(collection.get(1), this._gridView.columns.get(0));
+		Assert.notNull(cellState1);
+		Assert.equals(1, cellState1.rowIndex);
+		Assert.equals(collection.get(1), cellState1.data);
+		Assert.isTrue(cellState1.selected);
+		var cellState2 = this._gridView.itemAndColumnToCellState(collection.get(2), this._gridView.columns.get(0));
+		Assert.notNull(cellState2);
+		Assert.equals(2, cellState2.rowIndex);
+		Assert.equals(collection.get(2), cellState2.data);
+		Assert.isTrue(cellState2.selected);
 	}
 
 	public function testSelectionPropertiesAfterSetSelectedItems():Void {
-		this._gridView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._gridView.dataProvider = collection;
 		this._gridView.allowMultipleSelection = true;
 		Assert.equals(-1, this._gridView.selectedIndex);
 		Assert.isNull(this._gridView.selectedItem);
@@ -359,21 +404,39 @@ class GridViewTest extends Test {
 		Assert.equals(0, this._gridView.selectedIndices.length);
 		Assert.notNull(this._gridView.selectedItems);
 		Assert.equals(0, this._gridView.selectedItems.length);
-		this._gridView.selectedItems = [this._gridView.dataProvider.get(1), this._gridView.dataProvider.get(2)];
+		this._gridView.selectedItems = [collection.get(1), collection.get(2)];
 		Assert.equals(1, this._gridView.selectedIndex);
-		Assert.equals(this._gridView.dataProvider.get(1), this._gridView.selectedItem);
+		Assert.equals(collection.get(1), this._gridView.selectedItem);
 		Assert.notNull(this._gridView.selectedIndices);
 		Assert.equals(2, this._gridView.selectedIndices.length);
 		Assert.equals(1, this._gridView.selectedIndices[0]);
 		Assert.equals(2, this._gridView.selectedIndices[1]);
 		Assert.notNull(this._gridView.selectedItems);
 		Assert.equals(2, this._gridView.selectedItems.length);
-		Assert.equals(this._gridView.dataProvider.get(1), this._gridView.selectedItems[0]);
-		Assert.equals(this._gridView.dataProvider.get(2), this._gridView.selectedItems[1]);
+		Assert.equals(collection.get(1), this._gridView.selectedItems[0]);
+		Assert.equals(collection.get(2), this._gridView.selectedItems[1]);
+
+		this._gridView.validateNow();
+		var cellState0 = this._gridView.itemAndColumnToCellState(collection.get(0), this._gridView.columns.get(0));
+		Assert.notNull(cellState0);
+		Assert.equals(0, cellState0.rowIndex);
+		Assert.equals(collection.get(0), cellState0.data);
+		Assert.isFalse(cellState0.selected);
+		var cellState1 = this._gridView.itemAndColumnToCellState(collection.get(1), this._gridView.columns.get(0));
+		Assert.notNull(cellState1);
+		Assert.equals(1, cellState1.rowIndex);
+		Assert.equals(collection.get(1), cellState1.data);
+		Assert.isTrue(cellState1.selected);
+		var cellState2 = this._gridView.itemAndColumnToCellState(collection.get(2), this._gridView.columns.get(0));
+		Assert.notNull(cellState2);
+		Assert.equals(2, cellState2.rowIndex);
+		Assert.equals(collection.get(2), cellState2.data);
+		Assert.isTrue(cellState2.selected);
 	}
 
 	public function testSelectMultipleIndicesWithAllowMultipleSelectionDisabled():Void {
-		this._gridView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._gridView.dataProvider = collection;
 		this._gridView.allowMultipleSelection = false;
 		Assert.equals(-1, this._gridView.selectedIndex);
 		Assert.isNull(this._gridView.selectedItem);
@@ -383,17 +446,35 @@ class GridViewTest extends Test {
 		Assert.equals(0, this._gridView.selectedItems.length);
 		this._gridView.selectedIndices = [1, 2];
 		Assert.equals(1, this._gridView.selectedIndex);
-		Assert.equals(this._gridView.dataProvider.get(1), this._gridView.selectedItem);
+		Assert.equals(collection.get(1), this._gridView.selectedItem);
 		Assert.notNull(this._gridView.selectedIndices);
 		Assert.equals(1, this._gridView.selectedIndices.length);
 		Assert.equals(1, this._gridView.selectedIndices[0]);
 		Assert.notNull(this._gridView.selectedItems);
 		Assert.equals(1, this._gridView.selectedItems.length);
-		Assert.equals(this._gridView.dataProvider.get(1), this._gridView.selectedItems[0]);
+		Assert.equals(collection.get(1), this._gridView.selectedItems[0]);
+
+		this._gridView.validateNow();
+		var cellState0 = this._gridView.itemAndColumnToCellState(collection.get(0), this._gridView.columns.get(0));
+		Assert.notNull(cellState0);
+		Assert.equals(0, cellState0.rowIndex);
+		Assert.equals(collection.get(0), cellState0.data);
+		Assert.isFalse(cellState0.selected);
+		var cellState1 = this._gridView.itemAndColumnToCellState(collection.get(1), this._gridView.columns.get(0));
+		Assert.notNull(cellState1);
+		Assert.equals(1, cellState1.rowIndex);
+		Assert.equals(collection.get(1), cellState1.data);
+		Assert.isTrue(cellState1.selected);
+		var cellState2 = this._gridView.itemAndColumnToCellState(collection.get(2), this._gridView.columns.get(0));
+		Assert.notNull(cellState2);
+		Assert.equals(2, cellState2.rowIndex);
+		Assert.equals(collection.get(2), cellState2.data);
+		Assert.isFalse(cellState2.selected);
 	}
 
 	public function testSelectMultipleItemsWithAllowMultipleSelectionDisabled():Void {
-		this._gridView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._gridView.dataProvider = collection;
 		this._gridView.allowMultipleSelection = false;
 		Assert.equals(-1, this._gridView.selectedIndex);
 		Assert.isNull(this._gridView.selectedItem);
@@ -401,15 +482,32 @@ class GridViewTest extends Test {
 		Assert.equals(0, this._gridView.selectedIndices.length);
 		Assert.notNull(this._gridView.selectedItems);
 		Assert.equals(0, this._gridView.selectedItems.length);
-		this._gridView.selectedItems = [this._gridView.dataProvider.get(1), this._gridView.dataProvider.get(2)];
+		this._gridView.selectedItems = [collection.get(1), collection.get(2)];
 		Assert.equals(1, this._gridView.selectedIndex);
-		Assert.equals(this._gridView.dataProvider.get(1), this._gridView.selectedItem);
+		Assert.equals(collection.get(1), this._gridView.selectedItem);
 		Assert.notNull(this._gridView.selectedIndices);
 		Assert.equals(1, this._gridView.selectedIndices.length);
 		Assert.equals(1, this._gridView.selectedIndices[0]);
 		Assert.notNull(this._gridView.selectedItems);
 		Assert.equals(1, this._gridView.selectedItems.length);
-		Assert.equals(this._gridView.dataProvider.get(1), this._gridView.selectedItems[0]);
+		Assert.equals(collection.get(1), this._gridView.selectedItems[0]);
+
+		this._gridView.validateNow();
+		var cellState0 = this._gridView.itemAndColumnToCellState(collection.get(0), this._gridView.columns.get(0));
+		Assert.notNull(cellState0);
+		Assert.equals(0, cellState0.rowIndex);
+		Assert.equals(collection.get(0), cellState0.data);
+		Assert.isFalse(cellState0.selected);
+		var cellState1 = this._gridView.itemAndColumnToCellState(collection.get(1), this._gridView.columns.get(0));
+		Assert.notNull(cellState1);
+		Assert.equals(1, cellState1.rowIndex);
+		Assert.equals(collection.get(1), cellState1.data);
+		Assert.isTrue(cellState1.selected);
+		var cellState2 = this._gridView.itemAndColumnToCellState(collection.get(2), this._gridView.columns.get(0));
+		Assert.notNull(cellState2);
+		Assert.equals(2, cellState2.rowIndex);
+		Assert.equals(collection.get(2), cellState2.data);
+		Assert.isFalse(cellState2.selected);
 	}
 
 	public function testDeselectAllOnNullDataProvider():Void {

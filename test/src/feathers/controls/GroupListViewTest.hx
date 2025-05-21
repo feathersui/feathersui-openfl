@@ -115,6 +115,76 @@ class GroupListViewTest extends Test {
 		}, ArgumentError);
 	}
 
+	public function testSelectionPropertiesAfterSetSelectedLocation():Void {
+		var collection = new ArrayHierarchicalCollection([{text: "A", children: [{text: "One"}, {text: "Two"}, {text: "Three"}]}],
+			(item:Dynamic) -> item.children);
+		this._listView.dataProvider = collection;
+		Assert.isNull(this._listView.selectedLocation);
+		Assert.isNull(this._listView.selectedItem);
+		this._listView.selectedLocation = [0, 1];
+		Assert.notNull(this._listView.selectedLocation);
+		Assert.equals(2, this._listView.selectedLocation.length);
+		Assert.equals(0, this._listView.selectedLocation[0]);
+		Assert.equals(1, this._listView.selectedLocation[1]);
+		Assert.equals(collection.get([0, 1]), this._listView.selectedItem);
+
+		var itemStateG = this._listView.itemToItemState(collection.get([0]));
+		Assert.notNull(itemStateG);
+		Assert.equals(0, CompareLocations.compareLocations([0], itemStateG.location));
+		Assert.equals(collection.get([0]), itemStateG.data);
+		Assert.isFalse(itemStateG.selected);
+		var itemState0 = this._listView.itemToItemState(collection.get([0, 0]));
+		Assert.notNull(itemState0);
+		Assert.equals(0, CompareLocations.compareLocations([0, 0], itemState0.location));
+		Assert.equals(collection.get([0, 0]), itemState0.data);
+		Assert.isFalse(itemState0.selected);
+		var itemState1 = this._listView.itemToItemState(collection.get([0, 1]));
+		Assert.notNull(itemState1);
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], itemState1.location));
+		Assert.equals(collection.get([0, 1]), itemState1.data);
+		Assert.isTrue(itemState1.selected);
+		var itemState2 = this._listView.itemToItemState(collection.get([0, 2]));
+		Assert.notNull(itemState2);
+		Assert.equals(0, CompareLocations.compareLocations([0, 2], itemState2.location));
+		Assert.equals(collection.get([0, 2]), itemState2.data);
+		Assert.isFalse(itemState2.selected);
+	}
+
+	public function testSelectionPropertiesAfterSetSelectedItem():Void {
+		var collection = new ArrayHierarchicalCollection([{text: "A", children: [{text: "One"}, {text: "Two"}, {text: "Three"}]}],
+			(item:Dynamic) -> item.children);
+		this._listView.dataProvider = collection;
+		Assert.isNull(this._listView.selectedLocation);
+		Assert.isNull(this._listView.selectedItem);
+		this._listView.selectedItem = collection.get([0, 1]);
+		Assert.notNull(this._listView.selectedLocation);
+		Assert.equals(2, this._listView.selectedLocation.length);
+		Assert.equals(0, this._listView.selectedLocation[0]);
+		Assert.equals(1, this._listView.selectedLocation[1]);
+		Assert.equals(collection.get([0, 1]), this._listView.selectedItem);
+
+		var itemStateG = this._listView.itemToItemState(collection.get([0]));
+		Assert.notNull(itemStateG);
+		Assert.equals(0, CompareLocations.compareLocations([0], itemStateG.location));
+		Assert.equals(collection.get([0]), itemStateG.data);
+		Assert.isFalse(itemStateG.selected);
+		var itemState0 = this._listView.itemToItemState(collection.get([0, 0]));
+		Assert.notNull(itemState0);
+		Assert.equals(0, CompareLocations.compareLocations([0, 0], itemState0.location));
+		Assert.equals(collection.get([0, 0]), itemState0.data);
+		Assert.isFalse(itemState0.selected);
+		var itemState1 = this._listView.itemToItemState(collection.get([0, 1]));
+		Assert.notNull(itemState1);
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], itemState1.location));
+		Assert.equals(collection.get([0, 1]), itemState1.data);
+		Assert.isTrue(itemState1.selected);
+		var itemState2 = this._listView.itemToItemState(collection.get([0, 2]));
+		Assert.notNull(itemState2);
+		Assert.equals(0, CompareLocations.compareLocations([0, 2], itemState2.location));
+		Assert.equals(collection.get([0, 2]), itemState2.data);
+		Assert.isFalse(itemState2.selected);
+	}
+
 	public function testItemToItemRenderer():Void {
 		var collection = new ArrayHierarchicalCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
 		this._listView.dataProvider = collection;
