@@ -23,7 +23,7 @@ class TreeGridViewScreen extends Panel {
 
 		this.treeGridView = new TreeGridView();
 		this.treeGridView.variant = TreeGridView.VARIANT_BORDERLESS;
-		this.treeGridView.dataProvider = new ArrayHierarchicalCollection([
+		this.treeGridView.dataProvider = new ArrayHierarchicalCollection<TreeItemData>([
 			{
 				dept: "Bakery",
 				children: [
@@ -52,11 +52,11 @@ class TreeGridViewScreen extends Panel {
 					{item: "Broccoli", dept: "Produce", price: "2.99"},
 				]
 			},
-		], (item:Dynamic) -> item.children);
+		], (item:TreeItemData) -> item.children);
 		this.treeGridView.columns = new ArrayCollection([
-			new TreeGridViewColumn("Department", (data) -> data.dept),
-			new TreeGridViewColumn("Item", (data) -> data.item),
-			new TreeGridViewColumn("Unit Price", (data) -> data.price)
+			new TreeGridViewColumn("Department", (data:TreeItemData) -> data.dept),
+			new TreeGridViewColumn("Item", (data:TreeItemData) -> data.item),
+			new TreeGridViewColumn("Unit Price", (data:TreeItemData) -> data.price)
 		]);
 		this.treeGridView.layoutData = AnchorLayoutData.fill();
 		this.treeGridView.addEventListener(Event.CHANGE, treeGridView_changeHandler);
@@ -82,3 +82,10 @@ class TreeGridViewScreen extends Panel {
 		this.dispatchEvent(new Event(Event.COMPLETE));
 	}
 }
+
+private typedef TreeItemData = {
+	dept:String,
+	?item:String,
+	?price:String,
+	?children:Array<TreeItemData>
+};

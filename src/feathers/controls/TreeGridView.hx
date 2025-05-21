@@ -89,7 +89,7 @@ import openfl._internal.utils.ObjectPool;
 	```haxe
 	var treeGridView = new TreeGridView();
 
-	treeGridView.dataProvider = new ArrayHierarchicalCollection([
+	treeGridView.dataProvider = new ArrayHierarchicalCollection<TreeItemData>([
 		{
 			dept: "Bakery",
 			children: [
@@ -118,11 +118,11 @@ import openfl._internal.utils.ObjectPool;
 				{item: "Broccoli", dept: "Produce", price: "2.99"},
 			]
 		},
-	], (item:Dynamic) -> item.children);
+	], (item:TreeItemData) -> item.children);
 	treeGridView.columns = new ArrayCollection([
-		new TreeGridViewColumn("Department", (data) -> data.dept),
-		new TreeGridViewColumn("Item", (data) -> data.item),
-		new TreeGridViewColumn("Unit Price", (data) -> data.price)
+		new TreeGridViewColumn("Department", (data:TreeItemData) -> data.dept),
+		new TreeGridViewColumn("Item", (data:TreeItemData) -> data.item),
+		new TreeGridViewColumn("Unit Price", (data:TreeItemData) -> data.price)
 	]);
 
 	treeGridView.addEventListener(Event.CHANGE, (event:Event) -> {
@@ -131,6 +131,17 @@ import openfl._internal.utils.ObjectPool;
 	});
 
 	this.addChild(treeGridView);
+	```
+
+	The example above uses the following custom [Haxe typedef](https://haxe.org/manual/type-system-typedef.html).
+
+	```haxe
+	typedef TreeItemData = {
+		dept:String,
+		?item:String,
+		?price:String,
+		?children:Array<TreeItemData>
+	};
 	```
 
 	@event openfl.events.Event.CHANGE Dispatched when either

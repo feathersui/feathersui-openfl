@@ -68,7 +68,7 @@ import openfl._internal.utils.ObjectPool;
 	```haxe
 	var treeView = new TreeView();
 
-	var collection = new ArrayHierarchicalCollection([
+	treeView.dataProvider = new ArrayHierarchicalCollection<TreeItemData>([
 		{
 			text: "Node 1",
 			children: [
@@ -104,13 +104,9 @@ import openfl._internal.utils.ObjectPool;
 				{text: "Node 4E"}
 			]
 		}
-	]);
-	collection.itemToChildren = (item:Dynamic) -> {
-		return item.children;
-	};
-	treeView.dataProvider = collection;
+	], (item:TreeItemData) -> item.children);
 
-	treeView.itemToText = (item:Dynamic) -> {
+	treeView.itemToText = (item:TreeItemData) -> {
 		return item.text;
 	};
 
@@ -120,6 +116,15 @@ import openfl._internal.utils.ObjectPool;
 	});
 
 	this.addChild(treeView);
+	```
+
+	The example above uses the following custom [Haxe typedef](https://haxe.org/manual/type-system-typedef.html).
+
+	```haxe
+	typedef TreeItemData = {
+		text:String,
+		?children:Array<TreeItemData>
+	};
 	```
 		
 	@event openfl.events.Event.CHANGE Dispatched when either
