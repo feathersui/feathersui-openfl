@@ -116,7 +116,7 @@ class GroupListViewTest extends Test {
 	}
 
 	public function testSelectionPropertiesAfterSetSelectedLocation():Void {
-		var collection = new ArrayHierarchicalCollection([{text: "A", children: [{text: "One"}, {text: "Two"}, {text: "Three"}]}],
+		var collection = new ArrayHierarchicalCollection(([{text: "A", children: [{text: "One"}, {text: "Two"}, {text: "Three"}]}] : Array<Dynamic>),
 			(item:Dynamic) -> item.children);
 		this._listView.dataProvider = collection;
 		Assert.isNull(this._listView.selectedLocation);
@@ -151,7 +151,7 @@ class GroupListViewTest extends Test {
 	}
 
 	public function testSelectionPropertiesAfterSetSelectedItem():Void {
-		var collection = new ArrayHierarchicalCollection([{text: "A", children: [{text: "One"}, {text: "Two"}, {text: "Three"}]}],
+		var collection = new ArrayHierarchicalCollection(([{text: "A", children: [{text: "One"}, {text: "Two"}, {text: "Three"}]}] : Array<Dynamic>),
 			(item:Dynamic) -> item.children);
 		this._listView.dataProvider = collection;
 		Assert.isNull(this._listView.selectedLocation);

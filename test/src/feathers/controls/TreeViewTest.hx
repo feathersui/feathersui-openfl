@@ -210,11 +210,11 @@ import utest.Test;
 	}
 
 	public function testSelectionPropertiesAfterSetSelectedLocation():Void {
-		var collection = new ArrayHierarchicalCollection([
+		var collection = new ArrayHierarchicalCollection(([
 			{text: "One"},
 			{text: "Two", children: [{text: "2-A"}, {text: "2-B"}]},
 			{text: "Three"}
-		], (item:Dynamic) -> item.children);
+		] : Array<Dynamic>), (item:Dynamic) -> item.children);
 		this._treeView.dataProvider = collection;
 		Assert.isNull(this._treeView.selectedLocation);
 		Assert.isNull(this._treeView.selectedItem);
@@ -250,11 +250,11 @@ import utest.Test;
 	}
 
 	public function testSelectionPropertiesAfterSetSelectedItem():Void {
-		var collection = new ArrayHierarchicalCollection([
+		var collection = new ArrayHierarchicalCollection(([
 			{text: "One"},
 			{text: "Two", children: [{text: "2-A"}, {text: "2-B"}]},
 			{text: "Three"}
-		], (item:Dynamic) -> item.children);
+		] : Array<Dynamic>), (item:Dynamic) -> item.children);
 		this._treeView.dataProvider = collection;
 		Assert.isNull(this._treeView.selectedLocation);
 		Assert.isNull(this._treeView.selectedItem);
@@ -290,11 +290,11 @@ import utest.Test;
 	}
 
 	public function testSelectionPropertiesAfterSetSelectedLocations():Void {
-		var collection = new ArrayHierarchicalCollection([
+		var collection = new ArrayHierarchicalCollection(([
 			{text: "One"},
 			{text: "Two", children: [{text: "2-A"}, {text: "2-B"}]},
 			{text: "Three"}
-		], (item:Dynamic) -> item.children);
+		] : Array<Dynamic>), (item:Dynamic) -> item.children);
 		this._treeView.dataProvider = collection;
 		this._treeView.allowMultipleSelection = true;
 		Assert.isNull(this._treeView.selectedLocation);
@@ -349,11 +349,11 @@ import utest.Test;
 	}
 
 	public function testSelectionPropertiesAfterSetSelectedItems():Void {
-		var collection = new ArrayHierarchicalCollection([
+		var collection = new ArrayHierarchicalCollection(([
 			{text: "One"},
 			{text: "Two", children: [{text: "2-A"}, {text: "2-B"}]},
 			{text: "Three"}
-		], (item:Dynamic) -> item.children);
+		] : Array<Dynamic>), (item:Dynamic) -> item.children);
 		this._treeView.dataProvider = collection;
 		this._treeView.allowMultipleSelection = true;
 		Assert.isNull(this._treeView.selectedLocation);
@@ -408,11 +408,11 @@ import utest.Test;
 	}
 
 	public function testSelectMultipleLocationsWithAllowMultipleSelectionDisabled():Void {
-		var collection = new ArrayHierarchicalCollection([
+		var collection = new ArrayHierarchicalCollection(([
 			{text: "One"},
 			{text: "Two", children: [{text: "2-A"}, {text: "2-B"}]},
 			{text: "Three"}
-		], (item:Dynamic) -> item.children);
+		] : Array<Dynamic>), (item:Dynamic) -> item.children);
 		this._treeView.dataProvider = collection;
 		this._treeView.allowMultipleSelection = false;
 		Assert.isNull(this._treeView.selectedLocation);
@@ -464,11 +464,11 @@ import utest.Test;
 	}
 
 	public function testSelectMultipleItemsWithAllowMultipleSelectionDisabled():Void {
-		var collection = new ArrayHierarchicalCollection([
+		var collection = new ArrayHierarchicalCollection(([
 			{text: "One"},
 			{text: "Two", children: [{text: "2-A"}, {text: "2-B"}]},
 			{text: "Three"}
-		], (item:Dynamic) -> item.children);
+		] : Array<Dynamic>), (item:Dynamic) -> item.children);
 		this._treeView.dataProvider = collection;
 		this._treeView.allowMultipleSelection = false;
 		Assert.isNull(this._treeView.selectedLocation);
