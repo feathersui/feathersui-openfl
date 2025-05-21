@@ -1046,7 +1046,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		if (this._dataProvider == null || !this._dataProvider.contains(branch)) {
 			return false;
 		}
-		return this._dataProvider.isBranch(branch) && this.openBranches.indexOf(branch) != -1;
+		return this.isBranchOpenInternal(branch);
 	}
 
 	/**
@@ -1062,7 +1062,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		if (!this._dataProvider.isBranch(branch)) {
 			throw new ArgumentError("Cannot open item because it is not a branch.");
 		}
-		var alreadyOpen = this.openBranches.indexOf(branch) != -1;
+		var alreadyOpen = this.isBranchOpenInternal(branch);
 		if ((open && alreadyOpen) || (!open && !alreadyOpen)) {
 			// nothing to change
 			return;
@@ -1502,7 +1502,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 				// don't bother continuing if we're beyond the visible indices
 				break;
 			}
-			if (this._dataProvider.isBranch(item) && this.openBranches.indexOf(item) != -1) {
+			if (this.isBranchOpenInternal(item)) {
 				layoutIndex = this.findUnrenderedDataForLocation(location, layoutIndex);
 				if (layoutIndex > this._visibleIndices.end) {
 					// don't bother continuing if we're beyond the visible indices
@@ -1572,7 +1572,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			state.branch = branch;
 			changed = true;
 		}
-		var opened = state.branch && (this.openBranches.indexOf(item) != -1);
+		var opened = state.branch && this.isBranchOpenInternal(item);
 		if (force || state.opened != opened) {
 			state.opened = opened;
 			changed = true;
@@ -1791,6 +1791,16 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		this.selectedLocation = this._dataProvider.locationOf(this._selectedItem); // use the setter
 	}
 
+	private function isBranchOpenInternal(item:Dynamic):Bool {
+		if (this._dataProvider == null) {
+			return false;
+		}
+		if (!this._dataProvider.isBranch(item)) {
+			return false;
+		}
+		return this.openBranches.indexOf(item) != -1;
+	}
+
 	private function calculateTotalLayoutCount(location:Array<Int>):Int {
 		if (this._dataProvider == null) {
 			return 0;
@@ -1800,7 +1810,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		for (i in 0...itemCount) {
 			location.push(i);
 			var item = this._dataProvider.get(location);
-			if (this._dataProvider.isBranch(item) && this.openBranches.indexOf(item) != -1) {
+			if (this.isBranchOpenInternal(item)) {
 				result += this.calculateTotalLayoutCount(location);
 			}
 			location.pop();
@@ -1815,7 +1825,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			layoutIndex++;
 			this._virtualCache.insert(layoutIndex, null);
 			var item = this._dataProvider.get(location);
-			if (this._dataProvider.isBranch(item) && this.openBranches.indexOf(item) != -1) {
+			if (this.isBranchOpenInternal(item)) {
 				layoutIndex = insertChildrenIntoVirtualCache(location, layoutIndex);
 			}
 			location.pop();
@@ -1829,7 +1839,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		for (i in 0...length) {
 			location.push(i);
 			var item = this._dataProvider.get(location);
-			if (this._dataProvider.isBranch(item) && this.openBranches.indexOf(item) != -1) {
+			if (this.isBranchOpenInternal(item)) {
 				removeChildrenFromVirtualCache(location, layoutIndex);
 			}
 			this._virtualCache.splice(layoutIndex, 1);
@@ -1898,12 +1908,10 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 				return locationOfBranch;
 			}
 			var child = this._dataProvider.get(locationOfBranch);
-			if (this._dataProvider.isBranch(child)) {
-				if (this.openBranches.indexOf(child) != -1) {
-					var result = this.displayIndexToLocationAtBranch(target, locationOfBranch);
-					if (result != null) {
-						return result;
-					}
+			if (this.isBranchOpenInternal(child)) {
+				var result = this.displayIndexToLocationAtBranch(target, locationOfBranch);
+				if (result != null) {
+					return result;
 				}
 			}
 			locationOfBranch.resize(locationOfBranch.length - 1);
@@ -1931,13 +1939,13 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 				return this._currentDisplayIndex;
 			}
 			var child = this._dataProvider.get(locationOfBranch);
-			if (this._dataProvider.isBranch(child)) {
-				if (this.openBranches.indexOf(child) != -1) {
-					var result = this.locationToDisplayIndexAtBranch(locationOfBranch, locationToFind, nearestNotOpenBranch);
-					if (result != -1) {
-						return result;
-					}
-				} else if (nearestNotOpenBranch != null && this.compareLocations(nearestNotOpenBranch, locationOfBranch) == 0) {
+			if (this.isBranchOpenInternal(child)) {
+				var result = this.locationToDisplayIndexAtBranch(locationOfBranch, locationToFind, nearestNotOpenBranch);
+				if (result != -1) {
+					return result;
+				}
+			} else if (this._dataProvider.isBranch(child)) {
+				if (nearestNotOpenBranch != null && this.compareLocations(nearestNotOpenBranch, locationOfBranch) == 0) {
 					// if the location is inside a closed branch
 					// return that branch
 					return this._currentDisplayIndex;
@@ -2112,21 +2120,21 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			}
 		}
 		if (event.keyCode == Keyboard.LEFT) {
-			if (this._dataProvider.isBranch(this._selectedItem)) {
-				if (this.openBranches.indexOf(this._selectedItem) != -1) {
+			if (this._selectedItem != null) {
+				if (this._dataProvider.isBranch(this._selectedItem) && this.isBranchOpenInternal(this._selectedItem)) {
 					this.toggleBranch(this._selectedItem, false);
 					return;
 				}
-			}
-			var parentLocation = this._selectedLocation.copy();
-			parentLocation.pop();
-			if (parentLocation.length > 0) {
-				this.selectedLocation = parentLocation;
+				var parentLocation = this._selectedLocation.copy();
+				parentLocation.pop();
+				if (parentLocation.length > 0) {
+					this.selectedLocation = parentLocation;
+				}
 			}
 		}
 		if (event.keyCode == Keyboard.RIGHT) {
-			if (this._dataProvider.isBranch(this._selectedItem)) {
-				if (this.openBranches.indexOf(this._selectedItem) == -1) {
+			if (this._selectedItem != null && this._dataProvider.isBranch(this._selectedItem)) {
+				if (!this.isBranchOpenInternal(this._selectedItem)) {
 					this.toggleBranch(this._selectedItem, true);
 					return;
 				}
@@ -2168,7 +2176,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		if (this._selectedLocation != null && event.keyCode == Keyboard.SPACE) {
 			if (this._dataProvider.isBranch(this._selectedItem)) {
 				event.preventDefault();
-				this.toggleBranch(this._selectedItem, this.openBranches.indexOf(this._selectedItem) == -1);
+				this.toggleBranch(this._selectedItem, !this.isBranchOpenInternal(this._selectedItem));
 			}
 			return;
 		}
@@ -2210,7 +2218,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		}
 		state.location = location;
 		state.layoutIndex = layoutIndex;
-		var alreadyOpen = this.openBranches.indexOf(branch) != -1;
+		var alreadyOpen = this.isBranchOpenInternal(branch);
 		if (open && !alreadyOpen) {
 			this.populateCurrentItemState(branch, location, layoutIndex, state, true);
 			var result = TreeViewEvent.dispatch(this, TreeViewEvent.BRANCH_OPENING, state, true);
