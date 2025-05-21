@@ -1,0 +1,99 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  haxelib:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: krdlab/setup-haxe@v1
+      with:
+        haxe-version: 4.3.4
+    - name: Package Haxelib
+      working-directory: haxelib
+      run: haxe haxelib.hxml
+    - uses: actions/upload-artifact@v4
+      with:
+        name: feathersui-haxelib
+        path: bin/haxelib/
+        if-no-files-found: error
+  test-cli:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: krdlab/setup-haxe@v1
+      with:
+        haxe-version: 4.0.5
+    - name: Set up Haxelib dependencies
+      run: |
+        haxelib install lime 7.8.0 --quiet
+        haxelib install openfl 8.9.7 --quiet
+        haxelib install actuate --quiet
+        haxelib install hxargs --quiet
+        haxelib dev feathersui ${{ github.workspace }}
+    - name: Run CLI
+      run: |
+        haxelib run feathersui new-project MyProject
+        cd MyProject
+        haxelib run openfl build html5
+    - name: Run CLI (--vscode)
+      run: |
+        haxelib run feathersui new-project MyVSCodeProject --vscode
+        cd MyVSCodeProject
+        haxelib run openfl build html5
+  build-swc:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: krdlab/setup-haxe@v1
+      with:
+        haxe-version: 4.0.5
+    - name: Set up Haxelib dependencies
+      run: |
+        haxelib install lime 7.8.0 --quiet
+        haxelib install openfl 8.9.7 --quiet
+        haxelib install actuate --quiet
+        haxelib dev feathersui ${{ github.workspace }}
+    - name: Build Flash .swc library
+      run: haxelib run openfl build flash -debug
+    - uses: actions/upload-artifact@v4
+      with:
+        name: feathersui-openfl-swc
+        path: bin/flash/bin/feathersui-openfl.swc
+        if-no-files-found: error
+  build-api:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: krdlab/setup-haxe@v1
+      with:
+        haxe-version: 4.0.5
+    - name: Set up Haxelib dependencies
+      run: |
+        haxelib install lime 7.8.0 --quiet
+        haxelib install openfl 8.9.7 --quiet
+        haxelib install actuate --quiet
+        haxelib install dox --quiet
+        haxelib dev feathersui ${{ github.workspace }}
+    - name: Build API reference
+      working-directory: docs
+      run: haxe docs.hxml
+    - uses: actions/upload-artifact@v4
+      with:
+        name: feathersui-openfl-docs
+        path: bin/api/
+        if-no-files-found: error
+    - name: Deploy to unstable
+      if: ${{ github.repository == 'feathersui/feathersui-openfl' && github.event_name != 'pull_request' }}
+      uses: garygrossgarten/github-action-scp@release
+      with:
+        local: bin/api
+        remote: api.feathersui.com/unstable
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        password: ${{ secrets.SSH_PASS }}
