@@ -1108,6 +1108,33 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	}
 
 	/**
+		Returns the current item from the data provider that is rendered by a
+		specific cell renderer.
+
+		@since 1.4.0
+	**/
+	public function cellRendererToItem(cellRenderer:DisplayObject):Dynamic {
+		if (cellRenderer == null) {
+			return null;
+		}
+		for (layoutItem in this._rowLayoutItems) {
+			var rowRenderer = Std.downcast(layoutItem, TreeGridViewRowRenderer);
+			if (rowRenderer == null) {
+				continue;
+			}
+			var column = rowRenderer.cellRendererToColumn(cellRenderer);
+			if (column != null) {
+				var state = this.rowRendererToRowState.get(rowRenderer);
+				if (state == null) {
+					return null;
+				}
+				return state.data;
+			}
+		}
+		return null;
+	}
+
+	/**
 		Returns the current header renderer used to render a specific column.
 
 		@see `TreeGridView.columns`
