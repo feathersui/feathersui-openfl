@@ -690,6 +690,18 @@ import utest.Test;
 		Assert.equals(0, CompareLocations.compareLocations([2], updatedLocations[5]));
 	}
 
+	public function testUpdateAllDiscoversNewItemsInRoot():Void {
+		var rootArray:Array<Dynamic> = [{text: "One"}, {text: "Two"}];
+		this._treeView.dataProvider = new ArrayHierarchicalCollection(rootArray);
+		this._treeView.validateNow();
+		var newItem = {text: "Three"};
+		rootArray[2] = newItem;
+		this._treeView.dataProvider.updateAll();
+		this._treeView.validateNow();
+		var itemRenderer = this._treeView.itemToItemRenderer(newItem);
+		Assert.notNull(itemRenderer);
+	}
+
 	public function testAddItemToDataProviderCreatesNewItemRenderer():Void {
 		var item1 = {text: "One"};
 		var item2 = {text: "Two"};

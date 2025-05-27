@@ -460,6 +460,18 @@ import utest.Test;
 		Assert.equals(1, updatedColumns[11]);
 	}
 
+	public function testUpdateAllDiscoversNewItemsInRoot():Void {
+		var rootArray:Array<Dynamic> = [{text: "One"}, {text: "Two"}];
+		this._treeGridView.dataProvider = new ArrayHierarchicalCollection(rootArray);
+		this._treeGridView.validateNow();
+		var newItem = {text: "Three"};
+		rootArray[2] = newItem;
+		this._treeGridView.dataProvider.updateAll();
+		this._treeGridView.validateNow();
+		var itemRenderer = this._treeGridView.itemAndColumnToCellRenderer(newItem, this._treeGridView.columns.get(0));
+		Assert.notNull(itemRenderer);
+	}
+
 	public function testAddItemToDataProviderCreatesNewItemRenderer():Void {
 		var item1 = {text: "One"};
 		var item2 = {text: "Two"};

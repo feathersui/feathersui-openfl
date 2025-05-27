@@ -3346,6 +3346,20 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	}
 
 	private function treeGridView_dataProvider_updateAllHandler(event:HierarchicalCollectionEvent):Void {
+		// opened branches (or even the root) may not necessarily contain the
+		// same number of items after updateAll(), so we should recalculate the
+		// total number of items in the layout
+		this._totalRowLayoutCount = this.calculateTotalLayoutCount([]);
+		if (this._virtualCache != null) {
+			#if (hl && haxe_ver < 4.3)
+			this._virtualCache.splice(0, this._virtualCache.length);
+			#else
+			this._virtualCache.resize(0);
+			#end
+			this._virtualCache.resize(this._totalRowLayoutCount);
+		}
+		this.setInvalid(DATA);
+
 		var location:Array<Int> = [];
 		for (i in 0...this._dataProvider.getLength()) {
 			location[0] = i;
