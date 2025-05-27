@@ -814,6 +814,8 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 					}
 				}
 			}
+			var oldIgnoreContentResize = this._ignoreContentResize;
+			this._ignoreContentResize = true;
 			if (this.horizontalAlign == JUSTIFY || this.verticalAlign == JUSTIFY) {
 				var justifyWidth:Null<Float> = null;
 				var justifyHeight:Null<Float> = null;
@@ -836,8 +838,6 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 			} else {
 				this._contentMeasurements.restore(this._currentContent);
 			}
-			var oldIgnoreContentResize = this._ignoreContentResize;
-			this._ignoreContentResize = true;
 			if ((this._currentContent is IValidating)) {
 				(cast this._currentContent : IValidating).validateNow();
 			}
