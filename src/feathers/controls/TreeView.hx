@@ -2609,7 +2609,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 				this.setInvalid(DATA);
 			}
 		}
-		if (this._dataProvider.isBranch(item)) {
+		if (this.isBranchOpenInternal(item)) {
 			for (i in 0...this._dataProvider.getLength(location)) {
 				location.push(i);
 				this.updateItemRendererForLocation(location);
