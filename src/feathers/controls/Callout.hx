@@ -917,10 +917,10 @@ class Callout extends FeathersControl {
 		}
 
 		var measureContent:IMeasureObject = null;
-		if ((this._content is IMeasureObject)) {
-			measureContent = cast this._content;
-		}
 		if (this._content != null) {
+			if ((this._content is IMeasureObject)) {
+				measureContent = cast this._content;
+			}
 			var oldIgnoreContentResize = this._ignoreContentResize;
 			this._ignoreContentResize = true;
 			MeasurementsUtil.resetFluidlyWithParentValues(this._contentMeasurements, this._content,
