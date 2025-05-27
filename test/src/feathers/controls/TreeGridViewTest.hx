@@ -309,6 +309,8 @@ import utest.Test;
 		this._treeGridView.dataProvider.updateAt(itemLocation);
 		this._treeGridView.validateNow();
 
+		Assert.equals(sampleItemRenderer, cast(this._treeGridView.itemAndColumnToCellRenderer(item, textColumn), CustomRendererWithInterfaces));
+
 		Assert.equals(3, setDataValues.length);
 		Assert.equals(item, setDataValues[0]);
 		Assert.isNull(setDataValues[1]);
@@ -459,6 +461,19 @@ import utest.Test;
 		Assert.equals(0, updatedColumns[10]);
 		Assert.equals(1, updatedColumns[11]);
 	}
+
+	// public function testUpdateItemDiscoversNewItemsInBranch():Void {
+	// 	var branchArray:Array<Dynamic> = [{text: "A-1"}, {text: "A-2"}];
+	// 	var rootArray:Array<Dynamic> = [{text: "A", children: branchArray}, {text: "B"}];
+	// 	this._treeGridView.dataProvider = new ArrayHierarchicalCollection(rootArray);
+	// 	this._treeGridView.validateNow();
+	// 	var newItem = {text: "A-3"};
+	// 	branchArray[2] = newItem;
+	// 	this._treeGridView.dataProvider.updateAt([0]);
+	// 	this._treeGridView.validateNow();
+	// 	var itemRenderer = this._treeGridView.itemAndColumnToCellRenderer(newItem, this._treeGridView.columns.get(0));
+	// 	Assert.notNull(itemRenderer);
+	// }
 
 	public function testUpdateAllDiscoversNewItemsInRoot():Void {
 		var rootArray:Array<Dynamic> = [{text: "One"}, {text: "Two"}];

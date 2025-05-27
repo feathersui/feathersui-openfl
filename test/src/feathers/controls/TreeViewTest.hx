@@ -553,6 +553,7 @@ import utest.Test;
 		this._treeView.dataProvider = new ArrayHierarchicalCollection(items, (item:Dynamic) -> item.children);
 		var itemLocation = [0, 1];
 		var item = this._treeView.dataProvider.get(itemLocation);
+		Assert.notNull(item);
 		this._treeView.selectedLocation = itemLocation;
 		this._treeView.toggleBranch(this._treeView.dataProvider.get([0]), true);
 		this._treeView.toggleBranch(item, true);
@@ -576,6 +577,8 @@ import utest.Test;
 
 		this._treeView.dataProvider.updateAt(itemLocation);
 		this._treeView.validateNow();
+
+		Assert.equals(sampleItemRenderer, cast(this._treeView.itemToItemRenderer(item), CustomRendererWithInterfaces));
 
 		Assert.equals(3, setDataValues.length);
 		Assert.equals(item, setDataValues[0]);
@@ -688,6 +691,22 @@ import utest.Test;
 		Assert.equals(0, CompareLocations.compareLocations([0], updatedLocations[3]));
 		Assert.equals(0, CompareLocations.compareLocations([1], updatedLocations[4]));
 		Assert.equals(0, CompareLocations.compareLocations([2], updatedLocations[5]));
+	}
+
+	public function testUpdateItemDiscoversNewItemsInBranch():Void {
+		var branchArray:Array<Dynamic> = [{text: "A-1"}, {text: "A-2"}];
+		var branchItem = {text: "A", children: branchArray};
+		var rootArray:Array<Dynamic> = [branchItem, {text: "B"}];
+		this._treeView.dataProvider = new ArrayHierarchicalCollection(rootArray, (item:Dynamic) -> item.children);
+		this._treeView.validateNow();
+		this._treeView.toggleBranch(branchItem, true);
+		Assert.isTrue(this._treeView.isBranchOpen(branchItem));
+		var newItem = {text: "A-3"};
+		branchArray[2] = newItem;
+		this._treeView.dataProvider.updateAt([0]);
+		this._treeView.validateNow();
+		var itemRenderer = this._treeView.itemToItemRenderer(newItem);
+		Assert.notNull(itemRenderer);
 	}
 
 	public function testUpdateAllDiscoversNewItemsInRoot():Void {

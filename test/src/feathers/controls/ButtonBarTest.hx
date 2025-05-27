@@ -188,6 +188,8 @@ class ButtonBarTest extends Test {
 		this._buttonBar.dataProvider.updateAt(itemIndex);
 		this._buttonBar.validateNow();
 
+		Assert.equals(sampleItemRenderer, cast(this._buttonBar.itemToButton(item), CustomRendererWithInterfaces));
+
 		Assert.equals(3, setDataValues.length);
 		Assert.equals(item, setDataValues[0]);
 		Assert.isNull(setDataValues[1]);

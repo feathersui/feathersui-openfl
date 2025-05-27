@@ -271,6 +271,8 @@ class GroupListViewTest extends Test {
 		this._listView.dataProvider.updateAt(itemLocation);
 		this._listView.validateNow();
 
+		Assert.equals(sampleItemRenderer, cast(this._listView.itemToItemRenderer(item), CustomRendererWithInterfaces));
+
 		Assert.equals(3, setDataValues.length);
 		Assert.equals(item, setDataValues[0]);
 		Assert.isNull(setDataValues[1]);

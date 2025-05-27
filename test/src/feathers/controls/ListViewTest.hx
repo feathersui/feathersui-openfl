@@ -510,6 +510,8 @@ class ListViewTest extends Test {
 		this._listView.dataProvider.updateAt(itemIndex);
 		this._listView.validateNow();
 
+		Assert.equals(sampleItemRenderer, cast(this._listView.itemToItemRenderer(item), CustomRendererWithInterfaces));
+
 		Assert.equals(3, setDataValues.length);
 		Assert.equals(item, setDataValues[0]);
 		Assert.isNull(setDataValues[1]);

@@ -598,6 +598,8 @@ class GridViewTest extends Test {
 		this._gridView.dataProvider.updateAt(rowIndex);
 		this._gridView.validateNow();
 
+		Assert.equals(sampleItemRenderer, cast(this._gridView.itemAndColumnToCellRenderer(item, column), CustomRendererWithInterfaces));
+
 		Assert.equals(3, setDataValues.length);
 		Assert.equals(item, setDataValues[0]);
 		Assert.isNull(setDataValues[1]);

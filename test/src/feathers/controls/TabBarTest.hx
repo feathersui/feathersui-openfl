@@ -323,6 +323,8 @@ class TabBarTest extends Test {
 		this._tabBar.dataProvider.updateAt(itemIndex);
 		this._tabBar.validateNow();
 
+		Assert.equals(sampleItemRenderer, cast(this._tabBar.itemToTab(item), CustomRendererWithInterfaces));
+
 		Assert.equals(3, setDataValues.length);
 		Assert.equals(item, setDataValues[0]);
 		Assert.isNull(setDataValues[1]);
