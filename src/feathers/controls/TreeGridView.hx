@@ -1144,7 +1144,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		if (this._dataProvider == null || !this._dataProvider.contains(branch)) {
 			return false;
 		}
-		return this._dataProvider.isBranch(branch) && this.openBranches.indexOf(branch) != -1;
+		return this.isBranchOpenInternal(branch);
 	}
 
 	/**
@@ -1160,7 +1160,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		if (!this._dataProvider.isBranch(branch)) {
 			throw new ArgumentError("Cannot open item because it is not a branch.");
 		}
-		var alreadyOpen = this.openBranches.indexOf(branch) != -1;
+		var alreadyOpen = this.isBranchOpenInternal(branch);
 		if ((open && alreadyOpen) || (!open && !alreadyOpen)) {
 			// nothing to change
 			return;
@@ -2074,7 +2074,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 				// don't bother continuing if we're beyond the visible indices
 				break;
 			}
-			if (this._dataProvider.isBranch(item) && this.openBranches.indexOf(item) != -1) {
+			if (this.isBranchOpenInternal(item)) {
 				layoutIndex = this.findUnrenderedDataForLocation(location, layoutIndex);
 				if (layoutIndex > this._visibleIndices.end) {
 					// don't bother continuing if we're beyond the visible indices
@@ -2201,7 +2201,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			state.branch = branch;
 			changed = true;
 		}
-		var opened = state.branch && (this.openBranches.indexOf(item) != -1);
+		var opened = state.branch && this.isBranchOpenInternal(item);
 		if (force || state.opened != opened) {
 			state.opened = opened;
 			changed = true;
@@ -2445,12 +2445,10 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 				return locationOfBranch;
 			}
 			var child = this._dataProvider.get(locationOfBranch);
-			if (this._dataProvider.isBranch(child)) {
-				if (this.openBranches.indexOf(child) != -1) {
-					var result = this.displayIndexToLocationAtBranch(target, locationOfBranch);
-					if (result != null) {
-						return result;
-					}
+			if (this.isBranchOpenInternal(child)) {
+				var result = this.displayIndexToLocationAtBranch(target, locationOfBranch);
+				if (result != null) {
+					return result;
 				}
 			}
 			locationOfBranch.resize(locationOfBranch.length - 1);
@@ -2478,13 +2476,13 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 				return this._currentDisplayIndex;
 			}
 			var child = this._dataProvider.get(locationOfBranch);
-			if (this._dataProvider.isBranch(child)) {
-				if (this.openBranches.indexOf(child) != -1) {
-					var result = this.locationToDisplayIndexAtBranch(locationOfBranch, locationToFind, nearestNotOpenBranch);
-					if (result != -1) {
-						return result;
-					}
-				} else if (nearestNotOpenBranch != null && this.compareLocations(nearestNotOpenBranch, locationOfBranch) == 0) {
+			if (this.isBranchOpenInternal(child)) {
+				var result = this.locationToDisplayIndexAtBranch(locationOfBranch, locationToFind, nearestNotOpenBranch);
+				if (result != -1) {
+					return result;
+				}
+			} else if (this._dataProvider.isBranch(child)) {
+				if (nearestNotOpenBranch != null && this.compareLocations(nearestNotOpenBranch, locationOfBranch) == 0) {
 					// if the location is inside a closed branch
 					// return that branch
 					return this._currentDisplayIndex;
@@ -2666,7 +2664,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		}
 		state.rowLocation = location;
 		state.layoutIndex = layoutIndex;
-		var alreadyOpen = this.openBranches.indexOf(branch) != -1;
+		var alreadyOpen = this.isBranchOpenInternal(branch);
 		if (open && !alreadyOpen) {
 			var cellState = new TreeGridViewCellState();
 			this.populateCurrentRowCellState(branch, location, null, -1, layoutIndex, cellState, true);
@@ -2928,25 +2926,31 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		if (rowRenderer == null) {
 			// doesn't exist yet, so we need to do a full invalidation
 			this.setInvalid(DATA);
-			return;
+		} else {
+			var state = this.rowRendererToRowState.get(rowRenderer);
+			// a previous update may already be pending
+			if (state.owner != null) {
+				rowRenderer.updateCells();
+				this.populateCurrentRowState(row, location, layoutIndex, state, true);
+				// in order to display the same item with modified properties, this
+				// hack tricks the item renderer into thinking that it has been given
+				// a different item to render.
+				this.resetRowRenderer(rowRenderer, state);
+				if (this._rowRendererMeasurements != null) {
+					this._rowRendererMeasurements.restore(rowRenderer);
+				}
+				// ensures that the change is detected when we validate later
+				state.owner = null;
+				this.setInvalid(DATA);
+			}
 		}
-		var state = this.rowRendererToRowState.get(rowRenderer);
-		if (state.owner == null) {
-			// a previous update is already pending
-			return;
+		if (this.isBranchOpenInternal(row)) {
+			for (i in 0...this._dataProvider.getLength(location)) {
+				location.push(i);
+				this.updateRowRendererForLocation(location);
+				location.pop();
+			}
 		}
-		rowRenderer.updateCells();
-		this.populateCurrentRowState(row, location, layoutIndex, state, true);
-		// in order to display the same item with modified properties, this
-		// hack tricks the item renderer into thinking that it has been given
-		// a different item to render.
-		this.resetRowRenderer(rowRenderer, state);
-		if (this._rowRendererMeasurements != null) {
-			this._rowRendererMeasurements.restore(rowRenderer);
-		}
-		// ensures that the change is detected when we validate later
-		state.owner = null;
-		this.setInvalid(DATA);
 	}
 
 	private function validateCustomColumnWidths():Void {
@@ -3206,6 +3210,16 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		this.selectedLocation = this._dataProvider.locationOf(this._selectedItem); // use the setter
 	}
 
+	private function isBranchOpenInternal(item:Dynamic):Bool {
+		if (this._dataProvider == null) {
+			return false;
+		}
+		if (!this._dataProvider.isBranch(item)) {
+			return false;
+		}
+		return this.openBranches.indexOf(item) != -1;
+	}
+
 	private function calculateTotalLayoutCount(location:Array<Int>):Int {
 		if (this._dataProvider == null) {
 			return 0;
@@ -3215,7 +3229,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		for (i in 0...itemCount) {
 			location.push(i);
 			var item = this._dataProvider.get(location);
-			if (this._dataProvider.isBranch(item) && this.openBranches.indexOf(item) != -1) {
+			if (this.isBranchOpenInternal(item)) {
 				result += this.calculateTotalLayoutCount(location);
 			}
 			location.pop();
@@ -3230,7 +3244,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			layoutIndex++;
 			this._virtualCache.insert(layoutIndex, null);
 			var item = this._dataProvider.get(location);
-			if (this._dataProvider.isBranch(item) && this.openBranches.indexOf(item) != -1) {
+			if (this.isBranchOpenInternal(item)) {
 				layoutIndex = insertChildrenIntoVirtualCache(location, layoutIndex);
 			}
 			location.pop();
@@ -3244,7 +3258,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		for (i in 0...length) {
 			location.push(i);
 			var item = this._dataProvider.get(location);
-			if (this._dataProvider.isBranch(item) && this.openBranches.indexOf(item) != -1) {
+			if (this.isBranchOpenInternal(item)) {
 				removeChildrenFromVirtualCache(location, layoutIndex);
 			}
 			this._virtualCache.splice(layoutIndex, 1);
