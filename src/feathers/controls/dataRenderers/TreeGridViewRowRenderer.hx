@@ -515,6 +515,21 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 		return cellState;
 	}
 
+	/**
+		Returns the column that is associated with the cell renderer, or null
+		if the row does not currently contain the specified cell renderer.
+
+		@since 1.4.0
+	**/
+	public function cellRendererToColumn(cellRenderer:DisplayObject):TreeGridViewColumn {
+		for (column => otherCellRenderer in this._columnToCellRenderer) {
+			if (otherCellRenderer == cellRenderer) {
+				return column;
+			}
+		}
+		return null;
+	}
+
 	override private function initialize():Void {
 		super.initialize();
 

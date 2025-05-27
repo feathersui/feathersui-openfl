@@ -412,6 +412,21 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 	}
 
 	/**
+		Returns the column that is associated with the cell renderer, or null
+		if the row does not currently contain the specified cell renderer.
+
+		@since 1.4.0
+	**/
+	public function cellRendererToColumn(cellRenderer:DisplayObject):GridViewColumn {
+		for (column => otherCellRenderer in this._columnToCellRenderer) {
+			if (otherCellRenderer == cellRenderer) {
+				return column;
+			}
+		}
+		return null;
+	}
+
+	/**
 		Returns a `GridViewCellState` representing a specific column.
 
 		@see `feathers.controls.GridView.itemAndColumnToCellState`
