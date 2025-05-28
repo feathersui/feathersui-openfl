@@ -374,6 +374,11 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		if (this._dataProvider == value) {
 			return this._dataProvider;
 		}
+		// clear the entire layout cache when we receive a new data provider.
+		// we should not assume it contains the same set of items, and even if
+		// it does, they may not be in the same order. checking if the new data
+		// provider matches the old data provider would be overly expensive and
+		// likely to be error prone.
 		#if (hl && haxe_ver < 4.3)
 		this._virtualCache.splice(0, this._virtualCache.length);
 		#else
@@ -2484,6 +2489,11 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 	}
 
 	private function treeView_dataProvider_changeHandler(event:Event):Void {
+		// this could be optimized better. for example, if an item is added,
+		// replaced, or removed, all of the items before it in the data provider
+		// should still have valid layout cache measurements.
+		// list view and grid view are more precise already, but it's trickier
+		// to do this correctly with hierarchical data, but maybe in the future.
 		this._totalLayoutCount = this.calculateTotalLayoutCount([]);
 		if (this._virtualCache != null) {
 			#if (hl && haxe_ver < 4.3)
@@ -2577,10 +2587,6 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 	}
 
 	private function updateItemRendererForLocation(location:Array<Int>):Void {
-		var layoutIndex = this.locationToDisplayIndex(location, false);
-		if (this._virtualCache != null && layoutIndex != -1) {
-			this._virtualCache[layoutIndex] = null;
-		}
 		var item = this._dataProvider.get(location);
 		var itemRenderer:DisplayObject = null;
 		if ((item is String)) {
@@ -2596,6 +2602,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			// a previous update may already be pending
 			if (state.owner != null) {
 				var storage = this.itemStateToStorage(state);
+				var layoutIndex = this.locationToDisplayIndex(location, false);
 				this.populateCurrentItemState(item, location, layoutIndex, state, true);
 				// in order to display the same item with modified properties, this
 				// hack tricks the item renderer into thinking that it has been given
@@ -2619,7 +2626,49 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 	}
 
 	private function treeView_dataProvider_updateItemHandler(event:HierarchicalCollectionEvent):Void {
-		this.updateItemRendererForLocation(event.location);
+		var location = event.location;
+		var item = this._dataProvider.get(location);
+		if (item != null) {
+			if (this._dataProvider.isBranch(item) && this.isBranchOpenInternal(item)) {
+				// opened branches may not necessarily contain the same
+				// number of items after updateAt(), so we should
+				// recalculate the total number of items in the layout and
+				// adjust the cache. even if the total number of items are
+				// the same, that doesn't mean that the children of the
+				// branch are still the same set of items.
+				this._totalLayoutCount = this.calculateTotalLayoutCount([]);
+				this.setInvalid(DATA);
+
+				if (this._virtualCache != null) {
+					var numCacheItemsToKeep = 0;
+					var itemRenderer = this.itemToItemRenderer(item);
+					if (itemRenderer != null) {
+						var itemState = this.itemRendererToItemState.get(itemRenderer);
+						if (itemState != null) {
+							numCacheItemsToKeep = itemState.layoutIndex - 1;
+							if (numCacheItemsToKeep < 0) {
+								numCacheItemsToKeep = 0;
+							}
+						}
+					}
+					#if (hl && haxe_ver < 4.3)
+					this._virtualCache.splice(numCacheItemsToKeep, this._virtualCache.length);
+					#else
+					this._virtualCache.resize(numCacheItemsToKeep);
+					#end
+					this._virtualCache.resize(this._totalLayoutCount);
+				}
+			} else if (this._virtualCache != null) {
+				var layoutIndex = this.locationToDisplayIndex(location, false);
+				if (layoutIndex != -1) {
+					// if it's not a branch, or if the branch is closed, we
+					// can simply clear a single item from the cache. all
+					// other items should be unaffected.
+					this._virtualCache[layoutIndex] = null;
+				}
+			}
+		}
+		this.updateItemRendererForLocation(location);
 	}
 
 	private function treeView_dataProvider_updateAllHandler(event:HierarchicalCollectionEvent):Void {
@@ -2628,6 +2677,8 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		// total number of items in the layout
 		this._totalLayoutCount = this.calculateTotalLayoutCount([]);
 		if (this._virtualCache != null) {
+			// clear the entire cache because none of the items may necessarily
+			// be the same after updateAll()
 			#if (hl && haxe_ver < 4.3)
 			this._virtualCache.splice(0, this._virtualCache.length);
 			#else
