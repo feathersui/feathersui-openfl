@@ -289,6 +289,11 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 		if (this._dataProvider == value) {
 			return this._dataProvider;
 		}
+		// clear the entire layout cache when we receive a new data provider.
+		// we should not assume it contains the same set of items, and even if
+		// it does, they may not be in the same order. checking if the new data
+		// provider matches the old data provider would be overly expensive and
+		// likely to be error prone.
 		#if (hl && haxe_ver < 4.3)
 		this._virtualCache.splice(0, this._virtualCache.length);
 		#else
@@ -1875,9 +1880,6 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 	}
 
 	private function updateItemRendererForIndex(index:Int):Void {
-		if (this._virtualCache != null) {
-			this._virtualCache[index] = null;
-		}
 		var item = this._dataProvider.get([index]);
 		var itemRenderer:DisplayObject = null;
 		if ((item is String)) {
@@ -1917,10 +1919,24 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 		if (index == -1) {
 			return;
 		}
+		if (this._virtualCache != null) {
+			this._virtualCache[index] = null;
+		}
 		this.updateItemRendererForIndex(index);
 	}
 
 	private function menu_dataProvider_updateAllHandler(event:HierarchicalCollectionEvent):Void {
+		if (this._virtualCache != null) {
+			// we don't know exactly which indices have changed, and its
+			// possible that items were added or removed so reset the
+			// whole cache.
+			#if (hl && haxe_ver < 4.3)
+			this._virtualCache.splice(0, this._virtualCache.length);
+			#else
+			this._virtualCache.resize(0);
+			#end
+			this._virtualCache.resize(this._dataProvider.getLength());
+		}
 		for (i in 0...this._dataProvider.getLength()) {
 			this.updateItemRendererForIndex(i);
 		}

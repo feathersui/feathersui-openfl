@@ -323,6 +323,11 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._dataProvider == value) {
 			return this._dataProvider;
 		}
+		// clear the entire layout cache when we receive a new data provider.
+		// we should not assume it contains the same set of items, and even if
+		// it does, they may not be in the same order. checking if the new data
+		// provider matches the old data provider would be overly expensive and
+		// likely to be error prone.
 		#if (hl && haxe_ver < 4.3)
 		this._virtualCache.splice(0, this._virtualCache.length);
 		#else
@@ -2360,9 +2365,6 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function updateItemRendererForIndex(index:Int):Void {
-		if (this._virtualCache != null) {
-			this._virtualCache[index] = null;
-		}
 		var item = this._dataProvider.get(index);
 		var itemRenderer:DisplayObject = null;
 		if ((item is String)) {
@@ -2395,10 +2397,24 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function listView_dataProvider_updateItemHandler(event:FlatCollectionEvent):Void {
+		if (this._virtualCache != null) {
+			this._virtualCache[event.index] = null;
+		}
 		this.updateItemRendererForIndex(event.index);
 	}
 
 	private function listView_dataProvider_updateAllHandler(event:FlatCollectionEvent):Void {
+		if (this._virtualCache != null) {
+			// we don't know exactly which indices have changed, and its
+			// possible that items were added or removed so reset the
+			// whole cache.
+			#if (hl && haxe_ver < 4.3)
+			this._virtualCache.splice(0, this._virtualCache.length);
+			#else
+			this._virtualCache.resize(0);
+			#end
+			this._virtualCache.resize(this._dataProvider.length);
+		}
 		for (i in 0...this._dataProvider.length) {
 			this.updateItemRendererForIndex(i);
 		}

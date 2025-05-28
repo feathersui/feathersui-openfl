@@ -339,6 +339,11 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		if (this._dataProvider == value) {
 			return this._dataProvider;
 		}
+		// clear the entire layout cache when we receive a new data provider.
+		// we should not assume it contains the same set of items, and even if
+		// it does, they may not be in the same order. checking if the new data
+		// provider matches the old data provider would be overly expensive and
+		// likely to be error prone.
 		#if (hl && haxe_ver < 4.3)
 		this._virtualCache.splice(0, this._virtualCache.length);
 		#else
@@ -2247,6 +2252,11 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	}
 
 	private function groupListView_dataProvider_changeHandler(event:Event):Void {
+		// this could be optimized better. for example, if an item is added,
+		// replaced, or removed, all of the items before it in the data provider
+		// should still have valid layout cache measurements.
+		// list view and grid view are more precise already, but it's trickier
+		// to do this correctly with hierarchical data, but maybe in the future.
 		this._totalLayoutCount = this.calculateTotalLayoutCount([]);
 		if (this._virtualCache != null) {
 			#if (hl && haxe_ver < 4.3)
@@ -2326,10 +2336,6 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	}
 
 	private function updateItemRendererForLocation(location:Array<Int>):Void {
-		var layoutIndex = this.locationToDisplayIndex(location);
-		if (this._virtualCache != null) {
-			this._virtualCache[layoutIndex] = null;
-		}
 		var item = this._dataProvider.get(location);
 		var type = location.length == 1 ? HEADER : STANDARD;
 		var itemRenderer:DisplayObject = null;
@@ -2346,6 +2352,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			// a previous update may already be pending
 			if (state.owner != null) {
 				var storage = this.itemStateToStorage(state);
+				var layoutIndex = this.locationToDisplayIndex(location);
 				this.populateCurrentItemState(item, type, location, layoutIndex, state, true);
 				// in order to display the same item with modified properties, this
 				// hack tricks the item renderer into thinking that it has been given
@@ -2371,10 +2378,65 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	}
 
 	private function groupListView_dataProvider_updateItemHandler(event:HierarchicalCollectionEvent):Void {
-		this.updateItemRendererForLocation(event.location);
+		var location = event.location;
+		var type = location.length == 1 ? HEADER : STANDARD;
+		var item = this._dataProvider.get(location);
+		if (type == HEADER) {
+			// groups may not necessarily contain the same number of items
+			// after updateAt(), so we should recalculate the total number
+			// of items in the layout and adjust the cache. even if the
+			// total number of items are the same, that doesn't mean that
+			// the children of the group are still the same set of items.
+			this._totalLayoutCount = this.calculateTotalLayoutCount([]);
+			this.setInvalid(DATA);
+
+			if (this._virtualCache != null) {
+				var numCacheItemsToKeep = 0;
+				var itemRenderer = this.itemToItemRenderer(item);
+				if (itemRenderer != null) {
+					var itemState = this.itemRendererToItemState.get(itemRenderer);
+					if (itemState != null) {
+						numCacheItemsToKeep = itemState.layoutIndex - 1;
+						if (numCacheItemsToKeep < 0) {
+							numCacheItemsToKeep = 0;
+						}
+					}
+				}
+				#if (hl && haxe_ver < 4.3)
+				this._virtualCache.splice(numCacheItemsToKeep, this._virtualCache.length);
+				#else
+				this._virtualCache.resize(numCacheItemsToKeep);
+				#end
+				this._virtualCache.resize(this._totalLayoutCount);
+			}
+		} else if (this._virtualCache != null) {
+			var layoutIndex = this.locationToDisplayIndex(location);
+			if (layoutIndex != -1) {
+				// if it's not a group, we can simply clear a single item
+				// from the cache. all other items should be unaffected.
+				this._virtualCache[layoutIndex] = null;
+			}
+		}
+		this.updateItemRendererForLocation(location);
 	}
 
 	private function groupListView_dataProvider_updateAllHandler(event:HierarchicalCollectionEvent):Void {
+		// groups (or even the root) may not necessarily contain the same number
+		// of items after updateAll(), so we should recalculate the total number
+		// of items in the layout
+		this._totalLayoutCount = this.calculateTotalLayoutCount([]);
+		if (this._virtualCache != null) {
+			// clear the entire cache because none of the items may necessarily
+			// be the same after updateAll()
+			#if (hl && haxe_ver < 4.3)
+			this._virtualCache.splice(0, this._virtualCache.length);
+			#else
+			this._virtualCache.resize(0);
+			#end
+			this._virtualCache.resize(this._totalLayoutCount);
+		}
+		this.setInvalid(DATA);
+
 		var location:Array<Int> = [];
 		for (i in 0...this._dataProvider.getLength()) {
 			location[0] = i;
