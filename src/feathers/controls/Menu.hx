@@ -1019,6 +1019,8 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 
 		if (this.parent != null) {
 			this.stage.addEventListener(MouseEvent.MOUSE_DOWN, menu_stage_mouseDownHandler, false, 0, true);
+			this.stage.addEventListener(MouseEvent.RIGHT_MOUSE_DOWN, menu_stage_rightMouseDownHandler, false, 0, true);
+			this.stage.addEventListener(MouseEvent.MIDDLE_MOUSE_DOWN, menu_stage_middleMouseDownHandler, false, 0, true);
 			if (this._focusManager != null) {
 				this._focusManager.focus = this;
 			} else if (this.stage != null) {
@@ -1040,6 +1042,8 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 
 		if (this.popUpAdapter.active) {
 			this.stage.addEventListener(MouseEvent.MOUSE_DOWN, menu_stage_mouseDownHandler, false, 0, true);
+			this.stage.addEventListener(MouseEvent.RIGHT_MOUSE_DOWN, menu_stage_rightMouseDownHandler, false, 0, true);
+			this.stage.addEventListener(MouseEvent.MIDDLE_MOUSE_DOWN, menu_stage_middleMouseDownHandler, false, 0, true);
 			if (this._focusManager != null) {
 				this._focusManager.focus = this;
 			} else if (this.stage != null) {
@@ -2115,6 +2119,8 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 	private function menu_removedFromStageHandler(event:Event):Void {
 		if (this.stage != null) {
 			this.stage.removeEventListener(MouseEvent.MOUSE_DOWN, menu_stage_mouseDownHandler);
+			this.stage.removeEventListener(MouseEvent.RIGHT_MOUSE_DOWN, menu_stage_rightMouseDownHandler);
+			this.stage.removeEventListener(MouseEvent.MIDDLE_MOUSE_DOWN, menu_stage_middleMouseDownHandler);
 		}
 		this.closeSubMenu();
 		FeathersEvent.dispatch(this, Event.CLOSE);
@@ -2226,6 +2232,28 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 	}
 
 	private function menu_stage_mouseDownHandler(event:MouseEvent):Void {
+		var target = cast(event.target, DisplayObject);
+		while (target != null) {
+			if ((target is Menu) || (target is MenuBar)) {
+				return;
+			}
+			target = target.parent;
+		}
+		this.close();
+	}
+
+	private function menu_stage_rightMouseDownHandler(event:MouseEvent):Void {
+		var target = cast(event.target, DisplayObject);
+		while (target != null) {
+			if ((target is Menu) || (target is MenuBar)) {
+				return;
+			}
+			target = target.parent;
+		}
+		this.close();
+	}
+
+	private function menu_stage_middleMouseDownHandler(event:MouseEvent):Void {
 		var target = cast(event.target, DisplayObject);
 		while (target != null) {
 			if ((target is Menu) || (target is MenuBar)) {
