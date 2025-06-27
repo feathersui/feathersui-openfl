@@ -114,12 +114,18 @@ import openfl.ui.Multitouch;
 	within the bounds of the item renderer on release, and the list view cannot
 	scroll before release, or the gesture will be ignored.
 
+	@event feathers.events.GroupListViewEvent.ITEM_DOUBLE_CLICK Dispatched when the
+	user double-clicks an item renderer in the list view with a mouse. The item
+	renderer's `doubleClickEnabled` property must be set to true, and in some
+	cases the same property must be set on its children.
+
 	@see [Tutorial: How to use the GroupListView component](https://feathersui.com/learn/haxe-openfl/group-list-view/)
 
 	@since 1.0.0
 **/
 @:event(openfl.events.Event.CHANGE)
 @:event(feathers.events.GroupListViewEvent.ITEM_TRIGGER)
+@:event(feathers.events.GroupListViewEvent.ITEM_DOUBLE_CLICK)
 @:access(feathers.data.GroupListViewItemState)
 @defaultXmlProperty("dataProvider")
 @:styleContext
@@ -1431,6 +1437,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 				itemRenderer.removeEventListener(TriggerEvent.TRIGGER, groupListView_itemRenderer_triggerHandler);
 				itemRenderer.removeEventListener(MouseEvent.CLICK, groupListView_itemRenderer_clickHandler);
 				itemRenderer.removeEventListener(TouchEvent.TOUCH_TAP, groupListView_itemRenderer_touchTapHandler);
+				itemRenderer.removeEventListener(MouseEvent.DOUBLE_CLICK, groupListView_itemRenderer_doubleClickHandler);
 				itemRenderer.removeEventListener(Event.CHANGE, groupListView_itemRenderer_changeHandler);
 			}
 			itemRenderer.removeEventListener(Event.RESIZE, groupListView_itemRenderer_resizeHandler);
@@ -1622,6 +1629,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 				itemRenderer.addEventListener(TouchEvent.TOUCH_TAP, groupListView_itemRenderer_touchTapHandler);
 				#end
 			}
+			itemRenderer.addEventListener(MouseEvent.DOUBLE_CLICK, groupListView_itemRenderer_doubleClickHandler);
 			if ((itemRenderer is IToggle)) {
 				itemRenderer.addEventListener(Event.CHANGE, groupListView_itemRenderer_changeHandler);
 			}
@@ -2216,6 +2224,22 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			return;
 		}
 		this.handleSelectionChange(state.data, state.location, event.ctrlKey, event.shiftKey);
+	}
+
+	private function groupListView_itemRenderer_doubleClickHandler(event:MouseEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
+
+		var itemRenderer = cast(event.currentTarget, DisplayObject);
+		if (itemRenderer.parent != this.groupViewPort) {
+			return;
+		}
+		var state = this.itemRendererToItemState.get(itemRenderer);
+		if (state == null) {
+			return;
+		}
+		GroupListViewEvent.dispatch(this, GroupListViewEvent.ITEM_DOUBLE_CLICK, state);
 	}
 
 	private function groupListView_itemRenderer_resizeHandler(event:Event):Void {

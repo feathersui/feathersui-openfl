@@ -37,6 +37,14 @@ class TreeViewEvent extends Event {
 	public static inline var ITEM_TRIGGER:EventType<TreeViewEvent> = "itemTrigger";
 
 	/**
+		The `TreeViewEvent.ITEM_DOUBLE_CLICK` event type is dispatched when an item
+		renderer is double-clicked with a mouse.
+
+		@since 1.4.0
+	**/
+	public static inline var ITEM_DOUBLE_CLICK:EventType<TreeViewEvent> = "itemDoubleClick";
+
+	/**
 		The `TreeViewEvent.BRANCH_OPEN` event type is dispatched when a branch
 		is opened.
 

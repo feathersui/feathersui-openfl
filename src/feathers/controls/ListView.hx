@@ -108,6 +108,11 @@ import openfl._internal.utils.ObjectPool;
 	within the bounds of the item renderer on release, and the list view cannot
 	scroll before release, or the gesture will be ignored.
 
+	@event feathers.events.ListViewEvent.ITEM_DOUBLE_CLICK Dispatched when the
+	user double-clicks an item renderer in the list view with a mouse. The item
+	renderer's `doubleClickEnabled` property must be set to true, and in some
+	cases the same property must be set on its children.
+
 	@see [Tutorial: How to use the ListView component](https://feathersui.com/learn/haxe-openfl/list-view/)
 	@see `feathers.controls.PopUpListView`
 	@see `feathers.controls.ComboBox`
@@ -116,6 +121,7 @@ import openfl._internal.utils.ObjectPool;
 **/
 @:event(openfl.events.Event.CHANGE)
 @:event(feathers.events.ListViewEvent.ITEM_TRIGGER)
+@:event(feathers.events.ListViewEvent.ITEM_DOUBLE_CLICK)
 @:access(feathers.data.ListViewItemState)
 @defaultXmlProperty("dataProvider")
 @:styleContext
@@ -1489,6 +1495,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			itemRenderer.removeEventListener(TriggerEvent.TRIGGER, listView_itemRenderer_triggerHandler);
 			itemRenderer.removeEventListener(MouseEvent.CLICK, listView_itemRenderer_clickHandler);
 			itemRenderer.removeEventListener(TouchEvent.TOUCH_TAP, listView_itemRenderer_touchTapHandler);
+			itemRenderer.removeEventListener(MouseEvent.DOUBLE_CLICK, listView_itemRenderer_doubleClickHandler);
 			itemRenderer.removeEventListener(Event.CHANGE, listView_itemRenderer_changeHandler);
 			itemRenderer.removeEventListener(Event.RESIZE, listView_itemRenderer_resizeHandler);
 			itemRenderer.removeEventListener(MouseEvent.MOUSE_DOWN, listView_itemRenderer_mouseDownHandler);
@@ -1715,6 +1722,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			itemRenderer.addEventListener(TouchEvent.TOUCH_TAP, listView_itemRenderer_touchTapHandler);
 			#end
 		}
+		itemRenderer.addEventListener(MouseEvent.DOUBLE_CLICK, listView_itemRenderer_doubleClickHandler);
 		if ((itemRenderer is IToggle)) {
 			itemRenderer.addEventListener(Event.CHANGE, listView_itemRenderer_changeHandler);
 		}
@@ -1988,6 +1996,22 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			return;
 		}
 		this.handleSelectionChange(state.data, state.index, event.ctrlKey, event.shiftKey);
+	}
+
+	private function listView_itemRenderer_doubleClickHandler(event:MouseEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
+
+		var itemRenderer = cast(event.currentTarget, DisplayObject);
+		if (itemRenderer.parent != this.listViewPort) {
+			return;
+		}
+		var state = this.itemRendererToItemState.get(itemRenderer);
+		if (state == null) {
+			return;
+		}
+		ListViewEvent.dispatch(this, ListViewEvent.ITEM_DOUBLE_CLICK, state);
 	}
 
 	private function listView_itemRenderer_resizeHandler(event:Event):Void {

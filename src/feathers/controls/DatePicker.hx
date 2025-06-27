@@ -85,12 +85,18 @@ import openfl._internal.utils.ObjectPool;
 	within the bounds of the item renderer on release, or the gesture will be
 	ignored.
 
+	@event feathers.events.DatePickerEvent.ITEM_DOUBLE_CLICK Dispatched when the
+	user double-clicks an item renderer in the date picker with a mouse. The item
+	renderer's `doubleClickEnabled` property must be set to true, and in some
+	cases the same property must be set on its children.
+
 	@see [Tutorial: How to use the DatePicker component](https://feathersui.com/learn/haxe-openfl/date-picker/)
 
 	@since 1.0.0
 **/
 @:event(openfl.events.Event.CHANGE)
 @:event(feathers.events.DatePickerEvent.ITEM_TRIGGER)
+@:event(feathers.events.DatePickerEvent.ITEM_DOUBLE_CLICK)
 @:styleContext
 class DatePicker extends FeathersControl implements IDateSelector implements IFocusObject {
 	#if ((!flash && openfl < "9.2.0") || neko)
@@ -1545,6 +1551,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 			dateRenderer.removeEventListener(TriggerEvent.TRIGGER, datePicker_dateRenderer_triggerHandler);
 			dateRenderer.removeEventListener(MouseEvent.CLICK, datePicker_dateRenderer_clickHandler);
 			dateRenderer.removeEventListener(TouchEvent.TOUCH_TAP, datePicker_dateRenderer_touchTapHandler);
+			dateRenderer.removeEventListener(MouseEvent.DOUBLE_CLICK, datePicker_dateRenderer_doubleClickHandler);
 			dateRenderer.removeEventListener(Event.CHANGE, datePicker_dateRenderer_changeHandler);
 			this.resetDateRenderer(dateRenderer, state, storage);
 			if (storage.measurements != null) {
@@ -1611,6 +1618,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 			dateRenderer.addEventListener(TouchEvent.TOUCH_TAP, datePicker_dateRenderer_touchTapHandler);
 			#end
 		}
+		dateRenderer.addEventListener(MouseEvent.DOUBLE_CLICK, datePicker_dateRenderer_doubleClickHandler);
 		if ((dateRenderer is IToggle)) {
 			dateRenderer.addEventListener(Event.CHANGE, datePicker_dateRenderer_changeHandler);
 		}
@@ -2161,6 +2169,22 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 		this.selectedDate = state.date;
 		this.displayedFullYear = this.selectedDate.getFullYear();
 		this.displayedMonth = this.selectedDate.getMonth();
+	}
+
+	private function datePicker_dateRenderer_doubleClickHandler(event:MouseEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
+
+		var dateRenderer = cast(event.currentTarget, DisplayObject);
+		if (dateRenderer.parent != this.dateContainer) {
+			return;
+		}
+		var state = this.dateRendererToItemState.get(dateRenderer);
+		if (state == null) {
+			return;
+		}
+		DatePickerEvent.dispatch(this, DatePickerEvent.ITEM_DOUBLE_CLICK, state);
 	}
 
 	private function datePicker_dateRenderer_changeHandler(event:Event):Void {

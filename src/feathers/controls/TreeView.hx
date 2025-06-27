@@ -135,6 +135,11 @@ import openfl._internal.utils.ObjectPool;
 	within the bounds of the item renderer on release, and the tree view cannot
 	scroll before release, or the gesture will be ignored.
 
+	@event feathers.events.TreeViewEvent.ITEM_DOUBLE_CLICK Dispatched when the
+	user double-clicks an item renderer in the tree view with a mouse. The item
+	renderer's `doubleClickEnabled` property must be set to true, and in some
+	cases the same property must be set on its children.
+
 	@event feathers.events.TreeViewEvent.BRANCH_OPEN Dispatched when a branch
 	is opened.
 
@@ -153,6 +158,7 @@ import openfl._internal.utils.ObjectPool;
 **/
 @:event(openfl.events.Event.CHANGE)
 @:event(feathers.events.TreeViewEvent.ITEM_TRIGGER)
+@:event(feathers.events.TreeViewEvent.ITEM_DOUBLE_CLICK)
 @:event(feathers.events.TreeViewEvent.BRANCH_OPEN)
 @:event(feathers.events.TreeViewEvent.BRANCH_CLOSE)
 @:event(feathers.events.TreeViewEvent.BRANCH_OPENING)
@@ -1438,6 +1444,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			itemRenderer.removeEventListener(TriggerEvent.TRIGGER, treeView_itemRenderer_triggerHandler);
 			itemRenderer.removeEventListener(MouseEvent.CLICK, treeView_itemRenderer_clickHandler);
 			itemRenderer.removeEventListener(TouchEvent.TOUCH_TAP, treeView_itemRenderer_touchTapHandler);
+			itemRenderer.removeEventListener(MouseEvent.DOUBLE_CLICK, treeView_itemRenderer_doubleClickHandler);
 			itemRenderer.removeEventListener(Event.CHANGE, treeView_itemRenderer_changeHandler);
 			itemRenderer.removeEventListener(Event.RESIZE, treeView_itemRenderer_resizeHandler);
 			itemRenderer.removeEventListener(Event.OPEN, treeView_itemRenderer_openHandler);
@@ -1728,6 +1735,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			itemRenderer.addEventListener(TouchEvent.TOUCH_TAP, treeView_itemRenderer_touchTapHandler);
 			#end
 		}
+		itemRenderer.addEventListener(MouseEvent.DOUBLE_CLICK, treeView_itemRenderer_doubleClickHandler);
 		if ((itemRenderer is IToggle)) {
 			itemRenderer.addEventListener(Event.CHANGE, treeView_itemRenderer_changeHandler);
 		}
@@ -2423,6 +2431,21 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			return;
 		}
 		this.handleSelectionChange(state.data, state.location, state.layoutIndex, event.ctrlKey, event.shiftKey);
+	}
+
+	private function treeView_itemRenderer_doubleClickHandler(event:MouseEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
+		var itemRenderer = cast(event.currentTarget, DisplayObject);
+		if (itemRenderer.parent != this.treeViewPort) {
+			return;
+		}
+		var state = this.itemRendererToItemState.get(itemRenderer);
+		if (state == null) {
+			return;
+		}
+		TreeViewEvent.dispatch(this, TreeViewEvent.ITEM_DOUBLE_CLICK, state);
 	}
 
 	private function treeView_itemRenderer_resizeHandler(event:Event):Void {

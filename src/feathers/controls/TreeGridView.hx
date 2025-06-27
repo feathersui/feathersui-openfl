@@ -152,6 +152,11 @@ import openfl._internal.utils.ObjectPool;
 	remain within the bounds of the cell renderer on release, and the tree grid
 	view cannot scroll before release, or the gesture will be ignored.
 
+	@event feathers.events.TreeGridViewEvent.CELL_DOUBLE_CLICK Dispatched when the
+	user double-clicks an cell renderer in the grid view with a mouse. The cell
+	renderer's `doubleClickEnabled` property must be set to true, and in some
+	cases the same property must be set on its children.
+
 	@event feathers.events.TreeGridViewEvent.HEADER_TRIGGER Dispatched when the
 	user taps or clicks a header renderer in the tree grid view. The pointer
 	must remain within the bounds of the header renderer on release, and the
@@ -175,6 +180,7 @@ import openfl._internal.utils.ObjectPool;
 **/
 @:event(openfl.events.Event.CHANGE)
 @:event(feathers.events.TreeGridViewEvent.CELL_TRIGGER)
+@:event(feathers.events.TreeGridViewEvent.CELL_DOUBLE_CLICK)
 @:event(feathers.events.TreeGridViewEvent.HEADER_TRIGGER)
 @:event(feathers.events.TreeGridViewEvent.BRANCH_OPEN)
 @:event(feathers.events.TreeGridViewEvent.BRANCH_CLOSE)
@@ -2048,6 +2054,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 				this.objectDataToRowRenderer.remove(row);
 			}
 			rowRenderer.removeEventListener(TreeGridViewEvent.CELL_TRIGGER, treeGridView_rowRenderer_cellTriggerHandler);
+			rowRenderer.removeEventListener(TreeGridViewEvent.CELL_DOUBLE_CLICK, treeGridView_rowRenderer_cellDoubleClickHandler);
 			rowRenderer.removeEventListener(TriggerEvent.TRIGGER, treeGridView_rowRenderer_triggerHandler);
 			rowRenderer.removeEventListener(Event.OPEN, treeGridView_rowRenderer_openHandler);
 			rowRenderer.removeEventListener(Event.CLOSE, treeGridView_rowRenderer_closeHandler);
@@ -2189,6 +2196,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		this.updateRowRenderer(rowRenderer, state);
 		rowRenderer.treeGridView = this;
 		rowRenderer.addEventListener(TreeGridViewEvent.CELL_TRIGGER, treeGridView_rowRenderer_cellTriggerHandler);
+		rowRenderer.addEventListener(TreeGridViewEvent.CELL_DOUBLE_CLICK, treeGridView_rowRenderer_cellDoubleClickHandler);
 		rowRenderer.addEventListener(TriggerEvent.TRIGGER, treeGridView_rowRenderer_triggerHandler);
 		rowRenderer.addEventListener(Event.OPEN, treeGridView_rowRenderer_openHandler);
 		rowRenderer.addEventListener(Event.CLOSE, treeGridView_rowRenderer_closeHandler);
@@ -2824,6 +2832,14 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	}
 
 	private function treeGridView_rowRenderer_cellTriggerHandler(event:TreeGridViewEvent<TreeGridViewCellState>):Void {
+		var rowRenderer = cast(event.currentTarget, TreeGridViewRowRenderer);
+		if (rowRenderer.parent != this.treeGridViewPort) {
+			return;
+		}
+		this.dispatchEvent(event.clone());
+	}
+
+	private function treeGridView_rowRenderer_cellDoubleClickHandler(event:TreeGridViewEvent<TreeGridViewCellState>):Void {
 		var rowRenderer = cast(event.currentTarget, TreeGridViewRowRenderer);
 		if (rowRenderer.parent != this.treeGridViewPort) {
 			return;

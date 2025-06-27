@@ -707,6 +707,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			cellRenderer.removeEventListener(MouseEvent.CLICK, gridViewRowRenderer_cellRenderer_clickHandler);
 			cellRenderer.removeEventListener(TouchEvent.TOUCH_TAP, gridViewRowRenderer_cellRenderer_touchTapHandler);
 			cellRenderer.removeEventListener(TriggerEvent.TRIGGER, gridViewRowRenderer_cellRenderer_triggerHandler);
+			cellRenderer.removeEventListener(MouseEvent.DOUBLE_CLICK, gridViewRowRenderer_cellRenderer_doubleClickHandler);
 			cellRenderer.removeEventListener(Event.CHANGE, gridViewRowRenderer_cellRenderer_changeHandler);
 			cellRenderer.removeEventListener(Event.RESIZE, gridViewRowRenderer_cellRenderer_resizeHandler);
 			this.resetCellRenderer(cellRenderer, state, storage);
@@ -785,6 +786,7 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			cellRenderer.addEventListener(TouchEvent.TOUCH_TAP, gridViewRowRenderer_cellRenderer_touchTapHandler);
 			#end
 		}
+		cellRenderer.addEventListener(MouseEvent.DOUBLE_CLICK, gridViewRowRenderer_cellRenderer_doubleClickHandler);
 		if ((cellRenderer is IToggle)) {
 			cellRenderer.addEventListener(Event.CHANGE, gridViewRowRenderer_cellRenderer_changeHandler);
 		}
@@ -1013,6 +1015,25 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			return;
 		}
 		GridViewEvent.dispatchForCell(this, GridViewEvent.CELL_TRIGGER, state);
+		this.dispatchEvent(event);
+	}
+
+	private function gridViewRowRenderer_cellRenderer_doubleClickHandler(event:MouseEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
+		var cellRenderer = cast(event.currentTarget, DisplayObject);
+		if (cellRenderer.parent != this) {
+			return;
+		}
+		var state = this._cellRendererToCellState.get(cellRenderer);
+		if (state == null) {
+			return;
+		}
+		if (!this.customHitTest(event.stageX, event.stageY)) {
+			return;
+		}
+		GridViewEvent.dispatchForCell(this, GridViewEvent.CELL_DOUBLE_CLICK, state);
 		this.dispatchEvent(event);
 	}
 

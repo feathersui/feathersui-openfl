@@ -785,6 +785,7 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 			cellRenderer.removeEventListener(MouseEvent.CLICK, treeGridViewRowRenderer_cellRenderer_clickHandler);
 			cellRenderer.removeEventListener(TouchEvent.TOUCH_TAP, treeGridViewRowRenderer_cellRenderer_touchTapHandler);
 			cellRenderer.removeEventListener(TriggerEvent.TRIGGER, treeGridViewRowRenderer_cellRenderer_triggerHandler);
+			cellRenderer.removeEventListener(MouseEvent.DOUBLE_CLICK, treeGridViewRowRenderer_cellRenderer_doubleClickHandler);
 			cellRenderer.removeEventListener(Event.CHANGE, treeGridViewRowRenderer_cellRenderer_changeHandler);
 			cellRenderer.removeEventListener(Event.RESIZE, treeGridViewRowRenderer_cellRenderer_resizeHandler);
 			cellRenderer.removeEventListener(Event.OPEN, treeGridViewRowRenderer_cellRenderer_openHandler);
@@ -865,6 +866,7 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 			cellRenderer.addEventListener(TouchEvent.TOUCH_TAP, treeGridViewRowRenderer_cellRenderer_touchTapHandler);
 			#end
 		}
+		cellRenderer.addEventListener(MouseEvent.DOUBLE_CLICK, treeGridViewRowRenderer_cellRenderer_doubleClickHandler);
 		if ((cellRenderer is IToggle)) {
 			cellRenderer.addEventListener(Event.CHANGE, treeGridViewRowRenderer_cellRenderer_changeHandler);
 		}
@@ -1168,6 +1170,25 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 			return;
 		}
 		TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.CELL_TRIGGER, state);
+		this.dispatchEvent(event);
+	}
+
+	private function treeGridViewRowRenderer_cellRenderer_doubleClickHandler(event:MouseEvent):Void {
+		if (!this._enabled) {
+			return;
+		}
+		var cellRenderer = cast(event.currentTarget, DisplayObject);
+		if (cellRenderer.parent != this) {
+			return;
+		}
+		var state = this._cellRendererToCellState.get(cellRenderer);
+		if (state == null) {
+			return;
+		}
+		if (!this.customHitTest(event.stageX, event.stageY)) {
+			return;
+		}
+		TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.CELL_DOUBLE_CLICK, state);
 		this.dispatchEvent(event);
 	}
 

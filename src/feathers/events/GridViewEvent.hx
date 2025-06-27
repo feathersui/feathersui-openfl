@@ -38,6 +38,14 @@ class GridViewEvent<S> extends Event {
 	public static inline var CELL_TRIGGER:EventType<GridViewEvent<GridViewCellState>> = "cellTrigger";
 
 	/**
+		The `GridViewEvent.CELL_DOUBLE_CLICK` event type is dispatched when a cell
+		renderer is double-clicked with a mouse.
+
+		@since 1.4.0
+	**/
+	public static inline var CELL_DOUBLE_CLICK:EventType<GridViewEvent<GridViewCellState>> = "cellDoubleClick";
+
+	/**
 		The `GridViewEvent.HEADER_TRIGGER` event type is dispatched when a
 		header renderer is clicked or tapped.
 

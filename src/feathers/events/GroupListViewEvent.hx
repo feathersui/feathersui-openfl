@@ -36,6 +36,14 @@ class GroupListViewEvent extends Event {
 	**/
 	public static inline var ITEM_TRIGGER:EventType<GroupListViewEvent> = "itemTrigger";
 
+	/**
+		The `GroupListViewEvent.ITEM_DOUBLE_CLICK` event type is dispatched when an item
+		renderer is double-clicked with a mouse.
+
+		@since 1.4.0
+	**/
+	public static inline var ITEM_DOUBLE_CLICK:EventType<GroupListViewEvent> = "itemDoubleClick";
+
 	#if !flash
 	private static var _pool = new ObjectPool<GroupListViewEvent>(() -> return new GroupListViewEvent(null, null), (event) -> {
 		event.target = null;

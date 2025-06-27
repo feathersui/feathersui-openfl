@@ -36,6 +36,14 @@ class ListViewEvent extends Event {
 	**/
 	public static inline var ITEM_TRIGGER:EventType<ListViewEvent> = "itemTrigger";
 
+	/**
+		The `ListViewEvent.ITEM_DOUBLE_CLICK` event type is dispatched when an item
+		renderer is double-clicked with a mouse.
+
+		@since 1.4.0
+	**/
+	public static inline var ITEM_DOUBLE_CLICK:EventType<ListViewEvent> = "itemDoubleClick";
+
 	#if !flash
 	private static var _pool = new ObjectPool<ListViewEvent>(() -> return new ListViewEvent(null, null), (event) -> {
 		event.target = null;

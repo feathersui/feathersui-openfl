@@ -124,6 +124,11 @@ import openfl._internal.utils.ObjectPool;
 	within the bounds of the cell renderer on release, and the grid view cannot
 	scroll before release, or the gesture will be ignored.
 
+	@event feathers.events.GridViewEvent.CELL_DOUBLE_CLICK Dispatched when the
+	user double-clicks an cell renderer in the grid view with a mouse. The cell
+	renderer's `doubleClickEnabled` property must be set to true, and in some
+	cases the same property must be set on its children.
+
 	@event feathers.events.GridViewEvent.HEADER_TRIGGER Dispatched when the user
 	taps or clicks a header renderer in the grid view. The pointer must remain
 	within the bounds of the header renderer on release, and the grid view cannot
@@ -135,6 +140,7 @@ import openfl._internal.utils.ObjectPool;
 **/
 @:event(openfl.events.Event.CHANGE)
 @:event(feathers.events.GridViewEvent.CELL_TRIGGER)
+@:event(feathers.events.GridViewEvent.CELL_DOUBLE_CLICK)
 @:event(feathers.events.GridViewEvent.HEADER_TRIGGER)
 @:access(feathers.data.GridViewHeaderState)
 @defaultXmlProperty("dataProvider")
@@ -2383,6 +2389,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 				this.objectDataToRowRenderer.remove(item);
 			}
 			rowRenderer.removeEventListener(GridViewEvent.CELL_TRIGGER, gridView_rowRenderer_cellTriggerHandler);
+			rowRenderer.removeEventListener(GridViewEvent.CELL_DOUBLE_CLICK, gridView_rowRenderer_cellDoubleClickHandler);
 			rowRenderer.removeEventListener(TriggerEvent.TRIGGER, gridView_rowRenderer_triggerHandler);
 			rowRenderer.removeEventListener(MouseEvent.MOUSE_DOWN, gridView_rowRenderer_mouseDownHandler);
 			this.resetRowRenderer(rowRenderer, state);
@@ -2496,6 +2503,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		this.updateRowRenderer(rowRenderer, state);
 		rowRenderer.gridView = this;
 		rowRenderer.addEventListener(GridViewEvent.CELL_TRIGGER, gridView_rowRenderer_cellTriggerHandler);
+		rowRenderer.addEventListener(GridViewEvent.CELL_DOUBLE_CLICK, gridView_rowRenderer_cellDoubleClickHandler);
 		rowRenderer.addEventListener(TriggerEvent.TRIGGER, gridView_rowRenderer_triggerHandler);
 		rowRenderer.addEventListener(MouseEvent.MOUSE_DOWN, gridView_rowRenderer_mouseDownHandler);
 		this.rowRendererToRowState.set(rowRenderer, state);
@@ -2980,6 +2988,14 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function gridView_rowRenderer_cellTriggerHandler(event:GridViewEvent<GridViewCellState>):Void {
+		var rowRenderer = cast(event.currentTarget, GridViewRowRenderer);
+		if (rowRenderer.parent != this.gridViewPort) {
+			return;
+		}
+		this.dispatchEvent(event.clone());
+	}
+
+	private function gridView_rowRenderer_cellDoubleClickHandler(event:GridViewEvent<GridViewCellState>):Void {
 		var rowRenderer = cast(event.currentTarget, GridViewRowRenderer);
 		if (rowRenderer.parent != this.gridViewPort) {
 			return;

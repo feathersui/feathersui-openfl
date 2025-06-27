@@ -36,6 +36,14 @@ class DatePickerEvent extends Event {
 	**/
 	public static inline var ITEM_TRIGGER:EventType<DatePickerEvent> = "itemTrigger";
 
+	/**
+		The `DatePickerEvent.ITEM_DOUBLE_CLICK` event type is dispatched when an item
+		renderer is double-clicked with a mouse.
+
+		@since 1.4.0
+	**/
+	public static inline var ITEM_DOUBLE_CLICK:EventType<DatePickerEvent> = "itemDoubleClick";
+
 	#if !flash
 	private static var _pool = new ObjectPool<DatePickerEvent>(() -> return new DatePickerEvent(null, null), (event) -> {
 		event.target = null;
