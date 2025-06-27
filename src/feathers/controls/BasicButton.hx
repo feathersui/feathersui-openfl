@@ -23,6 +23,7 @@ import feathers.utils.MeasurementsUtil;
 import feathers.utils.PointerToState;
 import feathers.utils.PointerTrigger;
 import openfl.display.DisplayObject;
+import openfl.display.InteractiveObject;
 import openfl.events.MouseEvent;
 import openfl.events.TouchEvent;
 
@@ -235,6 +236,13 @@ class BasicButton extends FeathersControl implements ITriggerView implements ISt
 
 		if (stylesInvalid) {
 			this.refreshInteractivity();
+		}
+
+		for (i in 0...numChildren) {
+			var child = getChildAt(i);
+			if ((child is InteractiveObject)) {
+				(cast child : InteractiveObject).doubleClickEnabled = this.doubleClickEnabled;
+			}
 		}
 	}
 
