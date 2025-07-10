@@ -478,7 +478,7 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 			return this._alwaysShowFocus;
 		}
 		var wasFocused = (this._focusManager != null && (this is IFocusObject) && this._focusManager.focus == cast this)
-			|| this._focusRectSkin.parent != null;
+			|| (this._focusRectSkin != null && this._focusRectSkin.parent != null);
 		if (wasFocused) {
 			this.showFocus(false);
 		}
