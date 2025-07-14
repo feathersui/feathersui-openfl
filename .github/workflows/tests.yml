@@ -19,6 +19,7 @@ jobs:
         haxe-version: ${{ matrix.haxe-version }}
     - name: Set up Haxelib dependencies
       run: |
+        haxelib update haxelib --global
         haxelib install lime 7.8.0 --quiet
         haxelib install openfl 8.9.7 --quiet
         haxelib install actuate --quiet
@@ -39,6 +40,7 @@ jobs:
         haxe-version: ${{ matrix.haxe-version }}
     - name: Set up Haxelib dependencies
       run: |
+        haxelib update haxelib --global
         haxelib install lime 8.1.3 --quiet
         haxelib install openfl --quiet
         haxelib install actuate --quiet
@@ -63,6 +65,7 @@ jobs:
         haxe-version: ${{ matrix.haxe-version }}
     - name: Set up Haxelib dependencies
       run: |
+        haxelib update haxelib --global
         haxelib install lime --quiet
         haxelib install openfl --quiet
         haxelib install actuate --quiet
@@ -86,6 +89,7 @@ jobs:
         node-version: '16'
     - name: Set up Haxelib dependencies
       run: |
+        haxelib update haxelib --global
         haxelib install lime --quiet
         haxelib install openfl --quiet
         haxelib install actuate --quiet
@@ -118,6 +122,7 @@ jobs:
         haxe-version: ${{ matrix.haxe-version }}
     - name: Set up Haxelib dependencies
       run: |
+        haxelib update haxelib --global
         haxelib install lime --quiet
         haxelib install openfl --quiet
         haxelib install actuate --quiet
