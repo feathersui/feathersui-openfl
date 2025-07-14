@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: krdlab/setup-haxe@v1
+    - uses: krdlab/setup-haxe@v2
       with:
         haxe-version: ${{ matrix.haxe-version }}
     - name: Set up Haxelib dependencies
@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: krdlab/setup-haxe@v1
+    - uses: krdlab/setup-haxe@v2
       with:
         haxe-version: ${{ matrix.haxe-version }}
     - name: Set up Haxelib dependencies
@@ -58,7 +58,7 @@ jobs:
     runs-on: macos-13
     steps:
     - uses: actions/checkout@v4
-    - uses: krdlab/setup-haxe@v1
+    - uses: krdlab/setup-haxe@v2
       with:
         haxe-version: ${{ matrix.haxe-version }}
     - name: Set up Haxelib dependencies
@@ -78,7 +78,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: krdlab/setup-haxe@v1
+    - uses: krdlab/setup-haxe@v2
       with:
         haxe-version: ${{ matrix.haxe-version }}
     - uses: actions/setup-node@v3
@@ -113,7 +113,7 @@ jobs:
       with:
         air-version: "33.1"
         accept-license: true
-    - uses: krdlab/setup-haxe@v1
+    - uses: krdlab/setup-haxe@v2
       with:
         haxe-version: ${{ matrix.haxe-version }}
     - name: Set up Haxelib dependencies
