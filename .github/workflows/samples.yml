@@ -14,7 +14,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - uses: krdlab/setup-haxe@v2
+    - uses: krdlab/setup-haxe@v1
       with:
         haxe-version: 4.0.5
     - name: Set up Haxelib dependencies
@@ -193,7 +193,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - uses: krdlab/setup-haxe@v2
+    - uses: krdlab/setup-haxe@v1
       with:
         haxe-version: 4.0.5
     - name: Set up Haxelib dependencies
@@ -217,7 +217,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - uses: krdlab/setup-haxe@v2
+    - uses: krdlab/setup-haxe@v1
       with:
         haxe-version: 4.0.5
     - name: Set up Haxelib dependencies
@@ -240,7 +240,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - uses: krdlab/setup-haxe@v2
+    - uses: krdlab/setup-haxe@v1
       with:
         haxe-version: 4.0.5
     - name: Set up Haxelib dependencies
@@ -267,7 +267,7 @@ jobs:
       with:
         air-version: "33.1"
         accept-license: true
-    - uses: krdlab/setup-haxe@v2
+    - uses: krdlab/setup-haxe@v1
       with:
         haxe-version: 4.0.5
     - name: Set up Haxelib dependencies

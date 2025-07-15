@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: krdlab/setup-haxe@v2
+    - uses: krdlab/setup-haxe@v1
       with:
         haxe-version: 4.3.4
     - name: Package Haxelib
@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: krdlab/setup-haxe@v2
+    - uses: krdlab/setup-haxe@v1
       with:
         haxe-version: 4.0.5
     - name: Set up Haxelib dependencies
@@ -51,7 +51,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: krdlab/setup-haxe@v2
+    - uses: krdlab/setup-haxe@v1
       with:
         haxe-version: 4.0.5
     - name: Set up Haxelib dependencies
@@ -72,7 +72,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: krdlab/setup-haxe@v2
+    - uses: krdlab/setup-haxe@v1
       with:
         haxe-version: 4.0.5
     - name: Set up Haxelib dependencies
