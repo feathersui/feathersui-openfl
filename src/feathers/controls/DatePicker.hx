@@ -1237,7 +1237,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 			this.refreshEnabled();
 		}
 
-		if (dataInvalid || selectionInvalid) {
+		if (dataInvalid || selectionInvalid || monthTitleViewFactoryInvalid) {
 			this.refreshMonthTitle();
 		}
 
@@ -1255,6 +1255,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 	}
 
 	private function createMonthTitleView():Void {
+		this.destroyMonthTitleView();
 		var factory = this._monthTitleViewFactory != null ? this._monthTitleViewFactory : defaultMonthTitleViewFactory;
 		this._oldMonthTitleViewFactory = factory;
 		this.monthTitleView = factory.create();
@@ -1274,6 +1275,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 			this._oldMonthTitleViewFactory.destroy(this.monthTitleView);
 		}
 		this._oldMonthTitleViewFactory = null;
+		this.removeChild(this.monthTitleView);
 		this.monthTitleView = null;
 	}
 
@@ -1300,6 +1302,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 			this._oldDecrementMonthButtonFactory.destroy(this.decrementMonthButton);
 		}
 		this._oldDecrementMonthButtonFactory = null;
+		this.removeChild(this.decrementMonthButton);
 		this.decrementMonthButton = null;
 	}
 
@@ -1326,6 +1329,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 			this._oldIncrementMonthButtonFactory.destroy(this.incrementMonthButton);
 		}
 		this._oldIncrementMonthButtonFactory = null;
+		this.removeChild(this.incrementMonthButton);
 		this.incrementMonthButton = null;
 	}
 
@@ -1352,6 +1356,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 			this._oldDecrementYearButtonFactory.destroy(this.decrementYearButton);
 		}
 		this._oldDecrementYearButtonFactory = null;
+		this.removeChild(this.decrementYearButton);
 		this.decrementYearButton = null;
 	}
 
@@ -1378,6 +1383,7 @@ class DatePicker extends FeathersControl implements IDateSelector implements IFo
 			this._oldIncrementYearButtonFactory.destroy(this.incrementYearButton);
 		}
 		this._oldIncrementYearButtonFactory = null;
+		this.removeChild(this.incrementYearButton);
 		this.incrementYearButton = null;
 	}
 
