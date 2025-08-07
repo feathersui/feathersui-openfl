@@ -438,7 +438,7 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 			this.smallPadding = 4.0;
 			this.mediumPadding = 6.0;
 			this.largePadding = 10.0;
-			this.xlargePadding = 14.0;
+			this.xlargePadding = 16.0;
 		}
 	}
 
