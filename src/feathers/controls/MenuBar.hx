@@ -30,7 +30,9 @@ import feathers.layout.LayoutBoundsResult;
 import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
 import feathers.style.IVariantStyleObject;
+import feathers.utils.AbstractDisplayObjectFactory;
 import feathers.utils.AbstractDisplayObjectRecycler;
+import feathers.utils.DisplayObjectFactory;
 import feathers.utils.DisplayObjectRecycler;
 import haxe.ds.ObjectMap;
 import haxe.ds.StringMap;
@@ -121,6 +123,7 @@ import lime.ui.KeyCode;
 @:styleContext
 class MenuBar extends FeathersControl implements IDataSelector<Dynamic> implements IIndexSelector implements IFocusObject {
 	private static final INVALIDATION_FLAG_ITEM_RENDERER_FACTORY = InvalidationFlag.CUSTOM("itemRendererFactory");
+	private static final INVALIDATION_FLAG_MENU_FACTORY = InvalidationFlag.CUSTOM("menuFactory");
 
 	/**
 		The variant used to style the item renderer child components in a theme.
@@ -135,6 +138,8 @@ class MenuBar extends FeathersControl implements IDataSelector<Dynamic> implemen
 		@since 1.4.0
 	**/
 	public static final CHILD_VARIANT_ITEM_RENDERER = "menuBar_itemRenderer";
+
+	private static final defaultMenuFactory = DisplayObjectFactory.withClass(Menu);
 
 	private static final RESET_ITEM_RENDERER_STATE = new MenuItemState();
 
@@ -394,6 +399,42 @@ class MenuBar extends FeathersControl implements IDataSelector<Dynamic> implemen
 		this._separatorStorage.itemRendererRecycler = value;
 		this.setInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
 		return this._separatorStorage.itemRendererRecycler;
+	}
+
+	private var _oldMenuFactory:DisplayObjectFactory<Dynamic, Menu>;
+
+	private var _menuFactory:DisplayObjectFactory<Dynamic, Menu>;
+
+	/**
+		Creates a menu that is displayed as a sub-component. The menu must be of
+		type `feathers.controls.Menu`.
+
+		In the following example, a custom menu factory is provided:
+
+		```haxe
+		menuBar.menuFactory = () ->
+		{
+			return new Menu();
+		};
+		```
+
+		@see `feathers.controls.Menu`
+
+		@since 1.4.0
+	**/
+	public var menuFactory(get, set):AbstractDisplayObjectFactory<Dynamic, Menu>;
+
+	private function get_menuFactory():AbstractDisplayObjectFactory<Dynamic, Menu> {
+		return this._menuFactory;
+	}
+
+	private function set_menuFactory(value:AbstractDisplayObjectFactory<Dynamic, Menu>):AbstractDisplayObjectFactory<Dynamic, Menu> {
+		if (this._menuFactory == value) {
+			return this._menuFactory;
+		}
+		this._menuFactory = value;
+		this.setInvalid(INVALIDATION_FLAG_MENU_FACTORY);
+		return this._menuFactory;
 	}
 
 	private var _forceItemStateUpdate:Bool = false;
@@ -1346,7 +1387,9 @@ class MenuBar extends FeathersControl implements IDataSelector<Dynamic> implemen
 		} else {
 			menuCollection = new ArrayHierarchicalCollection();
 		}
-		this._openedMenu = new Menu();
+		var factory = this._menuFactory != null ? this._menuFactory : defaultMenuFactory;
+		this._oldMenuFactory = factory;
+		this._openedMenu = factory.create();
 		this._openedMenu.menuBarOwner = this;
 		this._openedMenu.menuOwner = null;
 		this._openedMenu.dataProvider = menuCollection;
@@ -1484,6 +1527,9 @@ class MenuBar extends FeathersControl implements IDataSelector<Dynamic> implemen
 			this._openedMenu = null;
 		}
 		this.stage.removeEventListener(KeyboardEvent.KEY_DOWN, menuBar_stage_keyDownHandler);
+		if (this._oldMenuFactory.destroy != null) {
+			this._oldMenuFactory.destroy(menu);
+		}
 
 		if (this._selectedIndex == -1) {
 			// this shouldn't happen
