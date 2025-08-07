@@ -37,7 +37,9 @@ import feathers.layout.IScrollLayout;
 import feathers.layout.IVirtualLayout;
 import feathers.layout.Measurements;
 import feathers.style.IVariantStyleObject;
+import feathers.utils.AbstractDisplayObjectFactory;
 import feathers.utils.AbstractDisplayObjectRecycler;
+import feathers.utils.DisplayObjectFactory;
 import feathers.utils.DisplayObjectRecycler;
 import haxe.ds.ObjectMap;
 import haxe.ds.StringMap;
@@ -141,7 +143,10 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 	**/
 	public static final CHILD_VARIANT_ITEM_RENDERER = "menu_itemRenderer";
 
+	private static final defaultMenuFactory = DisplayObjectFactory.withClass(Menu);
+
 	private static final INVALIDATION_FLAG_ITEM_RENDERER_FACTORY = InvalidationFlag.CUSTOM("itemRendererFactory");
+	private static final INVALIDATION_FLAG_SUB_MENU_FACTORY = InvalidationFlag.CUSTOM("subMenuFactory");
 
 	private static final RESET_ITEM_STATE = new MenuItemState();
 
@@ -520,6 +525,42 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 		this._separatorStorage.measurements = null;
 		this.setInvalid(INVALIDATION_FLAG_ITEM_RENDERER_FACTORY);
 		return this._separatorStorage.itemRendererRecycler;
+	}
+
+	private var _oldSubMenuFactory:DisplayObjectFactory<Dynamic, Menu>;
+
+	private var _subMenuFactory:DisplayObjectFactory<Dynamic, Menu>;
+
+	/**
+		Creates a sub-menu. The sub-menu must be of type
+		`feathers.controls.Menu`.
+
+		In the following example, a custom sub-menu factory is provided:
+
+		```haxe
+		menu.subMenuFactory = () ->
+		{
+			return new Menu();
+		};
+		```
+
+		@see `feathers.controls.Menu`
+
+		@since 1.4.0
+	**/
+	public var subMenuFactory(get, set):AbstractDisplayObjectFactory<Dynamic, Menu>;
+
+	private function get_subMenuFactory():AbstractDisplayObjectFactory<Dynamic, Menu> {
+		return this._subMenuFactory;
+	}
+
+	private function set_subMenuFactory(value:AbstractDisplayObjectFactory<Dynamic, Menu>):AbstractDisplayObjectFactory<Dynamic, Menu> {
+		if (this._subMenuFactory == value) {
+			return this._subMenuFactory;
+		}
+		this._subMenuFactory = value;
+		this.setInvalid(INVALIDATION_FLAG_SUB_MENU_FACTORY);
+		return this._subMenuFactory;
 	}
 
 	private var _forceItemStateUpdate:Bool = false;
@@ -2173,7 +2214,14 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 		var menuLocation = [itemState.index];
 		var menuCollection = new HierarchicalSubCollection(this._dataProvider, menuLocation);
 
-		this._subMenu = new Menu();
+		var factory:DisplayObjectFactory<Dynamic, Menu> = defaultMenuFactory;
+		if (this._subMenuFactory != null) {
+			factory = this._subMenuFactory;
+		} else if (this.menuBarOwner != null && this.menuBarOwner.menuFactory != null) {
+			factory = this.menuBarOwner.menuFactory;
+		}
+		this._oldSubMenuFactory = factory;
+		this._subMenu = factory.create();
 		this._subMenu.menuBarOwner = this.menuBarOwner;
 		this._subMenu.menuOwner = this;
 		this._subMenu.dataProvider = menuCollection;
@@ -2220,7 +2268,9 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 		menu.removeEventListener(MenuEvent.ITEM_TRIGGER, menu_subMenu_itemTriggerHandler);
 		menu.menuBarOwner = null;
 		menu.menuOwner = null;
-		menu.dispose();
+		if (this._oldSubMenuFactory.destroy != null) {
+			this._oldSubMenuFactory.destroy(menu);
+		}
 		if (this._subMenu == menu) {
 			this._subMenu = null;
 		}
