@@ -43,7 +43,10 @@ import feathers.utils.DisplayObjectFactory;
 import feathers.utils.DisplayObjectRecycler;
 import haxe.ds.ObjectMap;
 import haxe.ds.StringMap;
+import motion.easing.Linear;
 import openfl.display.DisplayObject;
+import openfl.display.InteractiveObject;
+import openfl.display.Sprite;
 import openfl.errors.ArgumentError;
 import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
@@ -190,6 +193,7 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 
 		this.tabEnabled = true;
 		this.focusRect = null;
+		this.scrollPolicyY = OFF;
 
 		if (this.viewPort == null) {
 			this.menuViewPort = new AdvancedLayoutViewPort();
@@ -218,6 +222,9 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 		@since 1.4.0
 	**/
 	public var menuBarOwner:MenuBar = null;
+
+	private var _scrollYTopOverlay:InteractiveObject;
+	private var _scrollYBottomOverlay:InteractiveObject;
 
 	private var _subMenu:Menu;
 	private var popUpAdapter:IPopUpAdapter;
@@ -1203,6 +1210,11 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 		return oldStart != this._tempVisibleIndices.start || oldEnd != this._tempVisibleIndices.end;
 	}
 
+	override private function refreshScrollBarValues():Void {
+		super.refreshScrollBarValues();
+		this.refreshScrollOverlays();
+	}
+
 	private function refreshItemRenderers(items:Array<DisplayObject>):Void {
 		this._layoutItems = items;
 
@@ -1596,6 +1608,48 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 		var storage = new ItemRendererStorage(recyclerID, recycler);
 		this._additionalStorage.push(storage);
 		return storage;
+	}
+
+	private function refreshScrollOverlays():Void {
+		if (this.scrollY > this.minScrollY) {
+			if (this._scrollYTopOverlay == null) {
+				var overlay = new Sprite();
+				overlay.graphics.beginFill(0xff00ff, 0.0);
+				overlay.graphics.drawRect(0.0, 0.0, 1.0, 1.0);
+				overlay.graphics.endFill();
+				this._scrollYTopOverlay = overlay;
+				this._scrollYTopOverlay.addEventListener(MouseEvent.ROLL_OVER, menu_scrollYTopOverlay_rollOverHandler);
+				this._scrollYTopOverlay.addEventListener(MouseEvent.ROLL_OUT, menu_scrollYTopOverlay_rollOutHandler);
+				this.addChild(this._scrollYTopOverlay);
+			}
+			this._scrollYTopOverlay.width = this.actualWidth;
+			this._scrollYTopOverlay.height = 20.0;
+			this._scrollYTopOverlay.x = 0.0;
+			this._scrollYTopOverlay.y = 0.0;
+		} else if (this._scrollYTopOverlay != null) {
+			this.removeChild(this._scrollYTopOverlay);
+			this._scrollYTopOverlay = null;
+		}
+
+		if (this.scrollY < this.maxScrollY) {
+			if (this._scrollYBottomOverlay == null) {
+				var overlay = new Sprite();
+				overlay.graphics.beginFill(0xff00ff, 0.0);
+				overlay.graphics.drawRect(0.0, 0.0, 1.0, 1.0);
+				overlay.graphics.endFill();
+				this._scrollYBottomOverlay = overlay;
+				this._scrollYBottomOverlay.addEventListener(MouseEvent.ROLL_OVER, menu_scrollYBottomOverlay_rollOverHandler);
+				this._scrollYBottomOverlay.addEventListener(MouseEvent.ROLL_OUT, menu_scrollYBottomOverlay_rollOutHandler);
+				this.addChild(this._scrollYBottomOverlay);
+			}
+			this._scrollYBottomOverlay.width = this.actualWidth;
+			this._scrollYBottomOverlay.height = 20.0;
+			this._scrollYBottomOverlay.x = 0.0;
+			this._scrollYBottomOverlay.y = this.actualHeight - this._scrollYBottomOverlay.height;
+		} else if (this._scrollYBottomOverlay != null) {
+			this.removeChild(this._scrollYBottomOverlay);
+			this._scrollYBottomOverlay = null;
+		}
 	}
 
 	private function showAtOriginInternal(origin:DisplayObject):Void {
@@ -2312,6 +2366,26 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 			target = target.parent;
 		}
 		this.close();
+	}
+
+	private function menu_scrollYTopOverlay_rollOverHandler(event:MouseEvent):Void {
+		var offsetY = this.scrollY - this.minScrollY;
+		var duration = offsetY / 200.0;
+		this.scroller.throwTo(this.scrollX, this.minScrollY, duration, Linear.easeNone);
+	}
+
+	private function menu_scrollYTopOverlay_rollOutHandler(event:MouseEvent):Void {
+		this.scroller.stop();
+	}
+
+	private function menu_scrollYBottomOverlay_rollOverHandler(event:MouseEvent):Void {
+		var offsetY = this.maxScrollY - this.scrollY;
+		var duration = offsetY / 200.0;
+		this.scroller.throwTo(this.scrollX, this.maxScrollY, duration, Linear.easeNone);
+	}
+
+	private function menu_scrollYBottomOverlay_rollOutHandler(event:MouseEvent):Void {
+		this.scroller.stop();
 	}
 }
 
