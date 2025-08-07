@@ -126,6 +126,32 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		return this._fitContentToOriginWidth;
 	}
 
+	private var _fitContentToGlobalHeight:Bool = true;
+
+	/**
+		Determines if the `height` or `maxHeight` of the content is adjusted to
+		match the height of the stage, when the content is larger than the
+		stage.
+
+		@since 1.4.0
+	**/
+	public var fitContentToGlobalHeight(get, set):Bool;
+
+	private function get_fitContentToGlobalHeight():Bool {
+		return this._fitContentToGlobalHeight;
+	}
+
+	private function set_fitContentToGlobalHeight(value:Bool):Bool {
+		if (this._fitContentToGlobalHeight == value) {
+			return this._fitContentToGlobalHeight;
+		}
+		this._fitContentToGlobalHeight = value;
+		if (this.active) {
+			this.layout();
+		}
+		return this._fitContentToGlobalHeight;
+	}
+
 	/**
 		@see `feathers.controls.popups.IPopUpAdapter.persistent`
 	**/
@@ -259,6 +285,22 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 				hasSetMinWidth = true;
 			}
 		}
+
+		var stageTopLeft = new Point();
+		stageTopLeft = popUpRoot.globalToLocal(stageTopLeft);
+		var stageBottomRight = new Point(this._stage.stageWidth, this._stage.stageHeight);
+		stageBottomRight = popUpRoot.globalToLocal(stageBottomRight);
+
+		var globalHeight = Math.max(0.0, stageBottomRight.y - stageTopLeft.y);
+
+		var hasSetMaxHeight = false;
+		if (this._fitContentToGlobalHeight && (this.content is IMeasureObject)) {
+			var measureContent:IMeasureObject = cast this.content;
+			if (measureContent.maxHeight > globalHeight) {
+				measureContent.maxHeight = globalHeight;
+				hasSetMaxHeight = true;
+			}
+		}
 		var oldIgnoreContentResizing = this._ignoreContentResizing;
 		this._ignoreContentResizing = true;
 		if ((this.content is IValidating)) {
@@ -267,10 +309,10 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		if (this._fitContentToOriginWidth && !hasSetMinWidth && this.content.width < originWidth) {
 			this.content.width = originWidth;
 		}
+		if (this._fitContentToGlobalHeight && !hasSetMaxHeight && this.content.height > globalHeight) {
+			this.content.height = globalHeight;
+		}
 		this._ignoreContentResizing = oldIgnoreContentResizing;
-
-		var stageTopLeft = popUpRoot.globalToLocal(new Point());
-		var stageBottomRight = popUpRoot.globalToLocal(new Point(this._stage.stageWidth, this._stage.stageHeight));
 
 		var contentX = originTopLeft.x;
 		if (contentX < stageTopLeft.x) {
