@@ -93,6 +93,13 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 	**/
 	public var modal:Bool = false;
 
+	/**
+		Used to optionally provide a custom overlay when opening the pop-up.
+
+		@since 1.4.0
+	**/
+	public var customOverlayFactory:() -> DisplayObject;
+
 	private var _fitContentToOriginWidth:Bool = true;
 
 	/**
@@ -166,7 +173,7 @@ class DropDownPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		this.origin = origin;
 		this.origin.addEventListener(Event.RESIZE, dropDownPopUpAdapter_origin_resizeHandler, false, 0, true);
 		this.origin.addEventListener(Event.REMOVED_FROM_STAGE, dropDownPopUpAdapter_origin_removedFromStageHandler, false, 0, true);
-		PopUpManager.addPopUp(this.content, this.origin, this.modal, false);
+		PopUpManager.addPopUp(this.content, this.origin, this.modal, false, this.customOverlayFactory);
 		if (!this.active) {
 			// it's possible to immediately close this adapter in an
 			// ADDED_TO_STAGE listener. in that case, we should not continue

@@ -61,6 +61,13 @@ class CalloutPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 	**/
 	public var modal:Bool = false;
 
+	/**
+		Used to optionally provide a custom overlay when opening the pop-up.
+
+		@since 1.4.0
+	**/
+	public var customOverlayFactory:() -> DisplayObject;
+
 	private var _fitContentToOriginWidth:Bool = false;
 
 	/**
@@ -111,7 +118,7 @@ class CalloutPopUpAdapter extends EventDispatcher implements IPopUpAdapter {
 		this.content = content;
 		this.origin = origin;
 
-		this.callout = Callout.show(this.content, this.origin, null, this.modal);
+		this.callout = Callout.show(this.content, this.origin, null, this.modal, this.customOverlayFactory);
 		this.callout.closeOnPointerOutside = false;
 
 		if (!this.active) {
