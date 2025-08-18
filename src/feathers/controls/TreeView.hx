@@ -297,7 +297,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		return this._childFocusEnabled;
 	}
 
-	private var openBranches:Array<Dynamic> = [];
+	private var _openBranches:Array<Dynamic> = [];
 
 	private var _dataProvider:IHierarchicalCollection<Dynamic>;
 
@@ -392,9 +392,9 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		#end
 		this._totalLayoutCount = 0;
 		#if (hl && haxe_ver < 4.3)
-		this.openBranches.splice(0, this.openBranches.length);
+		this._openBranches.splice(0, this._openBranches.length);
 		#else
-		this.openBranches.resize(0);
+		this._openBranches.resize(0);
 		#end
 		if (this._dataProvider != null) {
 			this._dataProvider.removeEventListener(Event.CHANGE, treeView_dataProvider_changeHandler);
@@ -1099,6 +1099,26 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		var layoutIndex = this.locationToDisplayIndex(location, false);
 		this.toggleChildrenOfInternal(branch, location, layoutIndex, open);
 		this._totalLayoutCount = this.calculateTotalLayoutCount([]);
+	}
+
+	/**
+		Returns an array containing all of the the currently open branches.
+
+		@see `TreeView.isBranchOpen()`
+		@see `TreeView.toggleBranch()`
+		@see `TreeView.toggleChildrenOf()`
+
+		@since 1.4.0
+	**/
+	public function getOpenBranches(?result:Array<Dynamic>):Array<Dynamic> {
+		if (result == null) {
+			return this._openBranches.copy();
+		}
+		result.resize(0);
+		for (openBranch in this._openBranches) {
+			result.push(openBranch);
+		}
+		return result;
 	}
 
 	/**
@@ -1811,7 +1831,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		if (!this._dataProvider.isBranch(item)) {
 			return false;
 		}
-		return this.openBranches.indexOf(item) != -1;
+		return this._openBranches.indexOf(item) != -1;
 	}
 
 	private function calculateTotalLayoutCount(location:Array<Int>):Int {
@@ -2236,7 +2256,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			this.populateCurrentItemState(branch, location, layoutIndex, state, true);
 			var result = TreeViewEvent.dispatch(this, TreeViewEvent.BRANCH_OPENING, state, true);
 			if (result) {
-				this.openBranches.push(branch);
+				this._openBranches.push(branch);
 				this.populateCurrentItemState(branch, location, layoutIndex, state, true);
 				layoutIndex = insertChildrenIntoVirtualCache(location, layoutIndex);
 				if (itemRenderer != null) {
@@ -2254,7 +2274,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			this.populateCurrentItemState(branch, location, layoutIndex, state, true);
 			var result = TreeViewEvent.dispatch(this, TreeViewEvent.BRANCH_CLOSING, state, true);
 			if (result) {
-				this.openBranches.remove(branch);
+				this._openBranches.remove(branch);
 				this.populateCurrentItemState(branch, location, layoutIndex, state, true);
 				removeChildrenFromVirtualCache(location, layoutIndex);
 				if (itemRenderer != null) {
@@ -2291,19 +2311,19 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		if (removedItem == null) {
 			return;
 		}
-		var i = this.openBranches.length - 1;
+		var i = this._openBranches.length - 1;
 		while (i >= 0) {
-			var openBranch = this.openBranches[i];
+			var openBranch = this._openBranches[i];
 			if (openBranch == removedItem) {
 				if (removedItem != addedItem) {
-					this.openBranches.splice(i, 1);
+					this._openBranches.splice(i, 1);
 				}
 				continue;
 			}
 			var location = this._dataProvider.locationOf(openBranch);
 			if (location == null) {
 				// remove references to branches that no longer exist
-				this.openBranches.splice(i, 1);
+				this._openBranches.splice(i, 1);
 			}
 			i--;
 		}
@@ -2581,9 +2601,9 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 
 	private function treeView_dataProvider_removeAllHandler(event:HierarchicalCollectionEvent):Void {
 		#if (hl && haxe_ver < 4.3)
-		this.openBranches.splice(0, this.openBranches.length);
+		this._openBranches.splice(0, this._openBranches.length);
 		#else
-		this.openBranches.resize(0);
+		this._openBranches.resize(0);
 		#end
 
 		// use the setter
@@ -2592,9 +2612,9 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 
 	private function treeView_dataProvider_resetHandler(event:HierarchicalCollectionEvent):Void {
 		#if (hl && haxe_ver < 4.3)
-		this.openBranches.splice(0, this.openBranches.length);
+		this._openBranches.splice(0, this._openBranches.length);
 		#else
-		this.openBranches.resize(0);
+		this._openBranches.resize(0);
 		#end
 
 		// use the setter

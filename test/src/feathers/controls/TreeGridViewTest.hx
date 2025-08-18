@@ -273,6 +273,65 @@ import utest.Test;
 		Assert.isNull(this._treeGridView.selectedItem);
 	}
 
+	public function testToggleBranch():Void {
+		var item0_0 = {text: "1-A"};
+		var item0_1 = {text: "1-B"};
+		var item0 = {text: "One", children: [item0_0, item0_1]}
+		var item1_0_0 = {text: "2-A-1"};
+		var item1_0 = {text: "2-A", children: [item1_0_0]};
+		var item1 = {text: "Two", children: [item1_0]}
+		var items:Array<Dynamic> = [item0, item1];
+		this._treeGridView.dataProvider = new ArrayHierarchicalCollection(items, (item:Dynamic) -> item.children);
+		Assert.isFalse(this._treeGridView.isBranchOpen(item0));
+		Assert.isFalse(this._treeGridView.isBranchOpen(item1));
+		Assert.isFalse(this._treeGridView.isBranchOpen(item1_0));
+		Assert.isTrue(this._treeGridView.getOpenBranches().indexOf(item0) == -1);
+		Assert.isTrue(this._treeGridView.getOpenBranches().indexOf(item1) == -1);
+		Assert.isTrue(this._treeGridView.getOpenBranches().indexOf(item1_0) == -1);
+		this._treeGridView.toggleBranch(item1, true);
+		Assert.isFalse(this._treeGridView.isBranchOpen(item0));
+		Assert.isTrue(this._treeGridView.isBranchOpen(item1));
+		Assert.isFalse(this._treeGridView.isBranchOpen(item1_0));
+		Assert.isTrue(this._treeGridView.getOpenBranches().indexOf(item0) == -1);
+		Assert.isFalse(this._treeGridView.getOpenBranches().indexOf(item1) == -1);
+		Assert.isTrue(this._treeGridView.getOpenBranches().indexOf(item1_0) == -1);
+		this._treeGridView.toggleBranch(item1_0, true);
+		Assert.isFalse(this._treeGridView.isBranchOpen(item0));
+		Assert.isTrue(this._treeGridView.isBranchOpen(item1));
+		Assert.isTrue(this._treeGridView.isBranchOpen(item1_0));
+		Assert.isTrue(this._treeGridView.getOpenBranches().indexOf(item0) == -1);
+		Assert.isFalse(this._treeGridView.getOpenBranches().indexOf(item1) == -1);
+		Assert.isFalse(this._treeGridView.getOpenBranches().indexOf(item1_0) == -1);
+		this._treeGridView.toggleBranch(item0, true);
+		Assert.isTrue(this._treeGridView.isBranchOpen(item0));
+		Assert.isTrue(this._treeGridView.isBranchOpen(item1));
+		Assert.isTrue(this._treeGridView.isBranchOpen(item1_0));
+		Assert.isFalse(this._treeGridView.getOpenBranches().indexOf(item0) == -1);
+		Assert.isFalse(this._treeGridView.getOpenBranches().indexOf(item1) == -1);
+		Assert.isFalse(this._treeGridView.getOpenBranches().indexOf(item1_0) == -1);
+		this._treeGridView.toggleBranch(item1, false);
+		Assert.isTrue(this._treeGridView.isBranchOpen(item0));
+		Assert.isFalse(this._treeGridView.isBranchOpen(item1));
+		Assert.isTrue(this._treeGridView.isBranchOpen(item1_0));
+		Assert.isFalse(this._treeGridView.getOpenBranches().indexOf(item0) == -1);
+		Assert.isTrue(this._treeGridView.getOpenBranches().indexOf(item1) == -1);
+		Assert.isFalse(this._treeGridView.getOpenBranches().indexOf(item1_0) == -1);
+		this._treeGridView.toggleBranch(item0, false);
+		Assert.isFalse(this._treeGridView.isBranchOpen(item0));
+		Assert.isFalse(this._treeGridView.isBranchOpen(item1));
+		Assert.isTrue(this._treeGridView.isBranchOpen(item1_0));
+		Assert.isTrue(this._treeGridView.getOpenBranches().indexOf(item0) == -1);
+		Assert.isTrue(this._treeGridView.getOpenBranches().indexOf(item1) == -1);
+		Assert.isFalse(this._treeGridView.getOpenBranches().indexOf(item1_0) == -1);
+		this._treeGridView.toggleBranch(item1_0, false);
+		Assert.isFalse(this._treeGridView.isBranchOpen(item0));
+		Assert.isFalse(this._treeGridView.isBranchOpen(item1));
+		Assert.isFalse(this._treeGridView.isBranchOpen(item1_0));
+		Assert.isTrue(this._treeGridView.getOpenBranches().indexOf(item0) == -1);
+		Assert.isTrue(this._treeGridView.getOpenBranches().indexOf(item1) == -1);
+		Assert.isTrue(this._treeGridView.getOpenBranches().indexOf(item1_0) == -1);
+	}
+
 	public function testUpdateItemSetsInterfaceProperties():Void {
 		var children:Array<Dynamic> = [{text: "One"}, {text: "Two", children: []}, {text: "Three"}];
 		var items:Array<Dynamic> = [{text: "A", children: children}];
@@ -818,8 +877,10 @@ import utest.Test;
 		this._treeGridView.dataProvider = dataProvider;
 		this._treeGridView.toggleBranch(branch, true);
 		Assert.isTrue(this._treeGridView.isBranchOpen(branch));
+		Assert.isFalse(this._treeGridView.getOpenBranches().indexOf(branch) == -1);
 		dataProvider.remove(branch);
 		Assert.isFalse(this._treeGridView.isBranchOpen(branch));
+		Assert.isTrue(this._treeGridView.getOpenBranches().indexOf(branch) == -1);
 	}
 
 	public function testRemoveParentOfOpenedBranch():Void {
@@ -833,10 +894,14 @@ import utest.Test;
 		this._treeGridView.toggleBranch(branch, true);
 		this._treeGridView.toggleBranch(childBranch, true);
 		Assert.isTrue(this._treeGridView.isBranchOpen(branch));
+		Assert.isFalse(this._treeGridView.getOpenBranches().indexOf(branch) == -1);
 		Assert.isTrue(this._treeGridView.isBranchOpen(childBranch));
+		Assert.isFalse(this._treeGridView.getOpenBranches().indexOf(childBranch) == -1);
 		dataProvider.remove(branch);
 		Assert.isFalse(this._treeGridView.isBranchOpen(branch));
+		Assert.isTrue(this._treeGridView.getOpenBranches().indexOf(branch) == -1);
 		Assert.isFalse(this._treeGridView.isBranchOpen(childBranch));
+		Assert.isTrue(this._treeGridView.getOpenBranches().indexOf(childBranch) == -1);
 	}
 
 	public function testRemoveAllWithOpenedBranch():Void {
@@ -848,8 +913,10 @@ import utest.Test;
 		this._treeGridView.dataProvider = dataProvider;
 		this._treeGridView.toggleBranch(branch, true);
 		Assert.isTrue(this._treeGridView.isBranchOpen(branch));
+		Assert.isFalse(this._treeGridView.getOpenBranches().indexOf(branch) == -1);
 		dataProvider.removeAll();
 		Assert.isFalse(this._treeGridView.isBranchOpen(branch));
+		Assert.isTrue(this._treeGridView.getOpenBranches().indexOf(branch) == -1);
 	}
 
 	public function testResetWithOpenedBranch():Void {
@@ -861,8 +928,10 @@ import utest.Test;
 		this._treeGridView.dataProvider = dataProvider;
 		this._treeGridView.toggleBranch(branch, true);
 		Assert.isTrue(this._treeGridView.isBranchOpen(branch));
+		Assert.isFalse(this._treeGridView.getOpenBranches().indexOf(branch) == -1);
 		dataProvider.array = [];
 		Assert.isFalse(this._treeGridView.isBranchOpen(branch));
+		Assert.isTrue(this._treeGridView.getOpenBranches().indexOf(branch) == -1);
 	}
 
 	public function testNewDataProviderWithOpenedBranch():Void {
@@ -874,8 +943,10 @@ import utest.Test;
 		this._treeGridView.dataProvider = dataProvider;
 		this._treeGridView.toggleBranch(branch, true);
 		Assert.isTrue(this._treeGridView.isBranchOpen(branch));
+		Assert.isFalse(this._treeGridView.getOpenBranches().indexOf(branch) == -1);
 		this._treeGridView.dataProvider = new ArrayHierarchicalCollection([], (item:Dynamic) -> item.children);
 		Assert.isFalse(this._treeGridView.isBranchOpen(branch));
+		Assert.isTrue(this._treeGridView.getOpenBranches().indexOf(branch) == -1);
 	}
 
 	public function testDefaultTextUpdateForColumnRecyclers():Void {

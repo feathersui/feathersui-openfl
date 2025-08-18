@@ -380,7 +380,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		return this._childFocusEnabled;
 	}
 
-	private var openBranches:Array<Dynamic> = [];
+	private var _openBranches:Array<Dynamic> = [];
 
 	private var treeGridViewPort:AdvancedLayoutViewPort;
 	private var _dataProvider:IHierarchicalCollection<Dynamic>;
@@ -442,9 +442,9 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		#end
 		this._totalRowLayoutCount = 0;
 		#if (hl && haxe_ver < 4.3)
-		this.openBranches.splice(0, this.openBranches.length);
+		this._openBranches.splice(0, this._openBranches.length);
 		#else
-		this.openBranches.resize(0);
+		this._openBranches.resize(0);
 		#end
 		if (this._dataProvider != null) {
 			this._dataProvider.removeEventListener(Event.CHANGE, treeGridView_dataProvider_changeHandler);
@@ -1234,6 +1234,26 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		var layoutIndex = this.locationToDisplayIndex(location, false);
 		this.toggleChildrenOfInternal(branch, location, layoutIndex, open);
 		this._totalRowLayoutCount = this.calculateTotalLayoutCount([]);
+	}
+
+	/**
+		Returns an array containing all of the the currently open branches.
+
+		@see `TreeGridView.isBranchOpen()`
+		@see `TreeGridView.toggleBranch()`
+		@see `TreeGridView.toggleChildrenOf()`
+
+		@since 1.4.0
+	**/
+	public function getOpenBranches(?result:Array<Dynamic>):Array<Dynamic> {
+		if (result == null) {
+			return this._openBranches.copy();
+		}
+		result.resize(0);
+		for (openBranch in this._openBranches) {
+			result.push(openBranch);
+		}
+		return result;
 	}
 
 	/**
@@ -2326,7 +2346,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			state.branch = branch;
 			changed = true;
 		}
-		var opened = state.branch && (this.openBranches.indexOf(item) != -1);
+		var opened = state.branch && (this._openBranches.indexOf(item) != -1);
 		if (force || state.opened != opened) {
 			state.opened = opened;
 			changed = true;
@@ -2720,7 +2740,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			this.populateCurrentRowCellState(branch, location, null, -1, layoutIndex, cellState, true);
 			var result = TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.BRANCH_OPENING, cellState, true);
 			if (result) {
-				this.openBranches.push(branch);
+				this._openBranches.push(branch);
 				this.populateCurrentRowState(branch, location, layoutIndex, state, true);
 				layoutIndex = insertChildrenIntoVirtualCache(location, layoutIndex);
 				if (rowRenderer != null) {
@@ -2737,7 +2757,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			this.populateCurrentRowCellState(branch, location, null, -1, layoutIndex, cellState, true);
 			var result = TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.BRANCH_CLOSING, cellState, true);
 			if (result) {
-				this.openBranches.remove(branch);
+				this._openBranches.remove(branch);
 				this.populateCurrentRowState(branch, location, layoutIndex, state, true);
 				removeChildrenFromVirtualCache(location, layoutIndex);
 				if (rowRenderer != null) {
@@ -2774,19 +2794,19 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		if (removedItem == null) {
 			return;
 		}
-		var i = this.openBranches.length - 1;
+		var i = this._openBranches.length - 1;
 		while (i >= 0) {
-			var openBranch = this.openBranches[i];
+			var openBranch = this._openBranches[i];
 			if (openBranch == removedItem) {
 				if (removedItem != addedItem) {
-					this.openBranches.splice(i, 1);
+					this._openBranches.splice(i, 1);
 				}
 				continue;
 			}
 			var location = this._dataProvider.locationOf(openBranch);
 			if (location == null) {
 				// remove references to branches that no longer exist
-				this.openBranches.splice(i, 1);
+				this._openBranches.splice(i, 1);
 			}
 			i--;
 		}
@@ -2947,9 +2967,9 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 
 	private function treeGridView_dataProvider_removeAllHandler(event:HierarchicalCollectionEvent):Void {
 		#if (hl && haxe_ver < 4.3)
-		this.openBranches.splice(0, this.openBranches.length);
+		this._openBranches.splice(0, this._openBranches.length);
 		#else
-		this.openBranches.resize(0);
+		this._openBranches.resize(0);
 		#end
 		// use the setter
 		this.selectedLocation = null;
@@ -2957,9 +2977,9 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 
 	private function treeGridView_dataProvider_resetHandler(event:HierarchicalCollectionEvent):Void {
 		#if (hl && haxe_ver < 4.3)
-		this.openBranches.splice(0, this.openBranches.length);
+		this._openBranches.splice(0, this._openBranches.length);
 		#else
-		this.openBranches.resize(0);
+		this._openBranches.resize(0);
 		#end
 		// use the setter
 		this.selectedLocation = null;
@@ -3277,7 +3297,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		if (!this._dataProvider.isBranch(item)) {
 			return false;
 		}
-		return this.openBranches.indexOf(item) != -1;
+		return this._openBranches.indexOf(item) != -1;
 	}
 
 	private function calculateTotalLayoutCount(location:Array<Int>):Int {
