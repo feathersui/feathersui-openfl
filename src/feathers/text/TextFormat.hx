@@ -167,6 +167,29 @@ class TextFormat extends EventDispatcher {
 		return this._textFormat.underline;
 	}
 
+	#if (openfl >= "9.5.0")
+	/**
+		@see [`openfl.text.TextFormat.strikethrough`](https://api.openfl.org/openfl/text/TextFormat.html#strikethrough)
+	**/
+	@:bindable("change")
+	public var strikethrough(get, set):Null<Bool>;
+
+	private function get_strikethrough():Null<Bool> {
+		return this._textFormat.strikethrough;
+	}
+
+	private function set_strikethrough(value:Null<Bool>):Null<Bool> {
+		if (this._textFormat.strikethrough == value) {
+			return this._textFormat.strikethrough;
+		}
+		// create a copy so that it won't pass equality checks
+		this._textFormat = TextFormatUtil.clone(this._textFormat);
+		this._textFormat.strikethrough = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._textFormat.strikethrough;
+	}
+	#end
+
 	/**
 		@see [`openfl.text.TextFormat.url`](https://api.openfl.org/openfl/text/TextFormat.html#url)
 	**/
@@ -430,6 +453,9 @@ class TextFormat extends EventDispatcher {
 		clone._textFormat.bullet = this.bullet;
 		clone._textFormat.kerning = this.kerning;
 		clone._textFormat.letterSpacing = this.letterSpacing;
+		#if (openfl >= "9.5.0")
+		clone._textFormat.strikethrough = this.strikethrough;
+		#end
 		clone._textFormat.tabStops = this.tabStops;
 		return clone;
 	}
@@ -453,7 +479,7 @@ class TextFormat extends EventDispatcher {
 	@since 1.0.0
 **/
 @:forward(font, size, color, bold, italic, underline, url, target, align, leftMargin, rightMargin, indent, leading, blockIndent, bullet, kerning,
-	letterSpacing, tabStops, clone)
+	letterSpacing, tabStops, clone #if (openfl >= "9.5.0"), strikethrough #end)
 abstract AbstractTextFormat(TextFormat) from TextFormat to TextFormat {
 	/**
 		Converts an `openfl.text.TextFormat` value to a
@@ -472,6 +498,9 @@ abstract AbstractTextFormat(TextFormat) from TextFormat to TextFormat {
 		clone.bullet = textFormat.bullet;
 		clone.kerning = textFormat.kerning;
 		clone.letterSpacing = textFormat.letterSpacing;
+		#if (openfl >= "9.5.0")
+		clone.strikethrough = textFormat.strikethrough;
+		#end
 		clone.tabStops = textFormat.tabStops;
 		return clone;
 	}
