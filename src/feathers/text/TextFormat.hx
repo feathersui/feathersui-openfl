@@ -166,7 +166,7 @@ class TextFormat extends EventDispatcher {
 		return this._textFormat.underline;
 	}
 
-	#if (openfl >= "9.5.0")
+	#if (openfl >= "9.5.0" && !flash)
 	/**
 		@see [`openfl.text.TextFormat.strikethrough`](https://api.openfl.org/openfl/text/TextFormat.html#strikethrough)
 	**/
@@ -452,7 +452,7 @@ class TextFormat extends EventDispatcher {
 		clone._textFormat.bullet = this.bullet;
 		clone._textFormat.kerning = this.kerning;
 		clone._textFormat.letterSpacing = this.letterSpacing;
-		#if (openfl >= "9.5.0")
+		#if (openfl >= "9.5.0" && !flash)
 		clone._textFormat.strikethrough = this.strikethrough;
 		#end
 		clone._textFormat.tabStops = this.tabStops;
@@ -478,7 +478,7 @@ class TextFormat extends EventDispatcher {
 	@since 1.0.0
 **/
 @:forward(font, size, color, bold, italic, underline, url, target, align, leftMargin, rightMargin, indent, leading, blockIndent, bullet, kerning,
-	letterSpacing, tabStops, clone #if (openfl >= "9.5.0"), strikethrough #end)
+	letterSpacing, tabStops, clone #if (openfl >= "9.5.0" && !flash), strikethrough #end)
 abstract AbstractTextFormat(TextFormat) from TextFormat to TextFormat {
 	/**
 		Converts an `openfl.text.TextFormat` value to a
@@ -497,7 +497,7 @@ abstract AbstractTextFormat(TextFormat) from TextFormat to TextFormat {
 		clone.bullet = textFormat.bullet;
 		clone.kerning = textFormat.kerning;
 		clone.letterSpacing = textFormat.letterSpacing;
-		#if (openfl >= "9.5.0")
+		#if (openfl >= "9.5.0" && !flash)
 		clone.strikethrough = textFormat.strikethrough;
 		#end
 		clone.tabStops = textFormat.tabStops;
