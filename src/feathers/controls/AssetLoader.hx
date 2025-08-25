@@ -188,7 +188,7 @@ class AssetLoader extends FeathersControl {
 						this.addChild(bitmap);
 						this.content = bitmap;
 						this.setInvalid(DATA);
-						this.dispatchEvent(new Event(Event.COMPLETE));
+						FeathersEvent.dispatch(this, Event.COMPLETE);
 					}).onError((event:Dynamic) -> {
 						this.dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
 					});
@@ -217,7 +217,7 @@ class AssetLoader extends FeathersControl {
 						this.addChild(movieClip);
 						this.content = movieClip;
 						this.setInvalid(DATA);
-						this.dispatchEvent(new Event(Event.COMPLETE));
+						FeathersEvent.dispatch(this, Event.COMPLETE);
 					}).onError((event:Dynamic) -> {
 						this.dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
 					});
