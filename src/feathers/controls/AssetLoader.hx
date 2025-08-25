@@ -10,6 +10,7 @@ package feathers.controls;
 
 import feathers.core.FeathersControl;
 import feathers.core.IValidating;
+import feathers.events.FeathersEvent;
 import feathers.layout.Measurements;
 import feathers.skins.RectangleSkin;
 import feathers.utils.ScaleUtil;
@@ -171,6 +172,7 @@ class AssetLoader extends FeathersControl {
 					this._contentMeasurements.save(bitmap);
 					this.addChild(bitmap);
 					this.content = bitmap;
+					FeathersEvent.dispatch(this, Event.COMPLETE);
 				} else // async
 				{
 					var future = Assets.loadBitmapData(this._source);
@@ -200,6 +202,7 @@ class AssetLoader extends FeathersControl {
 					this._contentMeasurements.save(movieClip);
 					this.addChild(movieClip);
 					this.content = movieClip;
+					FeathersEvent.dispatch(this, Event.COMPLETE);
 				} else // async
 				{
 					var future = Assets.loadMovieClip(this._source);
