@@ -8,6 +8,8 @@
 
 package feathers.controls;
 
+import feathers.controls.dataRenderers.IHierarchicalItemRenderer;
+import feathers.controls.dataRenderers.DrillDownItemRenderer;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.IMenuItemRenderer;
 import feathers.controls.dataRenderers.ItemRenderer;
@@ -654,7 +656,7 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 		return this._itemRendererRecyclerIDFunction;
 	}
 
-	private var _defaultStorage = new ItemRendererStorage(null, DisplayObjectRecycler.withClass(ItemRenderer));
+	private var _defaultStorage = new ItemRendererStorage(null, DisplayObjectRecycler.withClass(DrillDownItemRenderer));
 	private var _separatorStorage = new ItemRendererStorage("__menu_separator", DisplayObjectRecycler.withClass(HRule));
 	private var _additionalStorage:Array<ItemRendererStorage> = null;
 	private var objectDataToItemRenderer = new ObjectMap<Dynamic, DisplayObject>();
@@ -1477,6 +1479,10 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 			var dataRenderer:IDataRenderer = cast itemRenderer;
 			// if the renderer is an IDataRenderer, this cannot be overridden
 			dataRenderer.data = state.data;
+		}
+		if ((itemRenderer is IHierarchicalItemRenderer)) {
+			var hierarchicalRenderer:IHierarchicalItemRenderer = cast itemRenderer;
+			hierarchicalRenderer.branch = state.branch;
 		}
 		if ((itemRenderer is IMenuItemRenderer)) {
 			var listRenderer:IMenuItemRenderer = cast itemRenderer;

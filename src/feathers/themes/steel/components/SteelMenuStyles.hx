@@ -8,6 +8,7 @@
 
 package feathers.themes.steel.components;
 
+import feathers.controls.dataRenderers.DrillDownItemRenderer;
 import feathers.controls.Check;
 import feathers.controls.HRule;
 import feathers.controls.Menu;
@@ -112,6 +113,42 @@ class SteelMenuStyles {
 
 				itemRenderer.paddingLeft = theme.xlargePadding;
 				itemRenderer.paddingRight = theme.xlargePadding;
+			});
+		}
+		if (styleProvider.getStyleFunction(DrillDownItemRenderer, Menu.CHILD_VARIANT_ITEM_RENDERER) == null) {
+			styleProvider.setStyleFunction(DrillDownItemRenderer, Menu.CHILD_VARIANT_ITEM_RENDERER, function(itemRenderer:DrillDownItemRenderer):Void {
+				var isDesktop = DeviceUtil.isDesktop();
+
+				if (itemRenderer.backgroundSkin == null) {
+					var skin = new RectangleSkin();
+					skin.fill = SolidColor(0xff00ff, 0.0);
+					skin.border = None;
+					skin.selectedFill = theme.getActiveThemeFill();
+					skin.setFillForState(ToggleButtonState.HOVER(false), theme.getActiveThemeFill());
+					skin.setFillForState(ToggleButtonState.DOWN(false), theme.getActiveThemeFill());
+					skin.cornerRadius = 3.0;
+					if (isDesktop) {
+						skin.width = 26.0;
+						skin.height = 26.0;
+						skin.minWidth = 26.0;
+						skin.minHeight = 26.0;
+					} else {
+						skin.width = 44.0;
+						skin.height = 44.0;
+						skin.minWidth = 44.0;
+						skin.minHeight = 44.0;
+					}
+					itemRenderer.backgroundSkin = skin;
+				}
+
+				var styleFunction = styleProvider.getStyleFunction(DrillDownItemRenderer, null);
+				if (styleFunction != null) {
+					styleFunction(itemRenderer);
+				}
+
+				itemRenderer.paddingLeft = theme.xlargePadding;
+				itemRenderer.paddingRight = theme.xlargePadding;
+				itemRenderer.gap = theme.xlargePadding;
 			});
 		}
 		if (styleProvider.getStyleFunction(HRule, Menu.CHILD_VARIANT_ITEM_RENDERER) == null) {
