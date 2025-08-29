@@ -8,16 +8,11 @@
 
 package feathers.controls.dataRenderers;
 
-import feathers.core.IOpenCloseToggle;
 import feathers.core.IStateObserver;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
-import feathers.core.InvalidationFlag;
-import feathers.events.FeathersEvent;
 import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
-import feathers.utils.AbstractDisplayObjectFactory;
-import feathers.utils.DisplayObjectFactory;
 import openfl.display.DisplayObject;
 import openfl.errors.ArgumentError;
 import openfl.events.Event;
