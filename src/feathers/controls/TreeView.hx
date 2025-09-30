@@ -1112,9 +1112,15 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 	**/
 	public function getOpenBranches(?result:Array<Dynamic>):Array<Dynamic> {
 		if (result == null) {
+			if (this._dataProvider == null) {
+				return [];
+			}
 			return this._openBranches.copy();
 		}
 		result.resize(0);
+		if (this._dataProvider == null) {
+			return result;
+		}
 		for (openBranch in this._openBranches) {
 			result.push(openBranch);
 		}
