@@ -32,6 +32,7 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.controls.ButtonTest());
 		runner.addCase(new feathers.controls.ButtonMeasurementTest());
 		runner.addCase(new feathers.controls.ButtonBarTest());
+		runner.addCase(new feathers.controls.ButtonBarMeasurementTest());
 		runner.addCase(new feathers.controls.CalloutTest());
 		runner.addCase(new feathers.controls.ComboBoxTest());
 		runner.addCase(new feathers.controls.DatePickerTest());
@@ -52,8 +53,10 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.controls.LayoutGroupTest());
 		runner.addCase(new feathers.controls.LayoutGroupMeasurementTest());
 		runner.addCase(new feathers.controls.ListViewTest());
+		runner.addCase(new feathers.controls.MenuBarMeasurementTest());
 		runner.addCase(new feathers.controls.NumericStepperTest());
 		runner.addCase(new feathers.controls.PageIndicatorTest());
+		runner.addCase(new feathers.controls.PageIndicatorMeasurementTest());
 		runner.addCase(new feathers.controls.PanelTest());
 		runner.addCase(new feathers.controls.PanelMeasurementTest());
 		runner.addCase(new feathers.controls.PopUpDatePickerTest());
@@ -70,6 +73,7 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.controls.ScrollContainerFloatingScrollBarsTest());
 		runner.addCase(new feathers.controls.ScrollContainerMeasurementTest());
 		runner.addCase(new feathers.controls.TabBarTest());
+		runner.addCase(new feathers.controls.TabBarMeasurementTest());
 		runner.addCase(new feathers.controls.TextInputTest());
 		runner.addCase(new feathers.controls.ToggleButtonTest());
 		runner.addCase(new feathers.controls.ToggleButtonMeasurementTest());

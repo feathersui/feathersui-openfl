@@ -26,6 +26,7 @@ import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
 import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.utils.DisplayObjectRecycler;
+import feathers.utils.MeasurementsUtil;
 import haxe.ds.ObjectMap;
 import haxe.ds.StringMap;
 import openfl.display.DisplayObject;
@@ -630,7 +631,64 @@ class ButtonBar extends FeathersControl {
 	}
 
 	private function refreshViewPortBounds():Void {
-		this._layoutMeasurements.save(this);
+		var needsMinWidth = this.explicitMinWidth == null;
+		var needsMinHeight = this.explicitMinHeight == null;
+		var needsMaxWidth = this.explicitMaxWidth == null;
+		var needsMaxHeight = this.explicitMaxHeight == null;
+
+		if (this._currentBackgroundSkin != null) {
+			MeasurementsUtil.resetFluidlyWithParent(this._backgroundSkinMeasurements, this._currentBackgroundSkin, this);
+			if ((this._currentBackgroundSkin is IValidating)) {
+				(cast this._currentBackgroundSkin : IValidating).validateNow();
+			}
+		}
+
+		var viewPortMinWidth = this.explicitMinWidth;
+		if (needsMinWidth) {
+			viewPortMinWidth = 0.0;
+		}
+		var viewPortMinHeight = this.explicitMinHeight;
+		if (needsMinHeight) {
+			viewPortMinHeight = 0.0;
+		}
+		var viewPortMaxWidth = this.explicitMaxWidth;
+		if (needsMaxWidth) {
+			viewPortMaxWidth = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
+		}
+		var viewPortMaxHeight = this.explicitMaxHeight;
+		if (needsMaxHeight) {
+			viewPortMaxHeight = 1.0 / 0.0; // Math.POSITIVE_INFINITY bug workaround for swf
+		}
+		if (this._backgroundSkinMeasurements != null) {
+			// because the layout might need it, we account for the
+			// dimensions of the background skin when determining the minimum
+			// dimensions of the view port.
+			if (this._backgroundSkinMeasurements.width != null) {
+				if (this._backgroundSkinMeasurements.width > viewPortMinWidth) {
+					viewPortMinWidth = this._backgroundSkinMeasurements.width;
+				}
+			} else if (this._backgroundSkinMeasurements.minWidth != null) {
+				if (this._backgroundSkinMeasurements.minWidth > viewPortMinWidth) {
+					viewPortMinWidth = this._backgroundSkinMeasurements.minWidth;
+				}
+			}
+			if (this._backgroundSkinMeasurements.height != null) {
+				if (this._backgroundSkinMeasurements.height > viewPortMinHeight) {
+					viewPortMinHeight = this._backgroundSkinMeasurements.height;
+				}
+			} else if (this._backgroundSkinMeasurements.minHeight != null) {
+				if (this._backgroundSkinMeasurements.minHeight > viewPortMinHeight) {
+					viewPortMinHeight = this._backgroundSkinMeasurements.minHeight;
+				}
+			}
+		}
+
+		this._layoutMeasurements.width = this.explicitWidth;
+		this._layoutMeasurements.height = this.explicitHeight;
+		this._layoutMeasurements.minWidth = viewPortMinWidth;
+		this._layoutMeasurements.minHeight = viewPortMinHeight;
+		this._layoutMeasurements.maxWidth = viewPortMaxWidth;
+		this._layoutMeasurements.maxHeight = viewPortMaxHeight;
 	}
 
 	private function handleLayout():Void {
@@ -639,6 +697,33 @@ class ButtonBar extends FeathersControl {
 		this._layoutResult.reset();
 		if (this.layout != null) {
 			this.layout.layout(this._layoutItems, this._layoutMeasurements, this._layoutResult);
+		} else {
+			var viewPortWidth = this._layoutMeasurements.width;
+			if (viewPortWidth == null) {
+				if (this._layoutMeasurements.minWidth != null) {
+					viewPortWidth = this._layoutMeasurements.minWidth;
+				} else if (this._layoutMeasurements.minHeight != null) {
+					viewPortWidth = this._layoutMeasurements.minHeight;
+				} else {
+					viewPortWidth = 0.0;
+				}
+			}
+			var viewPortHeight = this._layoutMeasurements.height;
+			if (viewPortHeight == null) {
+				if (this._layoutMeasurements.minHeight != null) {
+					viewPortHeight = this._layoutMeasurements.minHeight;
+				} else if (this._layoutMeasurements.maxHeight != null) {
+					viewPortHeight = this._layoutMeasurements.maxHeight;
+				} else {
+					viewPortHeight = 0.0;
+				}
+			}
+			this._layoutResult.contentX = 0.0;
+			this._layoutResult.contentY = 0.0;
+			this._layoutResult.contentWidth = viewPortWidth;
+			this._layoutResult.contentHeight = viewPortHeight;
+			this._layoutResult.viewPortWidth = viewPortWidth;
+			this._layoutResult.viewPortHeight = viewPortHeight;
 		}
 		this._ignoreChildChanges = oldIgnoreChildChanges;
 	}
