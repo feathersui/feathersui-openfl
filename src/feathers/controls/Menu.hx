@@ -2350,6 +2350,7 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 
 	private function menu_itemRenderer_rollOutHandler(event:MouseEvent):Void {
 		this.clearPendingSubMenu();
+		this.selectedIndex = -1;
 	}
 
 	private function menu_subMenu_itemTriggerHandler(event:MenuEvent):Void {
