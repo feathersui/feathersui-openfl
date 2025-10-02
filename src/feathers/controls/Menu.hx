@@ -228,6 +228,7 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 	private var _scrollYTopOverlay:InteractiveObject;
 	private var _scrollYBottomOverlay:InteractiveObject;
 
+	private var _pendingSubMenuItemRenderer:DisplayObject;
 	private var _subMenu:Menu;
 	private var popUpAdapter:IPopUpAdapter;
 
@@ -1314,6 +1315,7 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 			itemRenderer.removeEventListener(Event.CHANGE, menu_itemRenderer_changeHandler);
 			itemRenderer.removeEventListener(Event.RESIZE, menu_itemRenderer_resizeHandler);
 			itemRenderer.removeEventListener(MouseEvent.ROLL_OVER, menu_itemRenderer_rollOverHandler);
+			itemRenderer.removeEventListener(MouseEvent.ROLL_OUT, menu_itemRenderer_rollOutHandler);
 			this.resetItemRenderer(itemRenderer, state, storage);
 			if (storage.measurements != null) {
 				storage.measurements.restore(itemRenderer);
@@ -1564,6 +1566,7 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 			itemRenderer.addEventListener(Event.RESIZE, menu_itemRenderer_resizeHandler);
 		}
 		itemRenderer.addEventListener(MouseEvent.ROLL_OVER, menu_itemRenderer_rollOverHandler);
+		itemRenderer.addEventListener(MouseEvent.ROLL_OUT, menu_itemRenderer_rollOutHandler);
 		this.itemRendererToItemState.set(itemRenderer, state);
 		var item = state.data;
 		if ((item is String)) {
@@ -2144,6 +2147,67 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 		}
 	}
 
+	private function openSubMenu(itemRenderer:DisplayObject):Void {
+		var itemState = this.itemRendererToItemState.get(itemRenderer);
+		if (itemState == null || !itemState.branch) {
+			return;
+		}
+
+		this.closeSubMenu();
+
+		var menuLocation = [itemState.index];
+		var menuCollection = new HierarchicalSubCollection(this._dataProvider, menuLocation);
+
+		var factory:DisplayObjectFactory<Dynamic, Menu> = defaultMenuFactory;
+		if (this._subMenuFactory != null) {
+			factory = this._subMenuFactory;
+		} else if (this.menuBarOwner != null && this.menuBarOwner.menuFactory != null) {
+			factory = this.menuBarOwner.menuFactory;
+		}
+		this._oldSubMenuFactory = factory;
+		this._subMenu = factory.create();
+		this._subMenu.menuBarOwner = this.menuBarOwner;
+		this._subMenu.menuOwner = this;
+		this._subMenu.dataProvider = menuCollection;
+		this._subMenu.itemToText = itemToText;
+		this._subMenu.itemToSeparator = itemToSeparator;
+		this._subMenu.itemToEnabled = itemToEnabled;
+		this._subMenu.addEventListener(MenuEvent.ITEM_TRIGGER, menu_subMenu_itemTriggerHandler);
+		this._subMenu.addEventListener(Event.CLOSE, menu_subMenu_closeHandler);
+		// we want to show it, but we don't want to give it focus
+		this._subMenu.showAtOriginInternal(itemRenderer);
+
+		MenuEvent.dispatch(this, MenuEvent.MENU_OPEN, itemState);
+	}
+
+	private function closeSubMenu():Void {
+		this.clearPendingSubMenu();
+		if (this._subMenu != null) {
+			this._subMenu.close();
+		}
+	}
+
+	private function setPendingSubMenu(itemRenderer:DisplayObject):Void {
+		this.clearPendingSubMenu();
+
+		var itemState = this.itemRendererToItemState.get(itemRenderer);
+		if (itemState == null || !itemState.branch) {
+			// no submenu
+			return;
+		}
+
+		this._pendingSubMenuItemRenderer = itemRenderer;
+		this.addEventListener(Event.ENTER_FRAME, menu_pendingSubMenu_enterFrameHandler);
+	}
+
+	private function clearPendingSubMenu():Void {
+		if (this._pendingSubMenuItemRenderer == null) {
+			return;
+		}
+		this.removeEventListener(Event.ENTER_FRAME, menu_pendingSubMenu_enterFrameHandler);
+		this._pendingSubMenuItemRenderer = null;
+	}
+
 	override private function baseScrollContainer_keyDownHandler(event:KeyboardEvent):Void {
 		if (!this._enabled || event.isDefaultPrevented()) {
 			return;
@@ -2263,43 +2327,10 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 		}
 	}
 
-	private function openSubMenu(itemRenderer:DisplayObject):Void {
-		var itemState = this.itemRendererToItemState.get(itemRenderer);
-		if (itemState == null || !itemState.branch) {
-			return;
-		}
-
-		this.closeSubMenu();
-
-		var menuLocation = [itemState.index];
-		var menuCollection = new HierarchicalSubCollection(this._dataProvider, menuLocation);
-
-		var factory:DisplayObjectFactory<Dynamic, Menu> = defaultMenuFactory;
-		if (this._subMenuFactory != null) {
-			factory = this._subMenuFactory;
-		} else if (this.menuBarOwner != null && this.menuBarOwner.menuFactory != null) {
-			factory = this.menuBarOwner.menuFactory;
-		}
-		this._oldSubMenuFactory = factory;
-		this._subMenu = factory.create();
-		this._subMenu.menuBarOwner = this.menuBarOwner;
-		this._subMenu.menuOwner = this;
-		this._subMenu.dataProvider = menuCollection;
-		this._subMenu.itemToText = itemToText;
-		this._subMenu.itemToSeparator = itemToSeparator;
-		this._subMenu.itemToEnabled = itemToEnabled;
-		this._subMenu.addEventListener(MenuEvent.ITEM_TRIGGER, menu_subMenu_itemTriggerHandler);
-		this._subMenu.addEventListener(Event.CLOSE, menu_subMenu_closeHandler);
-		// we want to show it, but we don't want to give it focus
-		this._subMenu.showAtOriginInternal(itemRenderer);
-
-		MenuEvent.dispatch(this, MenuEvent.MENU_OPEN, itemState);
-	}
-
-	private function closeSubMenu():Void {
-		if (this._subMenu != null) {
-			this._subMenu.close();
-		}
+	private function menu_pendingSubMenu_enterFrameHandler(event:Event):Void {
+		var pendingSubMenuItemRenderer = this._pendingSubMenuItemRenderer;
+		this.clearPendingSubMenu();
+		this.openSubMenu(pendingSubMenuItemRenderer);
 	}
 
 	private function menu_itemRenderer_rollOverHandler(event:MouseEvent):Void {
@@ -2310,11 +2341,15 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 		if (state != null) {
 			if (!state.separator && state.enabled) {
 				this.selectedIndex = state.index;
-				this.openSubMenu(itemRenderer);
+				this.setPendingSubMenu(itemRenderer);
 			} else {
 				this.selectedIndex = -1;
 			}
 		}
+	}
+
+	private function menu_itemRenderer_rollOutHandler(event:MouseEvent):Void {
+		this.clearPendingSubMenu();
 	}
 
 	private function menu_subMenu_itemTriggerHandler(event:MenuEvent):Void {
