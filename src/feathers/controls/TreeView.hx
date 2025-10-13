@@ -1054,10 +1054,12 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		@since 1.0.0
 	**/
 	public function isBranchOpen(branch:Dynamic):Bool {
-		if (this._dataProvider == null || !this._dataProvider.contains(branch)) {
+		if (!this.isBranchOpenInternal(branch)) {
 			return false;
 		}
-		return this.isBranchOpenInternal(branch);
+		// ideally, an item would be removed from openBranches when it is
+		// removed from the data provider, but one final check just in case.
+		return this._dataProvider.contains(branch);
 	}
 
 	/**
@@ -1835,7 +1837,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 	}
 
 	private function isBranchOpenInternal(item:Dynamic):Bool {
-		if (this._dataProvider == null) {
+		if (this._dataProvider == null || item == null) {
 			return false;
 		}
 		if (!this._dataProvider.isBranch(item)) {
