@@ -1048,6 +1048,107 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 	}
 
 	/**
+		The set of branches that are currently open. Unlike `toggleBranch()`,
+		setting `openBranches` does not throw an exception if a branch value is
+		not contained in the data provider.
+
+		@see `TreeView.isBranchOpen()`
+		@see `TreeView.toggleBranch()`
+		@see `TreeView.toggleChildrenOf()`
+
+		@since 1.4.0
+	**/
+	public var openBranches(get, set):Array<Dynamic>;
+
+	private function get_openBranches():Array<Dynamic> {
+		return this.getOpenBranches();
+	}
+
+	private function set_openBranches(value:Array<Dynamic>):Array<Dynamic> {
+		if (this._dataProvider == null) {
+			return this._openBranches;
+		}
+		if (this._openBranches.length == 0 && (value == null || value.length == 0)) {
+			return this._openBranches;
+		}
+		if (this._openBranches == value) {
+			return this._openBranches;
+		}
+		// if possible, dispatch branchClose events for the currently open
+		// branches that won't still be open
+		for (branch in this._openBranches) {
+			if (value == null || value.indexOf(branch) == -1) {
+				var itemRenderer:DisplayObject = null;
+				if ((branch is String)) {
+					// a branch can't really be a string, but let's be consistent in how
+					// we look up item renderers
+					itemRenderer = this.stringDataToItemRenderer.get(cast branch);
+				} else {
+					itemRenderer = this.objectDataToItemRenderer.get(branch);
+				}
+				var state:TreeViewItemState = null;
+				if (itemRenderer != null) {
+					state = this.itemRendererToItemState.get(itemRenderer);
+				}
+				var isTemporary = false;
+				if (state == null) {
+					// if there is no existing state, use a temporary object
+					isTemporary = true;
+					state = this.itemStatePool.get();
+				}
+				var location = this._dataProvider.locationOf(branch);
+				if (location != null) {
+					var layoutIndex = this.locationToDisplayIndex(location, false);
+					this.populateCurrentItemState(branch, location, layoutIndex, state, true);
+					TreeViewEvent.dispatch(this, TreeViewEvent.BRANCH_CLOSE, state);
+				}
+				if (isTemporary) {
+					this.itemStatePool.release(state);
+				}
+			}
+		}
+		if (value == null) {
+			#if (hl && haxe_ver < 4.3)
+			this._openBranches.splice(0, this._openBranches.length);
+			#else
+			this._openBranches.resize(0);
+			#end
+			return this._openBranches;
+		}
+		this._openBranches = value.copy();
+		for (branch in this._openBranches) {
+			var itemRenderer:DisplayObject = null;
+			if ((branch is String)) {
+				// a branch can't really be a string, but let's be consistent in how
+				// we look up item renderers
+				itemRenderer = this.stringDataToItemRenderer.get(cast branch);
+			} else {
+				itemRenderer = this.objectDataToItemRenderer.get(branch);
+			}
+			var state:TreeViewItemState = null;
+			if (itemRenderer != null) {
+				state = this.itemRendererToItemState.get(itemRenderer);
+			}
+			var isTemporary = false;
+			if (state == null) {
+				// if there is no existing state, use a temporary object
+				isTemporary = true;
+				state = this.itemStatePool.get();
+			}
+			var location = this._dataProvider.locationOf(branch);
+			if (location != null) {
+				var layoutIndex = this.locationToDisplayIndex(location, false);
+				this.populateCurrentItemState(branch, location, layoutIndex, state, true);
+				TreeViewEvent.dispatch(this, TreeViewEvent.BRANCH_OPEN, state);
+			}
+			if (isTemporary) {
+				this.itemStatePool.release(state);
+			}
+		}
+		return this._openBranches;
+	}
+
+	/**
 		Indicates if a branch is currently opened or closed. If the object is
 		not a branch, or does not exist in the data provider, returns `false`.
 
