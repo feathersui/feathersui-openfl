@@ -2017,6 +2017,11 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 		// ensures that the change is detected when we validate later
 		state.menuOwner = null;
 		this.setInvalid(DATA);
+
+		if (state.branch && state.selected) {
+			this.closeSubMenu();
+			this.openSubMenu(itemRenderer);
+		}
 	}
 
 	private function menu_dataProvider_updateItemHandler(event:HierarchicalCollectionEvent):Void {

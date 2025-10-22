@@ -1445,6 +1445,11 @@ class MenuBar extends FeathersControl implements IDataSelector<Dynamic> implemen
 		// ensures that the change is detected when we validate later
 		state.menuBarOwner = null;
 		this.setInvalid(DATA);
+
+		if (state.branch && state.selected) {
+			this.closeOpenedMenu();
+			this.openMenuAtIndex(state.index);
+		}
 	}
 
 	private function closeOpenedMenu():Void {
