@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.core.ITextControl;
 import openfl.events.TouchEvent;
 import feathers.events.ListViewEvent;
 import openfl.events.MouseEvent;
@@ -490,17 +491,20 @@ class ListViewTest extends Test {
 
 	public function testUpdateItemSetsInterfaceProperties():Void {
 		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._listView.itemToText = (item:Dynamic) -> item.text;
 		var itemIndex = 1;
 		var item = this._listView.dataProvider.get(itemIndex);
 		this._listView.selectedIndex = itemIndex;
 		this._listView.itemRendererRecycler = DisplayObjectRecycler.withClass(CustomRendererWithInterfaces);
 		this._listView.validateNow();
 		var sampleItemRenderer = cast(this._listView.itemToItemRenderer(item), CustomRendererWithInterfaces);
+		var setTextValues = sampleItemRenderer.setTextValues;
 		var setDataValues = sampleItemRenderer.setDataValues;
 		var setLayoutIndexValues = sampleItemRenderer.setLayoutIndexValues;
 		var setSelectedValues = sampleItemRenderer.setSelectedValues;
 		var setIndexValues = sampleItemRenderer.setIndexValues;
 		var setListViewOwnerValues = sampleItemRenderer.setListViewOwnerValues;
+		Assert.equals(1, setTextValues.length);
 		Assert.equals(1, setDataValues.length);
 		Assert.equals(1, setLayoutIndexValues.length);
 		Assert.equals(1, setSelectedValues.length);
@@ -511,6 +515,11 @@ class ListViewTest extends Test {
 		this._listView.validateNow();
 
 		Assert.equals(sampleItemRenderer, cast(this._listView.itemToItemRenderer(item), CustomRendererWithInterfaces));
+
+		Assert.equals(3, setTextValues.length);
+		Assert.equals("Two", setTextValues[0]);
+		Assert.isNull(setTextValues[1]);
+		Assert.equals("Two", setTextValues[2]);
 
 		Assert.equals(3, setDataValues.length);
 		Assert.equals(item, setDataValues[0]);
@@ -1133,9 +1142,34 @@ class ListViewTest extends Test {
 }
 
 private class CustomRendererWithInterfaces extends LayoutGroup implements IToggle implements IDataRenderer implements ILayoutIndexObject
-		implements IListViewItemRenderer {
+		implements IListViewItemRenderer implements ITextControl {
 	public function new() {
 		super();
+	}
+
+	public var baseline(get, never):Float;
+
+	private function get_baseline():Float {
+		return 0.0;
+	}
+
+	public var setTextValues:Array<String> = [];
+
+	private var _text:String;
+
+	public var text(get, set):String;
+
+	private function get_text():String {
+		return _text;
+	}
+
+	private function set_text(value:String):String {
+		if (_text == value) {
+			return _text;
+		}
+		_text = value;
+		setTextValues.push(value);
+		return _text;
 	}
 
 	public var setDataValues:Array<Dynamic> = [];

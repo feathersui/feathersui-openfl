@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.core.ITextControl;
 import openfl.errors.ArgumentError;
 import feathers.events.TriggerEvent;
 import openfl.events.TouchEvent;
@@ -610,6 +611,7 @@ import utest.Test;
 		var children:Array<Dynamic> = [{text: "One"}, {text: "Two", children: []}, {text: "Three"}];
 		var items:Array<Dynamic> = [{text: "A", children: children}];
 		this._treeView.dataProvider = new ArrayHierarchicalCollection(items, (item:Dynamic) -> item.children);
+		this._treeView.itemToText = (item:Dynamic) -> item.text;
 		var itemLocation = [0, 1];
 		var item = this._treeView.dataProvider.get(itemLocation);
 		Assert.notNull(item);
@@ -619,6 +621,7 @@ import utest.Test;
 		this._treeView.itemRendererRecycler = DisplayObjectRecycler.withClass(CustomRendererWithInterfaces);
 		this._treeView.validateNow();
 		var sampleItemRenderer = cast(this._treeView.itemToItemRenderer(item), CustomRendererWithInterfaces);
+		var setTextValues = sampleItemRenderer.setTextValues;
 		var setDataValues = sampleItemRenderer.setDataValues;
 		var setLayoutIndexValues = sampleItemRenderer.setLayoutIndexValues;
 		var setSelectedValues = sampleItemRenderer.setSelectedValues;
@@ -626,6 +629,7 @@ import utest.Test;
 		var setOpenedValues = sampleItemRenderer.setOpenedValues;
 		var setBranchValues = sampleItemRenderer.setBranchValues;
 		var setTreeViewOwnerValues = sampleItemRenderer.setTreeViewOwnerValues;
+		Assert.equals(1, setTextValues.length);
 		Assert.equals(1, setDataValues.length);
 		Assert.equals(1, setLayoutIndexValues.length);
 		Assert.equals(1, setSelectedValues.length);
@@ -638,6 +642,11 @@ import utest.Test;
 		this._treeView.validateNow();
 
 		Assert.equals(sampleItemRenderer, cast(this._treeView.itemToItemRenderer(item), CustomRendererWithInterfaces));
+
+		Assert.equals(3, setTextValues.length);
+		Assert.equals("Two", setTextValues[0]);
+		Assert.isNull(setTextValues[1]);
+		Assert.equals("Two", setTextValues[2]);
 
 		Assert.equals(3, setDataValues.length);
 		Assert.equals(item, setDataValues[0]);
@@ -1398,9 +1407,34 @@ import utest.Test;
 }
 
 private class CustomRendererWithInterfaces extends LayoutGroup implements IToggle implements IOpenCloseToggle implements IDataRenderer
-		implements ILayoutIndexObject implements ITreeViewItemRenderer {
+		implements ILayoutIndexObject implements ITreeViewItemRenderer implements ITextControl {
 	public function new() {
 		super();
+	}
+
+	public var baseline(get, never):Float;
+
+	private function get_baseline():Float {
+		return 0.0;
+	}
+
+	public var setTextValues:Array<String> = [];
+
+	private var _text:String;
+
+	public var text(get, set):String;
+
+	private function get_text():String {
+		return _text;
+	}
+
+	private function set_text(value:String):String {
+		if (_text == value) {
+			return _text;
+		}
+		_text = value;
+		setTextValues.push(value);
+		return _text;
 	}
 
 	public var setDataValues:Array<Dynamic> = [];

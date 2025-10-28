@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.core.ITextControl;
 import openfl.events.TouchEvent;
 import feathers.events.TriggerEvent;
 import openfl.events.MouseEvent;
@@ -307,15 +308,18 @@ class TabBarTest extends Test {
 
 	public function testUpdateItemSetsInterfaceProperties():Void {
 		this._tabBar.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._tabBar.itemToText = (item:Dynamic) -> item.text;
 		var itemIndex = 1;
 		var item = this._tabBar.dataProvider.get(itemIndex);
 		this._tabBar.selectedIndex = itemIndex;
 		this._tabBar.tabRecycler = DisplayObjectRecycler.withClass(CustomRendererWithInterfaces);
 		this._tabBar.validateNow();
 		var sampleItemRenderer = cast(this._tabBar.itemToTab(item), CustomRendererWithInterfaces);
+		var setTextValues = sampleItemRenderer.setTextValues;
 		var setDataValues = sampleItemRenderer.setDataValues;
 		var setLayoutIndexValues = sampleItemRenderer.setLayoutIndexValues;
 		var setSelectedValues = sampleItemRenderer.setSelectedValues;
+		Assert.equals(1, setTextValues.length);
 		Assert.equals(1, setDataValues.length);
 		Assert.equals(1, setLayoutIndexValues.length);
 		Assert.equals(1, setSelectedValues.length);
@@ -324,6 +328,11 @@ class TabBarTest extends Test {
 		this._tabBar.validateNow();
 
 		Assert.equals(sampleItemRenderer, cast(this._tabBar.itemToTab(item), CustomRendererWithInterfaces));
+
+		Assert.equals(3, setTextValues.length);
+		Assert.equals("Two", setTextValues[0]);
+		Assert.isNull(setTextValues[1]);
+		Assert.equals("Two", setTextValues[2]);
 
 		Assert.equals(3, setDataValues.length);
 		Assert.equals(item, setDataValues[0]);
@@ -804,6 +813,17 @@ class TabBarTest extends Test {
 private class CustomRendererWithInterfaces extends ToggleButton implements IDataRenderer implements ILayoutIndexObject {
 	public function new() {
 		super();
+	}
+
+	public var setTextValues:Array<String> = [];
+
+	override private function set_text(value:String):String {
+		if (_text == value) {
+			return _text;
+		}
+		super.text = value;
+		setTextValues.push(value);
+		return _text;
 	}
 
 	public var setDataValues:Array<Dynamic> = [];

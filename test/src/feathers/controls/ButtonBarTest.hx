@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.core.ITextControl;
 import openfl.events.TouchEvent;
 import feathers.events.TriggerEvent;
 import openfl.events.MouseEvent;
@@ -175,13 +176,16 @@ class ButtonBarTest extends Test {
 
 	public function testUpdateItemSetsInterfaceProperties():Void {
 		this._buttonBar.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._buttonBar.itemToText = (item:Dynamic) -> item.text;
 		var itemIndex = 1;
 		var item = this._buttonBar.dataProvider.get(itemIndex);
 		this._buttonBar.buttonRecycler = DisplayObjectRecycler.withClass(CustomRendererWithInterfaces);
 		this._buttonBar.validateNow();
 		var sampleItemRenderer = cast(this._buttonBar.itemToButton(item), CustomRendererWithInterfaces);
+		var setTextValues = sampleItemRenderer.setTextValues;
 		var setDataValues = sampleItemRenderer.setDataValues;
 		var setLayoutIndexValues = sampleItemRenderer.setLayoutIndexValues;
+		Assert.equals(1, setTextValues.length);
 		Assert.equals(1, setDataValues.length);
 		Assert.equals(1, setLayoutIndexValues.length);
 
@@ -189,6 +193,11 @@ class ButtonBarTest extends Test {
 		this._buttonBar.validateNow();
 
 		Assert.equals(sampleItemRenderer, cast(this._buttonBar.itemToButton(item), CustomRendererWithInterfaces));
+
+		Assert.equals(3, setTextValues.length);
+		Assert.equals("Two", setTextValues[0]);
+		Assert.isNull(setTextValues[1]);
+		Assert.equals("Two", setTextValues[2]);
 
 		Assert.equals(3, setDataValues.length);
 		Assert.equals(item, setDataValues[0]);
@@ -427,6 +436,17 @@ class ButtonBarTest extends Test {
 private class CustomRendererWithInterfaces extends Button implements IDataRenderer implements ILayoutIndexObject {
 	public function new() {
 		super();
+	}
+
+	public var setTextValues:Array<String> = [];
+
+	override private function set_text(value:String):String {
+		if (_text == value) {
+			return _text;
+		}
+		super.text = value;
+		setTextValues.push(value);
+		return _text;
 	}
 
 	public var setDataValues:Array<Dynamic> = [];
