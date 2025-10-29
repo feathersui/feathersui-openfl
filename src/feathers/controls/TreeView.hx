@@ -1096,6 +1096,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 					isTemporary = true;
 					state = this.itemStatePool.get();
 				}
+				var clearOwner = !isTemporary && state.owner == null;
 				var location = this._dataProvider.locationOf(branch);
 				if (location != null) {
 					var layoutIndex = this.locationToDisplayIndex(location, false);
@@ -1104,6 +1105,10 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 				}
 				if (isTemporary) {
 					this.itemStatePool.release(state);
+				} else if (clearOwner) {
+					// to ensure that updateAt() works correctly, restore
+					// owner to null, if it wasn't populated before
+					state.owner = null;
 				}
 			}
 		}
@@ -1135,6 +1140,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 				isTemporary = true;
 				state = this.itemStatePool.get();
 			}
+			var clearOwner = !isTemporary && state.owner == null;
 			var location = this._dataProvider.locationOf(branch);
 			if (location != null) {
 				var layoutIndex = this.locationToDisplayIndex(location, false);
@@ -1143,6 +1149,10 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			}
 			if (isTemporary) {
 				this.itemStatePool.release(state);
+			} else if (clearOwner) {
+				// to ensure that updateAt() works correctly, restore
+				// owner to null, if it wasn't populated before
+				state.owner = null;
 			}
 		}
 		return this._openBranches;
@@ -2310,11 +2320,16 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 					isTemporary = true;
 					state = this.itemStatePool.get();
 				}
+				var clearOwner = !isTemporary && state.owner == null;
 				var layoutIndex = this.locationToDisplayIndex(this._selectedLocation, false);
 				this.populateCurrentItemState(this._selectedItem, this._selectedLocation, layoutIndex, state, true);
 				TreeViewEvent.dispatch(this, TreeViewEvent.ITEM_TRIGGER, state);
 				if (isTemporary) {
 					this.itemStatePool.release(state);
+				} else if (clearOwner) {
+					// to ensure that updateAt() works correctly, restore
+					// owner to null, if it wasn't populated before
+					state.owner = null;
 				}
 			}
 		}
@@ -2362,6 +2377,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			isTemporary = true;
 			state = this.itemStatePool.get();
 		}
+		var clearOwner = !isTemporary && state.owner == null;
 		state.location = location;
 		state.layoutIndex = layoutIndex;
 		var alreadyOpen = this.isBranchOpenInternal(branch);
@@ -2402,6 +2418,10 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		}
 		if (isTemporary) {
 			this.itemStatePool.release(state);
+		} else if (clearOwner) {
+			// to ensure that updateAt() works correctly, restore
+			// owner to null, if it wasn't populated before
+			state.owner = null;
 		}
 		this.setInvalid(DATA);
 		return layoutIndex;

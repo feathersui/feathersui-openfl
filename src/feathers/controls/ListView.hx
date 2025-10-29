@@ -2562,10 +2562,15 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 					isTemporary = true;
 					state = this.itemStatePool.get();
 				}
+				var clearOwner = !isTemporary && state.owner == null;
 				this.populateCurrentItemState(this._selectedItem, this._selectedIndex, state, true);
 				ListViewEvent.dispatch(this, ListViewEvent.ITEM_TRIGGER, state);
 				if (isTemporary) {
 					this.itemStatePool.release(state);
+				} else if (clearOwner) {
+					// to ensure that updateAt() works correctly, restore
+					// owner to null, if it wasn't populated before
+					state.owner = null;
 				}
 			}
 		}

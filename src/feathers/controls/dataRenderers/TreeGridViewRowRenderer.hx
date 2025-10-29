@@ -1309,10 +1309,15 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 				isTemporary = true;
 				state = this.cellStatePool.get();
 			}
+			var clearOwner = !isTemporary && state.owner == null;
 			this.populateCurrentItemState(column, 0, state, true);
 			TreeGridViewEvent.dispatchForCell(this, TreeGridViewEvent.CELL_TRIGGER, state);
 			if (isTemporary) {
 				this.cellStatePool.release(state);
+			} else if (clearOwner) {
+				// to ensure that updateAt() works correctly, restore
+				// owner to null, if it wasn't populated before
+				state.owner = null;
 			}
 		}
 		if (this._selected && event.keyCode == Keyboard.SPACE) {

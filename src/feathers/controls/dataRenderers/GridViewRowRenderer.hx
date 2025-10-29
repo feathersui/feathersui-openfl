@@ -1088,10 +1088,15 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 					isTemporary = true;
 					state = this.cellStatePool.get();
 				}
+				var clearOwner = !isTemporary && state.owner == null;
 				this.populateCurrentItemState(column, 0, state, true);
 				GridViewEvent.dispatchForCell(this, GridViewEvent.CELL_TRIGGER, state);
 				if (isTemporary) {
 					this.cellStatePool.release(state);
+				} else if (clearOwner) {
+					// to ensure that updateAt() works correctly, restore
+					// owner to null, if it wasn't populated before
+					state.owner = null;
 				}
 			}
 		}

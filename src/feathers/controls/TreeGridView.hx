@@ -2732,6 +2732,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			isTemporary = true;
 			state = this.rowStatePool.get();
 		}
+		var clearOwner = !isTemporary && state.owner == null;
 		state.rowLocation = location;
 		state.layoutIndex = layoutIndex;
 		var alreadyOpen = this.isBranchOpenInternal(branch);
@@ -2772,6 +2773,10 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		}
 		if (isTemporary) {
 			this.rowStatePool.release(state);
+		} else if (clearOwner) {
+			// to ensure that updateAt() works correctly, restore
+			// owner to null, if it wasn't populated before
+			state.owner = null;
 		}
 		this.setInvalid(DATA);
 		return layoutIndex;

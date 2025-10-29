@@ -2148,12 +2148,17 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 					isTemporary = true;
 					state = this.itemStatePool.get();
 				}
+				var clearOwner = !isTemporary && state.owner == null;
 				var type = this._selectedLocation.length == 1 ? HEADER : STANDARD;
 				var layoutIndex = this.locationToDisplayIndex(this._selectedLocation);
 				this.populateCurrentItemState(this._selectedItem, type, this._selectedLocation, layoutIndex, state, true);
 				GroupListViewEvent.dispatch(this, GroupListViewEvent.ITEM_TRIGGER, state);
 				if (isTemporary) {
 					this.itemStatePool.release(state);
+				} else if (clearOwner) {
+					// to ensure that updateAt() works correctly, restore
+					// owner to null, if it wasn't populated before
+					state.owner = null;
 				}
 			}
 		}

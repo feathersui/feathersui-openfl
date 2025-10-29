@@ -2320,6 +2320,7 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 					isTemporary = true;
 					state = this.itemStatePool.get();
 				}
+				var clearOwner = !isTemporary && state.menuOwner == null;
 				this.populateCurrentItemState(this._selectedItem, this._selectedIndex, state, true);
 				if (!state.branch && !state.separator && state.enabled) {
 					MenuEvent.dispatch(this, MenuEvent.ITEM_TRIGGER, state);
@@ -2327,6 +2328,10 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 				}
 				if (isTemporary) {
 					this.itemStatePool.release(state);
+				} else if (clearOwner) {
+					// to ensure that updateAt() works correctly, restore
+					// owner to null, if it wasn't populated before
+					state.menuOwner = null;
 				}
 			}
 		}
