@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.controls.Button;
 import openfl.errors.RangeError;
 import feathers.data.ArrayCollection;
 import openfl.Lib;
@@ -548,5 +549,28 @@ class PopUpListViewTest extends Test {
 		Assert.equals(oldSelectedItem, this._listView.selectedItem);
 		this._listView.closeListView();
 		Assert.equals(newSelectedItem, this._listView.selectedItem);
+	}
+
+	public function testItemToText():Void {
+		var button = new Button();
+		this._listView.buttonFactory = () -> button;
+		Assert.equals("", this._listView.text);
+		var item1 = {text: "One"};
+		var item2 = {text: "Two"};
+		this._listView.dataProvider = new ArrayCollection([item1, item2]);
+		this._listView.itemToText = (item:Dynamic) -> item.text;
+		this._listView.selectedIndex = 1;
+		this._listView.validateNow();
+		Assert.equals("Two", this._listView.text);
+		Assert.equals("Two", button.text);
+		this._listView.itemToText = (item:Dynamic) -> "Test: " + item.text;
+		this._listView.validateNow();
+		Assert.equals("Test: Two", this._listView.text);
+		Assert.equals("Test: Two", button.text);
+		item2.text = "Three";
+		this._listView.dataProvider.updateAt(1);
+		this._listView.validateNow();
+		Assert.equals("Test: Three", this._listView.text);
+		Assert.equals("Test: Three", button.text);
 	}
 }

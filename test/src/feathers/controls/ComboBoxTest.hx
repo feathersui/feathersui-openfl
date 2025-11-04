@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.controls.TextInput;
 import openfl.text.TextField;
 import feathers.data.ArrayCollection;
 import openfl.Lib;
@@ -711,5 +712,28 @@ class ComboBoxTest extends Test {
 		Assert.isFalse(changeDispatched);
 		Assert.equals(-1, this._comboBox.selectedIndex);
 		Assert.isNull(this._comboBox.selectedItem);
+	}
+
+	public function testItemToText():Void {
+		var textInput = new TextInput();
+		this._comboBox.textInputFactory = () -> textInput;
+		Assert.equals("", this._comboBox.text);
+		var item1 = {text: "One"};
+		var item2 = {text: "Two"};
+		this._comboBox.dataProvider = new ArrayCollection([item1, item2]);
+		this._comboBox.itemToText = (item:Dynamic) -> item.text;
+		this._comboBox.selectedIndex = 1;
+		this._comboBox.validateNow();
+		Assert.equals("Two", this._comboBox.text);
+		Assert.equals("Two", textInput.text);
+		this._comboBox.itemToText = (item:Dynamic) -> "Test: " + item.text;
+		this._comboBox.validateNow();
+		Assert.equals("Test: Two", this._comboBox.text);
+		Assert.equals("Test: Two", textInput.text);
+		item2.text = "Three";
+		this._comboBox.dataProvider.updateAt(1);
+		this._comboBox.validateNow();
+		Assert.equals("Test: Three", this._comboBox.text);
+		Assert.equals("Test: Three", textInput.text);
 	}
 }
