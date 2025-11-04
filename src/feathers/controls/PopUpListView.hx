@@ -249,6 +249,21 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		return this._dataProvider;
 	}
 
+	/**
+		The text representing the currently selected item, or an empty string,
+		if no item is currently selected.
+
+		@since 1.4.0
+	**/
+	public var text(get, never):String;
+
+	private function get_text():String {
+		if (this._selectedItem != null) {
+			return (this._selectedItem is String) ? cast this._selectedItem : this.itemToText(this._selectedItem);
+		}
+		return "";
+	}
+
 	private var _ignoreListViewChange = false;
 
 	private var _selectedIndex:Int = -1;
