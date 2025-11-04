@@ -222,12 +222,16 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 		}
 		if (this._dataProvider != null) {
 			this._dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ALL, popUpListView_dataProvider_removeAllHandler);
+			this._dataProvider.removeEventListener(FlatCollectionEvent.UPDATE_ITEM, popUpListView_dataProvider_updateItemHandler);
+			this._dataProvider.removeEventListener(FlatCollectionEvent.UPDATE_ALL, popUpListView_dataProvider_updateAllHandler);
 		}
 		var oldSelectedIndex = this._selectedIndex;
 		var oldSelectedItem = this._selectedItem;
 		this._dataProvider = value;
 		if (this._dataProvider != null) {
 			this._dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ALL, popUpListView_dataProvider_removeAllHandler);
+			this._dataProvider.addEventListener(FlatCollectionEvent.UPDATE_ITEM, popUpListView_dataProvider_updateItemHandler);
+			this._dataProvider.addEventListener(FlatCollectionEvent.UPDATE_ALL, popUpListView_dataProvider_updateAllHandler);
 		}
 		if (this._dataProvider == null || this._dataProvider.length == 0) {
 			this._selectedIndex = -1;
@@ -769,11 +773,11 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 			this.refreshListViewData();
 		}
 
-		if (selectionInvalid || listViewFactoryInvalid || buttonFactoryInvalid) {
+		if (dataInvalid || selectionInvalid || listViewFactoryInvalid || buttonFactoryInvalid) {
 			this.refreshSelection();
 		}
 
-		if (stateInvalid || listViewFactoryInvalid || buttonFactoryInvalid) {
+		if (dataInvalid || stateInvalid || listViewFactoryInvalid || buttonFactoryInvalid) {
 			this.refreshEnabled();
 		}
 
@@ -1161,5 +1165,16 @@ class PopUpListView extends FeathersControl implements IIndexSelector implements
 	private function popUpListView_dataProvider_removeAllHandler(event:Event):Void {
 		// use the setter
 		this.selectedIndex = -1;
+	}
+
+	private function popUpListView_dataProvider_updateItemHandler(event:FlatCollectionEvent):Void {
+		if (event.index != this._selectedIndex) {
+			return;
+		}
+		this.setInvalid(DATA);
+	}
+
+	private function popUpListView_dataProvider_updateAllHandler(event:FlatCollectionEvent):Void {
+		this.setInvalid(DATA);
 	}
 }

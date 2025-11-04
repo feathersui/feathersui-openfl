@@ -258,12 +258,16 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 		}
 		if (this._dataProvider != null) {
 			this._dataProvider.removeEventListener(FlatCollectionEvent.REMOVE_ALL, comboBox_dataProvider_removeAllHandler);
+			this._dataProvider.removeEventListener(FlatCollectionEvent.UPDATE_ITEM, comboBox_dataProvider_updateItemHandler);
+			this._dataProvider.removeEventListener(FlatCollectionEvent.UPDATE_ALL, comboBox_dataProvider_updateAllHandler);
 		}
 		var oldSelectedIndex = this._selectedIndex;
 		var oldSelectedItem = this._selectedItem;
 		this._dataProvider = value;
 		if (this._dataProvider != null) {
 			this._dataProvider.addEventListener(FlatCollectionEvent.REMOVE_ALL, comboBox_dataProvider_removeAllHandler);
+			this._dataProvider.addEventListener(FlatCollectionEvent.UPDATE_ITEM, comboBox_dataProvider_updateItemHandler);
+			this._dataProvider.addEventListener(FlatCollectionEvent.UPDATE_ALL, comboBox_dataProvider_updateAllHandler);
 		}
 		if (this._dataProvider == null || this._dataProvider.length == 0) {
 			this._selectedIndex = -1;
@@ -1096,12 +1100,12 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			this.refreshTextInputData();
 		}
 
-		if (selectionInvalid || listViewFactoryInvalid || buttonFactoryInvalid || textInputFactoryInvalid) {
+		if (dataInvalid || selectionInvalid || listViewFactoryInvalid || buttonFactoryInvalid || textInputFactoryInvalid) {
 			this.refreshSelection();
 			this.refreshTextInputSelection();
 		}
 
-		if (stateInvalid || listViewFactoryInvalid || buttonFactoryInvalid || textInputFactoryInvalid) {
+		if (dataInvalid || stateInvalid || listViewFactoryInvalid || buttonFactoryInvalid || textInputFactoryInvalid) {
 			this.refreshEnabled();
 		}
 
@@ -1660,5 +1664,16 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 			return;
 		}
 		this.openListView();
+	}
+
+	private function comboBox_dataProvider_updateItemHandler(event:FlatCollectionEvent):Void {
+		if (event.index != this._selectedIndex) {
+			return;
+		}
+		this.setInvalid(DATA);
+	}
+
+	private function comboBox_dataProvider_updateAllHandler(event:FlatCollectionEvent):Void {
+		this.setInvalid(DATA);
 	}
 }
