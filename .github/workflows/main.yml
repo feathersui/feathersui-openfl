@@ -10,14 +10,14 @@ jobs:
   haxelib:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: krdlab/setup-haxe@v1
+    - uses: actions/checkout@v5
+    - uses: krdlab/setup-haxe@8f35d1215b93e940a76f9470e22e8a5ba6149598
       with:
         haxe-version: 4.3.4
     - name: Package Haxelib
       working-directory: haxelib
       run: haxe haxelib.hxml
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v5
       with:
         name: feathersui-haxelib
         path: bin/haxelib/
@@ -25,8 +25,8 @@ jobs:
   test-cli:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: krdlab/setup-haxe@v1
+    - uses: actions/checkout@v5
+    - uses: krdlab/setup-haxe@8f35d1215b93e940a76f9470e22e8a5ba6149598
       with:
         haxe-version: 4.0.5
     - name: Set up Haxelib dependencies
@@ -50,8 +50,8 @@ jobs:
   build-swc:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: krdlab/setup-haxe@v1
+    - uses: actions/checkout@v5
+    - uses: krdlab/setup-haxe@8f35d1215b93e940a76f9470e22e8a5ba6149598
       with:
         haxe-version: 4.0.5
     - name: Set up Haxelib dependencies
@@ -63,7 +63,7 @@ jobs:
         haxelib dev feathersui ${{ github.workspace }}
     - name: Build Flash .swc library
       run: haxelib run openfl build flash -debug
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v5
       with:
         name: feathersui-openfl-swc
         path: bin/flash/bin/feathersui-openfl.swc
@@ -71,8 +71,8 @@ jobs:
   build-api:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: krdlab/setup-haxe@v1
+    - uses: actions/checkout@v5
+    - uses: krdlab/setup-haxe@8f35d1215b93e940a76f9470e22e8a5ba6149598
       with:
         haxe-version: 4.0.5
     - name: Set up Haxelib dependencies
@@ -86,7 +86,7 @@ jobs:
     - name: Build API reference
       working-directory: docs
       run: haxe docs.hxml
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v5
       with:
         name: feathersui-openfl-docs
         path: bin/api/
