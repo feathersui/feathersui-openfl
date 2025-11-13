@@ -20,7 +20,11 @@ class ListViewScreen extends Panel {
 
 		this.layout = new AnchorLayout();
 
-		var items = [];
+		// data containers may display any type of data. in this case, we're
+		// defining a custom typedef at the end of this file that we've named
+		// SimpleTextItem. a custom class could be used instead, if preferred.
+		// you could also skip creating a custom type and use Dynamic or Any.
+		var items:Array<SimpleTextItem> = [];
 		for (i in 0...30) {
 			items[i] = {text: "List Item " + (i + 1)};
 		}
@@ -28,7 +32,7 @@ class ListViewScreen extends Panel {
 		this.listView = new ListView();
 		this.listView.variant = ListView.VARIANT_BORDERLESS;
 		this.listView.dataProvider = new ArrayCollection(items);
-		this.listView.itemToText = (item:Dynamic) -> {
+		this.listView.itemToText = (item:SimpleTextItem) -> {
 			return item.text;
 		};
 		this.listView.layoutData = AnchorLayoutData.fill();
@@ -59,4 +63,8 @@ class ListViewScreen extends Panel {
 	private function backButton_triggerHandler(event:TriggerEvent):Void {
 		this.dispatchEvent(new Event(Event.COMPLETE));
 	}
+}
+
+private typedef SimpleTextItem = {
+	text:String
 }

@@ -39,8 +39,11 @@ class MenuScreen extends Panel {
 	}
 
 	private function button_triggerHandler(event:TriggerEvent):Void {
-		var menu = new Menu();
-		menu.dataProvider = new ArrayHierarchicalCollection<MenuItemData>([
+		// data containers may display any type of data. in this case, we're
+		// defining a custom typedef at the end of this file that we've named
+		// MenuItemData. a custom class could be used instead, if preferred.
+		// you could also skip creating a custom type and use Dynamic or Any.
+		var items:Array<MenuItemData> = [
 			// @formatter:off
 			{
 				text: "A",
@@ -75,7 +78,10 @@ class MenuScreen extends Panel {
 				]
 			}
 			// @formatter:on
-		], (item:MenuItemData) -> item.children);
+		];
+
+		var menu = new Menu();
+		menu.dataProvider = new ArrayHierarchicalCollection<MenuItemData>(items, (item:MenuItemData) -> item.children);
 		menu.itemToText = (item:MenuItemData) -> {
 			return item.text;
 		};

@@ -19,14 +19,18 @@ class TabBarScreen extends Panel {
 
 		this.layout = new AnchorLayout();
 
-		var items = [];
+		// data containers may display any type of data. in this case, we're
+		// defining a custom typedef at the end of this file that we've named
+		// SimpleTextItem. a custom class could be used instead, if preferred.
+		// you could also skip creating a custom type and use Dynamic or Any.
+		var items:Array<SimpleTextItem> = [];
 		for (i in 0...3) {
 			items[i] = {text: "Tab " + (i + 1)};
 		}
 
 		this.tabBar = new TabBar();
 		this.tabBar.dataProvider = new ArrayCollection(items);
-		this.tabBar.itemToText = (data:Dynamic) -> {
+		this.tabBar.itemToText = (data:SimpleTextItem) -> {
 			return data.text;
 		};
 		this.tabBar.layoutData = AnchorLayoutData.center();
@@ -52,4 +56,8 @@ class TabBarScreen extends Panel {
 	private function backButton_triggerHandler(event:TriggerEvent):Void {
 		this.dispatchEvent(new Event(Event.COMPLETE));
 	}
+}
+
+private typedef SimpleTextItem = {
+	text:String
 }

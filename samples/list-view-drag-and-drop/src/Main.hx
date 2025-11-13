@@ -20,12 +20,8 @@ class Main extends Application {
 		this.initializeView();
 
 		this.listView1 = new ListView();
-		this.listView1.dataProvider = new ArrayCollection([
-			{text: "One"},
-			{text: "Two"},
-			{text: "Three"},
-		]);
-		this.listView1.itemToText = (item:Dynamic) -> {
+		this.listView1.dataProvider = new ArrayCollection<SimpleTextItem>([{text: "One"}, {text: "Two"}, {text: "Three"},]);
+		this.listView1.itemToText = (item:SimpleTextItem) -> {
 			return item.text;
 		};
 		// allow items to be dragged from this list view
@@ -37,7 +33,7 @@ class Main extends Application {
 		this.view.addChild(this.listView1);
 
 		this.listView2 = new ListView();
-		this.listView2.dataProvider = new ArrayCollection([
+		this.listView2.dataProvider = new ArrayCollection<SimpleTextItem>([
 			{text: "One"},
 			{text: "Two"},
 			{text: "Three"},
@@ -49,7 +45,7 @@ class Main extends Application {
 			{text: "Nine"},
 			{text: "Ten"},
 		]);
-		this.listView2.itemToText = (item:Dynamic) -> {
+		this.listView2.itemToText = (item:SimpleTextItem) -> {
 			return item.text;
 		};
 		// allow items from the other list view to be dropped on this one
@@ -89,7 +85,7 @@ class Main extends Application {
 	A custom class to hold data for the PopUpListView where the user chooses how
 	the ListView data provider should be sorted.
 **/
-class SortItem {
+private class SortItem {
 	public function new(text:String, sortCompareFunction:(Dynamic, Dynamic) -> Int) {
 		this.text = text;
 		this.sortCompareFunction = sortCompareFunction;
@@ -102,4 +98,8 @@ class SortItem {
 	public function toString():String {
 		return this.text;
 	}
+}
+
+private typedef SimpleTextItem = {
+	text:String
 }

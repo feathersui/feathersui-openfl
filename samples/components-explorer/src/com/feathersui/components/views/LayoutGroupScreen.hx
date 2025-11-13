@@ -10,6 +10,7 @@ import feathers.events.TriggerEvent;
 import feathers.layout.AnchorLayout;
 import feathers.layout.AnchorLayoutData;
 import feathers.layout.HorizontalLayout;
+import feathers.layout.ILayout;
 import feathers.layout.VerticalLayout;
 import feathers.skins.RectangleSkin;
 import openfl.events.Event;
@@ -61,11 +62,11 @@ class LayoutGroupScreen extends Panel {
 		header.leftView = backButton;
 
 		this.layoutListView = new PopUpListView();
-		this.layoutListView.dataProvider = new ArrayCollection([
+		this.layoutListView.dataProvider = new ArrayCollection<LayoutItem>([
 			{text: "Vertical", layout: this.verticalLayout},
 			{text: "Horizontal", layout: this.horizontalLayout},
 		]);
-		this.layoutListView.itemToText = item -> item.text;
+		this.layoutListView.itemToText = (item:LayoutItem) -> item.text;
 		this.layoutListView.addEventListener(Event.CHANGE, layoutListView_changeHandler);
 		header.rightView = this.layoutListView;
 	}
@@ -77,4 +78,9 @@ class LayoutGroupScreen extends Panel {
 	private function layoutListView_changeHandler(event:Event):Void {
 		this.group.layout = this.layoutListView.selectedItem.layout;
 	}
+}
+
+private typedef LayoutItem = {
+	text:String,
+	layout:ILayout
 }

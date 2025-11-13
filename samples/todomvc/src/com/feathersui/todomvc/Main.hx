@@ -136,7 +136,7 @@ class Main extends Application {
 			new FilterItem("Active", activeFilterFunction),
 			new FilterItem("Completed", completedFilterFunction)
 		]);
-		this.filterTabs.itemToText = item -> item.text;
+		this.filterTabs.itemToText = (item:FilterItem) -> item.text;
 		this.filterTabs.addEventListener(Event.CHANGE, filterTabs_changeHandler);
 		bottomBar.addChild(this.filterTabs);
 

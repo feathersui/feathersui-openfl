@@ -19,16 +19,42 @@ class PopUpListViewScreen extends Panel {
 
 		this.layout = new AnchorLayout();
 
-		var arrayItems = [
-			{text: "Aardvark"}, {text: "Badger"}, {text: "Cheetah"}, {text: "Dolphin"}, {text: "Elephant"}, {text: "Flamingo"}, {text: "Gecko"},
-			{text: "Hedgehog"}, {text: "Iguana"}, {text: "Jaguar"}, {text: "Kangaroo"}, {text: "Lobster"}, {text: "Moose"}, {text: "Newt"}, {text: "Octopus"},
-			{text: "Penguin"}, {text: "Quokka"}, {text: "Raccoon"}, {text: "Starling"}, {text: "Toucan"}, {text: "Urchin"}, {text: "Vulture"},
-			{text: "Warthog"}, {text: "X-Ray Tetra"}, {text: "Yak"}, {text: "Zebra"},
+		// data containers may display any type of data. in this case, we're
+		// defining a custom typedef at the end of this file that we've named
+		// SimpleTextItem. a custom class could be used instead, if preferred.
+		// you could also skip creating a custom type and use Dynamic or Any.
+		var items:Array<SimpleTextItem> = [
+			{text: "Aardvark"},
+			{text: "Badger"},
+			{text: "Cheetah"},
+			{text: "Dolphin"},
+			{text: "Elephant"},
+			{text: "Flamingo"},
+			{text: "Gecko"},
+			{text: "Hedgehog"},
+			{text: "Iguana"},
+			{text: "Jaguar"},
+			{text: "Kangaroo"},
+			{text: "Lobster"},
+			{text: "Moose"},
+			{text: "Newt"},
+			{text: "Octopus"},
+			{text: "Penguin"},
+			{text: "Quokka"},
+			{text: "Raccoon"},
+			{text: "Starling"},
+			{text: "Toucan"},
+			{text: "Urchin"},
+			{text: "Vulture"},
+			{text: "Warthog"},
+			{text: "X-Ray Tetra"},
+			{text: "Yak"},
+			{text: "Zebra"},
 		];
 
 		this.listView = new PopUpListView();
-		this.listView.dataProvider = new ArrayCollection(arrayItems);
-		this.listView.itemToText = (item:Dynamic) -> {
+		this.listView.dataProvider = new ArrayCollection(items);
+		this.listView.itemToText = (item:SimpleTextItem) -> {
 			return item.text;
 		};
 		this.listView.layoutData = AnchorLayoutData.center();
@@ -54,4 +80,8 @@ class PopUpListViewScreen extends Panel {
 	private function backButton_triggerHandler(event:TriggerEvent):Void {
 		this.dispatchEvent(new Event(Event.COMPLETE));
 	}
+}
+
+private typedef SimpleTextItem = {
+	text:String
 }

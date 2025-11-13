@@ -20,22 +20,38 @@ class GridViewScreen extends Panel {
 
 		this.layout = new AnchorLayout();
 
+		// data containers may display any type of data. in this case, we're
+		// defining a custom typedef at the end of this file that we've named
+		// ProductData. a custom class could be used instead, if preferred.
+		// you could also skip creating a custom type and use Dynamic or Any.
+		var items:Array<ProductData> = [
+			{item: "Chicken breast", dept: "Meat", price: 5.90},
+			{item: "Bacon", dept: "Meat", price: 4.49},
+			{item: "2% Milk", dept: "Dairy", price: 2.49},
+			{item: "Butter", dept: "Dairy", price: 4.00},
+			{item: "Lettuce", dept: "Produce", price: 1.29},
+			{item: "Broccoli", dept: "Produce", price: 2.99},
+			{item: "Whole Wheat Bread", dept: "Bakery", price: 2.49},
+			{item: "English Muffins", dept: "Bakery", price: 2.99},
+		];
+
 		this.gridView = new GridView();
 		this.gridView.variant = GridView.VARIANT_BORDERLESS;
-		this.gridView.dataProvider = new ArrayCollection([
-			{item: "Chicken breast", dept: "Meat", price: "5.90"},
-			{item: "Bacon", dept: "Meat", price: "4.49"},
-			{item: "2% Milk", dept: "Dairy", price: "2.49"},
-			{item: "Butter", dept: "Dairy", price: "4.69"},
-			{item: "Lettuce", dept: "Produce", price: "1.29"},
-			{item: "Broccoli", dept: "Produce", price: "2.99"},
-			{item: "Whole Wheat Bread", dept: "Bakery", price: "2.49"},
-			{item: "English Muffins", dept: "Bakery", price: "2.99"},
-		]);
+		this.gridView.dataProvider = new ArrayCollection<ProductData>(items);
 		this.gridView.columns = new ArrayCollection([
-			new GridViewColumn("Item", (data) -> data.item),
-			new GridViewColumn("Department", (data) -> data.dept),
-			new GridViewColumn("Unit Price", (data) -> data.price)
+			new GridViewColumn("Item", (data:ProductData) -> data.item),
+			new GridViewColumn("Department", (data:ProductData) -> data.dept),
+			new GridViewColumn("Unit Price", (data:ProductData) -> {
+				var priceParts = Std.string(data.price).split(".");
+				var dollar = priceParts[0];
+				var cents = priceParts[1];
+				if (cents == null) {
+					cents = "";
+				}
+				// ensure that cents renders with two digits, adding zeroes if necessary
+				cents = StringTools.rpad(cents, "0", 2);
+				return '${dollar}.${cents}';
+			})
 		]);
 		this.gridView.layoutData = AnchorLayoutData.fill();
 		this.gridView.addEventListener(Event.CHANGE, gridView_changeHandler);
@@ -60,4 +76,11 @@ class GridViewScreen extends Panel {
 	private function backButton_triggerHandler(event:TriggerEvent):Void {
 		this.dispatchEvent(new Event(Event.COMPLETE));
 	}
+}
+
+// items aren't required to be typedefs. they may be classes too!
+private typedef ProductData = {
+	item:String,
+	dept:String,
+	price:Float
 }

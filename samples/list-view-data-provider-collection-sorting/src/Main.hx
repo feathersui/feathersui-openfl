@@ -17,21 +17,43 @@ class Main extends Application {
 		this.initializeView();
 
 		// we have an array of unsorted objects
-		var arrayItems = [
-			{text: "Raccoon"}, {text: "Moose"}, {text: "Cheetah"}, {text: "Penguin"}, {text: "Iguana"}, {text: "Badger"}, {text: "Elephant"},
-			{text: "Kangaroo"}, {text: "Dolphin"}, {text: "Yak"}, {text: "Hedgehog"}, {text: "Flamingo"}, {text: "Warthog"}, {text: "Jaguar"},
-			{text: "Lobster"}, {text: "Urchin"}, {text: "Newt"}, {text: "Zebra"}, {text: "Octopus"}, {text: "X-Ray Tetra"}, {text: "Quokka"}, {text: "Gecko"},
-			{text: "Starling"}, {text: "Toucan"}, {text: "Vulture"}, {text: "Aardvark"},
+		var items:Array<SimpleTextItem> = [
+			{text: "Raccoon"},
+			{text: "Moose"},
+			{text: "Cheetah"},
+			{text: "Penguin"},
+			{text: "Iguana"},
+			{text: "Badger"},
+			{text: "Elephant"},
+			{text: "Kangaroo"},
+			{text: "Dolphin"},
+			{text: "Yak"},
+			{text: "Hedgehog"},
+			{text: "Flamingo"},
+			{text: "Warthog"},
+			{text: "Jaguar"},
+			{text: "Lobster"},
+			{text: "Urchin"},
+			{text: "Newt"},
+			{text: "Zebra"},
+			{text: "Octopus"},
+			{text: "X-Ray Tetra"},
+			{text: "Quokka"},
+			{text: "Gecko"},
+			{text: "Starling"},
+			{text: "Toucan"},
+			{text: "Vulture"},
+			{text: "Aardvark"},
 		];
 
 		// we will display these items in a ListView
 		this.listView = new ListView();
 		// ListView expects an IFlatCollection, so we need to wrap the array in
 		// an ArrayCollection
-		this.listView.dataProvider = new ArrayCollection(arrayItems);
+		this.listView.dataProvider = new ArrayCollection(items);
 		// the ListView will use this function to pass text to item renderers
 		// we'll also use it in our sort comparison functions
-		this.listView.itemToText = (item:Dynamic) -> {
+		this.listView.itemToText = (item:SimpleTextItem) -> {
 			return item.text;
 		};
 		this.listView.layoutData = AnchorLayoutData.fill();
@@ -44,7 +66,7 @@ class Main extends Application {
 	/**
 		Sorts items in the ArrayCollection in alphabetical order (A to Z)
 	**/
-	private function sortAlphabetical(a:Dynamic, b:Dynamic):Int {
+	private function sortAlphabetical(a:SimpleTextItem, b:SimpleTextItem):Int {
 		var aText = this.listView.itemToText(a);
 		var bText = this.listView.itemToText(b);
 		if (aText < bText) {
@@ -114,7 +136,7 @@ class Main extends Application {
 	A custom class to hold data for the PopUpListView where the user chooses how
 	the ListView data provider should be sorted.
 **/
-class SortItem {
+private class SortItem {
 	public function new(text:String, sortCompareFunction:(Dynamic, Dynamic) -> Int) {
 		this.text = text;
 		this.sortCompareFunction = sortCompareFunction;
@@ -127,4 +149,8 @@ class SortItem {
 	public function toString():String {
 		return this.text;
 	}
+}
+
+private typedef SimpleTextItem = {
+	text:String
 }

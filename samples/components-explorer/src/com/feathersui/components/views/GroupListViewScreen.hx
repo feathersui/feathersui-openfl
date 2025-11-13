@@ -19,6 +19,10 @@ class GroupListViewScreen extends Panel {
 
 		this.layout = new AnchorLayout();
 
+		// data containers may display any type of data. in this case, we're
+		// defining a custom typedef at the end of this file that we've named
+		// ItemType. a custom class could be used instead, if preferred.
+		// you could also skip creating a custom type and use Dynamic or Any.
 		var data:Array<ItemType> = [
 			{
 				text: "A",
@@ -150,7 +154,7 @@ class GroupListViewScreen extends Panel {
 		];
 		this.groupListView = new GroupListView();
 		this.groupListView.variant = GroupListView.VARIANT_BORDERLESS;
-		this.groupListView.dataProvider = new ArrayHierarchicalCollection(data, item -> item.children);
+		this.groupListView.dataProvider = new ArrayHierarchicalCollection(data, (item:ItemType) -> item.children);
 		this.groupListView.itemToText = (item:ItemType) -> {
 			return item.text;
 		};

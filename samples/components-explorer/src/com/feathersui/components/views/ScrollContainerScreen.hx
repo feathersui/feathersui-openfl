@@ -1,17 +1,18 @@
 package com.feathersui.components.views;
 
-import feathers.data.ArrayCollection;
-import feathers.layout.HorizontalLayout;
-import feathers.controls.PopUpListView;
-import feathers.layout.VerticalLayout;
-import feathers.skins.RectangleSkin;
 import feathers.controls.Button;
 import feathers.controls.Header;
 import feathers.controls.Panel;
+import feathers.controls.PopUpListView;
 import feathers.controls.ScrollContainer;
+import feathers.data.ArrayCollection;
 import feathers.events.TriggerEvent;
 import feathers.layout.AnchorLayout;
 import feathers.layout.AnchorLayoutData;
+import feathers.layout.HorizontalLayout;
+import feathers.layout.ILayout;
+import feathers.layout.VerticalLayout;
+import feathers.skins.RectangleSkin;
 import openfl.events.Event;
 
 class ScrollContainerScreen extends Panel {
@@ -66,11 +67,11 @@ class ScrollContainerScreen extends Panel {
 		header.leftView = backButton;
 
 		this.layoutListView = new PopUpListView();
-		this.layoutListView.dataProvider = new ArrayCollection([
+		this.layoutListView.dataProvider = new ArrayCollection<LayoutItem>([
 			{text: "Vertical", layout: this.verticalLayout},
 			{text: "Horizontal", layout: this.horizontalLayout},
 		]);
-		this.layoutListView.itemToText = item -> item.text;
+		this.layoutListView.itemToText = (item:LayoutItem) -> item.text;
 		this.layoutListView.addEventListener(Event.CHANGE, layoutListView_changeHandler);
 		header.rightView = this.layoutListView;
 	}
@@ -82,4 +83,9 @@ class ScrollContainerScreen extends Panel {
 	private function layoutListView_changeHandler(event:Event):Void {
 		this.container.layout = this.layoutListView.selectedItem.layout;
 	}
+}
+
+private typedef LayoutItem = {
+	text:String,
+	layout:ILayout
 }

@@ -102,7 +102,7 @@ class MainMenu extends Panel {
 			]),
 			// @formatter:on
 		]);
-		menuItems.itemToChildren = item -> item.children;
+		menuItems.itemToChildren = (item:MenuItem) -> item.children;
 
 		this.listView = new GroupListView();
 		this.listView.variant = GroupListView.VARIANT_BORDERLESS;
