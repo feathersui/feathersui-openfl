@@ -48,8 +48,9 @@ class GridViewScreen extends Panel {
 				if (cents == null) {
 					cents = "";
 				}
-				// ensure that cents renders with two digits, adding zeroes if necessary
-				cents = StringTools.rpad(cents, "0", 2);
+				// ensure that cents renders with exactly two digits, by
+				// removing excess digits or adding zeroes, if necessary
+				cents = StringTools.rpad(cents.substr(0, 2), "0", 2);
 				return '${dollar}.${cents}';
 			})
 		]);
