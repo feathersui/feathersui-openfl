@@ -3267,7 +3267,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			totalWidth += size;
 			indices.push(i);
 		}
-		if (totalWidth == availableWidth) {
+		if (MathUtil.fuzzyEquals(totalWidth, availableWidth)) {
+			// floating point precision errors can result in an extremely small
+			// difference that we shouldn't bother distributing
 			return;
 		}
 
