@@ -22,12 +22,12 @@ import openfl.display.DisplayObject;
 **/
 class DisplayObjectFactory<T:B, B:DisplayObject> {
 	/**
-		Creates a `DisplayObjectFactory` that instantiates a display object by
-		instantiating the specified class. The class must have a constructor
-		with zero required arguments.
+		Creates a `DisplayObjectFactory` that returns the same display object
+		instance each time the factory is used.
 
-		To instantiate an object with one or more required constructor
-		arguments, use `DisplayObjectFactory.withFunction()` instead.
+		To instantiate a different display object each time, use
+		`DisplayObjectFactory.withClass()` or
+		`DisplayObjectFactory.withFunction()` instead.
 	**/
 	public static function withDisplayObject<T:B, B:DisplayObject>(displayObject:T, ?destroy:(T) -> Void):DisplayObjectFactory<T, B> {
 		var item = new DisplayObjectFactory<T, B>();
