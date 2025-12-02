@@ -1439,7 +1439,7 @@ class ComboBox extends FeathersControl implements IIndexSelector implements IDat
 	}
 
 	private function comboBox_textInput_focusOutHandler(event:FocusEvent):Void {
-		// the list view can stay open of the focus is still inside
+		// the list view can stay open if the focus is still inside
 		if (event.relatedObject != null && (event.relatedObject == this.listView || this.listView.contains(event.relatedObject))) {
 			return;
 		}

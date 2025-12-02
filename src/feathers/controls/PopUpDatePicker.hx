@@ -906,7 +906,7 @@ class PopUpDatePicker extends FeathersControl implements IDateSelector implement
 	}
 
 	private function popUpDatePicker_textInput_focusOutHandler(event:FocusEvent):Void {
-		// the date picker can stay open of the focus is still inside
+		// the date picker can stay open if the focus is still inside
 		if (event.relatedObject != null && (event.relatedObject == this.datePicker || this.datePicker.contains(event.relatedObject))) {
 			return;
 		}
