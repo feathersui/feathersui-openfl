@@ -2072,7 +2072,7 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 				case Keyboard.UP:
 					if (result == -1) {
 						// special case: if there is no current selection,
-						// start at the bottom isntead of the top.
+						// start at the bottom instead of the top.
 						// both macOS and Windows behave like this.
 						result = this._dataProvider.getLength() - 1;
 					} else {
