@@ -1475,7 +1475,8 @@ class MenuBar extends FeathersControl implements IDataSelector<Dynamic> implemen
 		if (itemState.branch) {
 			menuCollection = new HierarchicalSubCollection(this._dataProvider, menuLocation);
 		} else {
-			menuCollection = new ArrayHierarchicalCollection();
+			MenuEvent.dispatch(this, MenuEvent.ITEM_TRIGGER, itemState);
+			return;
 		}
 		var factory = this._menuFactory != null ? this._menuFactory : defaultMenuFactory;
 		this._oldMenuFactory = factory;
