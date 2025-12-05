@@ -1415,6 +1415,11 @@ class MenuBar extends FeathersControl implements IDataSelector<Dynamic> implemen
 			var layoutObject:ILayoutIndexObject = cast itemRenderer;
 			layoutObject.layoutIndex = state.index;
 		}
+		if ((itemRenderer is IToggle)) {
+			var toggle:IToggle = cast itemRenderer;
+			// if the renderer is an IToggle, this cannot be overridden
+			toggle.selected = state.selected;
+		}
 		this._ignoreSelectionChange = oldIgnoreSelectionChange;
 	}
 
@@ -1491,7 +1496,7 @@ class MenuBar extends FeathersControl implements IDataSelector<Dynamic> implemen
 		this._openedMenu.addEventListener(Event.CLOSE, menuBar_menu_closeHandler);
 
 		this.stage.addEventListener(KeyboardEvent.KEY_DOWN, menuBar_stage_keyDownHandler, false, 0, true);
-		this._selectedIndex = index;
+		this.selectedIndex = index;
 
 		this._openedMenu.showAtOrigin(itemRenderer);
 		MenuEvent.dispatch(this, MenuEvent.MENU_OPEN, itemState);
