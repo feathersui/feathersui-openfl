@@ -1486,6 +1486,7 @@ class MenuBar extends FeathersControl implements IDataSelector<Dynamic> implemen
 		this._openedMenu.itemToText = itemToText;
 		this._openedMenu.itemToSeparator = itemToSeparator;
 		this._openedMenu.itemToEnabled = itemToEnabled;
+		this._openedMenu.visible = menuCollection.getLength() > 0;
 		this._openedMenu.addEventListener(MenuEvent.ITEM_TRIGGER, menuBar_menu_itemTriggerHandler);
 		this._openedMenu.addEventListener(Event.CLOSE, menuBar_menu_closeHandler);
 
