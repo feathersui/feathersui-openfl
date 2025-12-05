@@ -1572,7 +1572,7 @@ class MenuBar extends FeathersControl implements IDataSelector<Dynamic> implemen
 		var itemState = this.itemRendererToItemState.get(itemRenderer);
 		if (itemState.branch) {
 			this.openMenuAtIndex(itemState.index);
-		} else {
+		} else if (!itemState.separator && itemState.enabled) {
 			MenuEvent.dispatch(this, MenuEvent.ITEM_TRIGGER, itemState);
 		}
 	}
