@@ -197,6 +197,15 @@ class EdgePuller extends EventDispatcher {
 			return this._maxPullDistance;
 		}
 		this._maxPullDistance = value;
+		if (this._pendingOpened != null) {
+			if (this._pendingOpened) {
+				// the old maximum was the animation target, but we have a new
+				// maximum, so that needs to be the target now, or the edge will
+				// pull too far or not far enough.
+				this.throwTo(this.getMaxPullDistance());
+			}
+			// if the old animation target was 0.0, so it will still be 0.0
+		}
 		return this._maxPullDistance;
 	}
 
