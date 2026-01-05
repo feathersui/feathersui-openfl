@@ -102,6 +102,7 @@ class TestMain extends Sprite {
 		runner.addCase(new feathers.data.ArrayHierarchicalCollectionTest());
 		runner.addCase(new feathers.data.HierarchicalSubCollectionTest());
 		runner.addCase(new feathers.data.TreeCollectionTest());
+		runner.addCase(new feathers.data.VectorCollectionTest());
 		runner.addCase(new feathers.layout.AnchorLayoutTest());
 		runner.addCase(new feathers.layout.FlowRowsLayoutTest());
 		runner.addCase(new feathers.layout.HorizontalDistributedLayoutTest());
