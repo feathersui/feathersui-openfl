@@ -20,6 +20,7 @@ import openfl.display.BitmapData;
 import openfl.display.DisplayObject;
 import openfl.display.Loader;
 import openfl.display.MovieClip;
+import openfl.display.PixelSnapping;
 import openfl.display.StageScaleMode;
 import openfl.errors.SecurityError;
 import openfl.events.Event;
@@ -322,6 +323,26 @@ class AssetLoader extends FeathersControl {
 		return this._scaleMode;
 	}
 
+	/**
+		Applies pixel snapping to the loaded content, if the loaded content is a
+		bitmap. For other types of loaded content, the `pixelSnapping` property
+		is ignored.
+
+		@see [`openfl.display.Bitmap.pixelSnapping`](https://api.openfl.org/openfl/display/Bitmap.html#pixelSnapping)
+	**/
+	@:style
+	public var pixelSnapping:PixelSnapping = AUTO;
+
+	/**
+		Applies smoothing to the loaded content, if the loaded content is a
+		bitmap. For other types of loaded content, the `smoothing` property is
+		ignored.
+
+		@see [`openfl.display.Bitmap.smoothing`](https://api.openfl.org/openfl/display/Bitmap.html#smoothing)
+	**/
+	@:style
+	public var smoothing:Bool = false;
+
 	private function initializeAssetLoaderTheme():Void {
 		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelAssetLoaderStyles.initialize();
@@ -336,6 +357,21 @@ class AssetLoader extends FeathersControl {
 	override private function update():Void {
 		var dataInvalid = this.isInvalid(DATA);
 		var layoutInvalid = this.isInvalid(LAYOUT);
+		var stylesInvalid = this.isInvalid(STYLES);
+
+		if (dataInvalid || stylesInvalid) {
+			if (this.content != null) {
+				var bitmap = Std.downcast(this.content, Bitmap);
+				if (bitmap == null) {
+					var loader = Std.downcast(this.content, Loader);
+					bitmap = Std.downcast(loader.content, Bitmap);
+				}
+				if (bitmap != null) {
+					bitmap.pixelSnapping = this.pixelSnapping;
+					bitmap.smoothing = this.smoothing;
+				}
+			}
+		}
 
 		this.measure();
 		this.layoutChildren();
@@ -492,7 +528,7 @@ class AssetLoader extends FeathersControl {
 	}
 
 	private function createBitmap(bitmapData:BitmapData):Bitmap {
-		return new Bitmap(bitmapData);
+		return new Bitmap(bitmapData, this.pixelSnapping, this.smoothing);
 	}
 
 	private function cleanupLoader():Void {
@@ -519,6 +555,12 @@ class AssetLoader extends FeathersControl {
 	}
 
 	private function loader_contentLoaderInfo_completeHandler(event:Event):Void {
+		var bitmap = Std.downcast(this.loader.content, Bitmap);
+		if (bitmap != null) {
+			bitmap.pixelSnapping = this.pixelSnapping;
+			bitmap.smoothing = this.smoothing;
+		}
+
 		this.addChild(this.loader);
 		this.content = this.loader;
 		this._contentMeasurements.save(this.content);
