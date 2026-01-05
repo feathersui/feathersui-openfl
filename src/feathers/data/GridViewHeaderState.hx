@@ -81,4 +81,11 @@ class GridViewHeaderState {
 		@since 1.2.0
 	**/
 	public var sortOrder:SortOrder = NONE;
+
+	/**
+		Returns the header's recycler ID.
+
+		@since 1.4.0
+	**/
+	public var recyclerID:String;
 }

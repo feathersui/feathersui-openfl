@@ -72,4 +72,11 @@ class TreeGridViewHeaderState {
 		@since 1.0.0
 	**/
 	public var enabled:Bool = true;
+
+	/**
+		Returns the header's recycler ID.
+
+		@since 1.4.0
+	**/
+	public var recyclerID:String;
 }

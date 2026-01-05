@@ -9,6 +9,7 @@
 package feathers.controls;
 
 import feathers.data.TreeGridViewCellState;
+import feathers.data.TreeGridViewHeaderState;
 import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.utils.DisplayObjectRecycler;
 import openfl.display.DisplayObject;
@@ -100,6 +101,23 @@ class TreeGridViewColumn extends EventDispatcher implements IGridViewColumn {
 		@since 1.0.0
 	**/
 	public var cellRendererRecycler:AbstractDisplayObjectRecycler<Dynamic, TreeGridViewCellState, DisplayObject> = null;
+
+	/**
+		Manages the header renderer used by this tree grid view column.
+
+		In the following example, the column uses a custom header renderer class:
+
+		```haxe
+		column.headerRendererRecycler = DisplayObjectRecycler.withClass(CustomHeaderRenderer);
+		```
+
+		@see `feathers.controls.TreeGridView.headerRendererRecycler`
+		@see `feathers.controls.dataRenderers.SortOrderHeaderRenderer`
+		@see `feathers.controls.dataRenderers.LayoutGroupItemRenderer`
+
+		@since 1.4.0
+	**/
+	public var headerRendererRecycler:AbstractDisplayObjectRecycler<Dynamic, TreeGridViewHeaderState, DisplayObject> = null;
 
 	/**
 		Converts an item to text to display within a grid view cell. By default,

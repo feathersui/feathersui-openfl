@@ -9,6 +9,7 @@
 package feathers.controls;
 
 import feathers.data.GridViewCellState;
+import feathers.data.GridViewHeaderState;
 import feathers.data.SortOrder;
 import feathers.utils.AbstractDisplayObjectRecycler;
 import feathers.utils.DisplayObjectRecycler;
@@ -101,6 +102,23 @@ class GridViewColumn extends EventDispatcher implements IGridViewColumn {
 		@since 1.0.0
 	**/
 	public var cellRendererRecycler:AbstractDisplayObjectRecycler<Dynamic, GridViewCellState, DisplayObject> = null;
+
+	/**
+		Manages the header renderer used by this grid view column.
+
+		In the following example, the column uses a custom header renderer class:
+
+		```haxe
+		column.headerRendererRecycler = DisplayObjectRecycler.withClass(CustomHeaderRenderer);
+		```
+
+		@see `feathers.controls.GridView.headerRendererRecycler`
+		@see `feathers.controls.dataRenderers.SortOrderHeaderRenderer`
+		@see `feathers.controls.dataRenderers.LayoutGroupItemRenderer`
+
+		@since 1.4.0
+	**/
+	public var headerRendererRecycler:AbstractDisplayObjectRecycler<Dynamic, GridViewHeaderState, DisplayObject> = null;
 
 	/**
 

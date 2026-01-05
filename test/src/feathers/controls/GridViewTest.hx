@@ -677,6 +677,48 @@ class GridViewTest extends Test {
 		Assert.equals(6, updatedColumns.length);
 	}
 
+	public function testColumnItemStateUpdate():Void {
+		var updatedDefaultRows:Array<Int> = [];
+		var updatedDefaultColumns:Array<Int> = [];
+		var updatedCustomRows:Array<Int> = [];
+		var updatedCustomColumns:Array<Int> = [];
+		this._gridView.dataProvider = new ArrayCollection([{a: "A0", b: "B0"}, {a: "A1", b: "B1"}, {a: "A2", b: "B2"}]);
+		this._gridView.cellRendererRecycler = DisplayObjectRecycler.withClass(ItemRenderer, (target, state:GridViewCellState) -> {
+			updatedDefaultRows.push(state.rowIndex);
+			updatedDefaultColumns.push(state.columnIndex);
+		});
+		var column1 = new GridViewColumn("B", item -> item.b);
+		column1.cellRendererRecycler = DisplayObjectRecycler.withClass(ItemRenderer, (target, state:GridViewCellState) -> {
+			updatedCustomRows.push(state.rowIndex);
+			updatedCustomColumns.push(state.columnIndex);
+		});
+		this._gridView.columns = new ArrayCollection([new GridViewColumn("A", item -> item.a), column1,]);
+		this._gridView.validateNow();
+		Assert.equals(3, updatedDefaultRows.length);
+		Assert.equals(0, updatedDefaultRows[0]);
+		Assert.equals(1, updatedDefaultRows[1]);
+		Assert.equals(2, updatedDefaultRows[2]);
+		Assert.equals(3, updatedDefaultColumns.length);
+		Assert.equals(0, updatedDefaultColumns[0]);
+		Assert.equals(0, updatedDefaultColumns[1]);
+		Assert.equals(0, updatedDefaultColumns[2]);
+
+		Assert.equals(3, updatedCustomRows.length);
+		Assert.equals(0, updatedCustomRows[0]);
+		Assert.equals(1, updatedCustomRows[1]);
+		Assert.equals(2, updatedCustomRows[2]);
+		Assert.equals(3, updatedCustomColumns.length);
+		Assert.equals(1, updatedCustomColumns[0]);
+		Assert.equals(1, updatedCustomColumns[1]);
+		Assert.equals(1, updatedCustomColumns[2]);
+		this._gridView.setInvalid(DATA);
+		this._gridView.validateNow();
+		Assert.equals(3, updatedDefaultRows.length);
+		Assert.equals(3, updatedDefaultColumns.length);
+		Assert.equals(3, updatedCustomRows.length);
+		Assert.equals(3, updatedCustomColumns.length);
+	}
+
 	public function testUpdateItemCallsDisplayObjectRecyclerUpdate():Void {
 		var updatedRows:Array<Int> = [];
 		var updatedColumns:Array<Int> = [];

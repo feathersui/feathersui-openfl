@@ -447,6 +447,47 @@ import utest.Test;
 		Assert.equals(6, updatedColumns.length);
 	}
 
+	public function testColumnItemStateUpdate():Void {
+		var updatedDefaultLocations:Array<Array<Int>> = [];
+		var updatedDefaultColumns:Array<Int> = [];
+		var updatedCustomLocations:Array<Array<Int>> = [];
+		var updatedCustomColumns:Array<Int> = [];
+		this._treeGridView.dataProvider = new ArrayHierarchicalCollection([{a: "A0", b: "B0"}, {a: "A1", b: "B1"}, {a: "A2", b: "B2"}]);
+		this._treeGridView.cellRendererRecycler = DisplayObjectRecycler.withClass(HierarchicalItemRenderer, (target, state:TreeGridViewCellState) -> {
+			updatedDefaultLocations.push(state.rowLocation);
+			updatedDefaultColumns.push(state.columnIndex);
+		});
+		var column1 = new TreeGridViewColumn("B", item -> item.b);
+		column1.cellRendererRecycler = DisplayObjectRecycler.withClass(HierarchicalItemRenderer, (target, state:TreeGridViewCellState) -> {
+			updatedCustomLocations.push(state.rowLocation);
+			updatedCustomColumns.push(state.columnIndex);
+		});
+		this._treeGridView.columns = new ArrayCollection([new TreeGridViewColumn("A", item -> item.a), column1,]);
+		this._treeGridView.validateNow();
+		Assert.equals(3, updatedDefaultLocations.length);
+		Assert.equals(0, CompareLocations.compareLocations([0], updatedDefaultLocations[0]));
+		Assert.equals(0, CompareLocations.compareLocations([1], updatedDefaultLocations[1]));
+		Assert.equals(0, CompareLocations.compareLocations([2], updatedDefaultLocations[2]));
+		Assert.equals(3, updatedDefaultColumns.length);
+		Assert.equals(0, updatedDefaultColumns[0]);
+		Assert.equals(0, updatedDefaultColumns[1]);
+		Assert.equals(0, updatedDefaultColumns[2]);
+		Assert.equals(3, updatedCustomLocations.length);
+		Assert.equals(0, CompareLocations.compareLocations([0], updatedCustomLocations[0]));
+		Assert.equals(0, CompareLocations.compareLocations([1], updatedCustomLocations[1]));
+		Assert.equals(0, CompareLocations.compareLocations([2], updatedCustomLocations[2]));
+		Assert.equals(3, updatedCustomColumns.length);
+		Assert.equals(1, updatedCustomColumns[0]);
+		Assert.equals(1, updatedCustomColumns[1]);
+		Assert.equals(1, updatedCustomColumns[2]);
+		this._treeGridView.setInvalid(DATA);
+		this._treeGridView.validateNow();
+		Assert.equals(3, updatedDefaultLocations.length);
+		Assert.equals(3, updatedDefaultColumns.length);
+		Assert.equals(3, updatedCustomLocations.length);
+		Assert.equals(3, updatedCustomColumns.length);
+	}
+
 	public function testUpdateItemCallsDisplayObjectRecyclerUpdate():Void {
 		var updatedLocations:Array<Array<Int>> = [];
 		var updatedColumns:Array<Int> = [];
