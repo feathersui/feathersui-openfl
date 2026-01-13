@@ -13,8 +13,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v5
-    - uses: krdlab/setup-haxe@8f35d1215b93e940a76f9470e22e8a5ba6149598
+    - uses: actions/checkout@v6
+    - uses: krdlab/setup-haxe@v2
       with:
         haxe-version: 4.0.5
     - name: Set up Haxelib dependencies
@@ -192,8 +192,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v5
-    - uses: krdlab/setup-haxe@8f35d1215b93e940a76f9470e22e8a5ba6149598
+    - uses: actions/checkout@v6
+    - uses: krdlab/setup-haxe@v2
       with:
         haxe-version: 4.0.5
     - name: Set up Haxelib dependencies
@@ -215,8 +215,8 @@ jobs:
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v5
-    - uses: krdlab/setup-haxe@8f35d1215b93e940a76f9470e22e8a5ba6149598
+    - uses: actions/checkout@v6
+    - uses: krdlab/setup-haxe@v2
       with:
         haxe-version: 4.0.5
     - name: Set up Haxelib dependencies
@@ -238,8 +238,8 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v5
-    - uses: krdlab/setup-haxe@8f35d1215b93e940a76f9470e22e8a5ba6149598
+    - uses: actions/checkout@v6
+    - uses: krdlab/setup-haxe@v2
       with:
         haxe-version: 4.0.5
     - name: Set up Haxelib dependencies
@@ -261,12 +261,12 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
     - uses: joshtynjala/setup-adobe-air-action@v2
       with:
         air-version: "33.1"
         accept-license: true
-    - uses: krdlab/setup-haxe@8f35d1215b93e940a76f9470e22e8a5ba6149598
+    - uses: krdlab/setup-haxe@v2
       with:
         haxe-version: 4.0.5
     - name: Set up Haxelib dependencies
