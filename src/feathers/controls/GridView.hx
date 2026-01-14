@@ -18,6 +18,7 @@ import feathers.core.IDataSelector;
 import feathers.core.IFocusContainer;
 import feathers.core.IIndexSelector;
 import feathers.core.IMeasureObject;
+import feathers.core.ISortOrderSelector;
 import feathers.core.ITextControl;
 import feathers.core.IUIControl;
 import feathers.core.IValidating;
@@ -145,8 +146,8 @@ import openfl._internal.utils.ObjectPool;
 @:access(feathers.data.GridViewHeaderState)
 @defaultXmlProperty("dataProvider")
 @:styleContext
-class GridView extends BaseScrollContainer implements IIndexSelector implements IDataSelector<Dynamic> implements IFocusContainer implements IDragSource
-		implements IDropTarget {
+class GridView extends BaseScrollContainer implements IIndexSelector implements IDataSelector<Dynamic> implements ISortOrderSelector
+		implements IFocusContainer implements IDragSource implements IDropTarget {
 	/**
 		A variant used to style the grid view without a border. The variant is
 		used by default on mobile.
@@ -1153,6 +1154,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		@since 1.0.0
 	**/
+	@:bindable("sortOrderChange")
 	public var sortOrder(get, set):SortOrder;
 
 	private function get_sortOrder():SortOrder {
@@ -1169,6 +1171,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		}
 		this._sortOrder = value;
 		this.setInvalid(SORT);
+		FeathersEvent.dispatch(this, FeathersEvent.SORT_ORDER_CHANGE);
 		return this._sortOrder;
 	}
 
@@ -1278,6 +1281,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	private var _ignoreSelectionChange = false;
 	private var _ignoreLayoutChanges = false;
 	private var _ignoreHeaderLayoutChanges = false;
+	private var _ignoreHeaderSortOrderChanges = false;
 	private var _pendingScrollRowIndex:Int = -1;
 	private var _pendingScrollDuration:Null<Float> = null;
 
@@ -2330,6 +2334,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			var column = state.column;
 			this.headerRendererToHeaderState.remove(headerRenderer);
 			this.dataToHeaderRenderer.remove(column);
+			headerRenderer.removeEventListener(FeathersEvent.SORT_ORDER_CHANGE, gridView_headerRenderer_sortOrderChangeHandler);
 			headerRenderer.removeEventListener(TriggerEvent.TRIGGER, gridView_headerRenderer_triggerHandler);
 			headerRenderer.removeEventListener(MouseEvent.CLICK, gridView_headerRenderer_clickHandler);
 			headerRenderer.removeEventListener(TouchEvent.TOUCH_TAP, gridView_headerRenderer_touchTapHandler);
@@ -2700,6 +2705,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			headerRenderer = storage.inactiveHeaderRenderers.shift();
 		}
 		this.updateHeaderRenderer(headerRenderer, state, storage);
+		if ((headerRenderer is ISortOrderSelector)) {
+			headerRenderer.addEventListener(FeathersEvent.SORT_ORDER_CHANGE, gridView_headerRenderer_sortOrderChangeHandler);
+		}
 		if ((headerRenderer is ITriggerView)) {
 			// prefer TriggerEvent.TRIGGER
 			headerRenderer.addEventListener(TriggerEvent.TRIGGER, gridView_headerRenderer_triggerHandler);
@@ -2774,6 +2782,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	private function refreshHeaderRendererProperties(headerRenderer:DisplayObject, state:GridViewHeaderState):Void {
+		var oldIgnoreSortOrderChanges = this._ignoreHeaderSortOrderChanges;
+		this._ignoreHeaderSortOrderChanges = true;
 		if ((headerRenderer is IUIControl)) {
 			var uiControl:IUIControl = cast headerRenderer;
 			uiControl.enabled = state.enabled;
@@ -2784,6 +2794,10 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			header.columnIndex = state.columnIndex;
 			header.gridViewOwner = state.owner;
 		}
+		if ((headerRenderer is ISortOrderSelector)) {
+			var sortObject:ISortOrderSelector = cast headerRenderer;
+			sortObject.sortOrder = state.sortOrder;
+		}
 		if ((headerRenderer is ISortOrderObserver)) {
 			var sortObject:ISortOrderObserver = cast headerRenderer;
 			sortObject.sortOrder = state.sortOrder;
@@ -2792,6 +2806,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			var layoutObject:ILayoutIndexObject = cast headerRenderer;
 			layoutObject.layoutIndex = state.columnIndex;
 		}
+		this._ignoreHeaderSortOrderChanges = oldIgnoreSortOrderChanges;
 	}
 
 	private function refreshSelectedIndicesAfterFilterOrSort():Void {
@@ -3601,14 +3616,32 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		this._ignoreDataProviderChanges = oldIgnoreDataProviderChanges;
 	}
 
-	private function updateSortedColumn(column:GridViewColumn):Void {
-		if (!this._sortableColumns || column.defaultSortOrder == NONE) {
+	private function updateSortedColumn(column:GridViewColumn, headerRenderer:DisplayObject):Void {
+		if (!this._sortableColumns) {
+			return;
+		}
+		if ((headerRenderer is ISortOrderSelector)) {
+			var sortOrderRenderer:ISortOrderSelector = cast headerRenderer;
+			// don't use setter because it we don't want it to set sortOrder to
+			// column.defaultSortOrder
+			this._sortedColumn = column;
+			this._sortOrder = sortOrderRenderer.sortOrder;
+			this.setInvalid(SORT);
+			return;
+		}
+		if (!(headerRenderer is ISortOrderSelector) && column.defaultSortOrder == NONE) {
 			return;
 		}
 		if (this._sortedColumn != column) {
+			// also automatically sets sortOrder to column.defaultSortOrder
 			this.sortedColumn = column;
 		} else {
-			this.sortOrder = (this._sortOrder == ASCENDING) ? SortOrder.DESCENDING : SortOrder.ASCENDING;
+			var newSortOrder = column.defaultSortOrder;
+			if (this._sortOrder != NONE) {
+				// toggle between ascending and descending
+				newSortOrder = (this._sortOrder == ASCENDING) ? SortOrder.DESCENDING : SortOrder.ASCENDING;
+			}
+			this.sortOrder = newSortOrder;
 		}
 	}
 
@@ -3714,7 +3747,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (state == null) {
 			return;
 		}
-		this.updateSortedColumn(state.column);
+		if (!(headerRenderer is ISortOrderSelector)) {
+			this.updateSortedColumn(state.column, headerRenderer);
+		}
 		GridViewEvent.dispatchForHeader(this, GridViewEvent.HEADER_TRIGGER, state);
 	}
 
@@ -3731,7 +3766,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (state == null) {
 			return;
 		}
-		this.updateSortedColumn(state.column);
+		if (!(headerRenderer is ISortOrderSelector)) {
+			this.updateSortedColumn(state.column, headerRenderer);
+		}
 		GridViewEvent.dispatchForHeader(this, GridViewEvent.HEADER_TRIGGER, state);
 	}
 
@@ -3748,8 +3785,29 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (state == null) {
 			return;
 		}
-		this.updateSortedColumn(state.column);
+		if (!(headerRenderer is ISortOrderSelector)) {
+			this.updateSortedColumn(state.column, headerRenderer);
+		}
 		GridViewEvent.dispatchForHeader(this, GridViewEvent.HEADER_TRIGGER, state);
+	}
+
+	private function gridView_headerRenderer_sortOrderChangeHandler(event:FeathersEvent):Void {
+		if (this._ignoreHeaderSortOrderChanges) {
+			return;
+		}
+		var headerRenderer = cast(event.currentTarget, DisplayObject);
+		if (headerRenderer.parent != this._headerContainer) {
+			return;
+		}
+		var state = this.headerRendererToHeaderState.get(headerRenderer);
+		if (state == null) {
+			return;
+		}
+		if (!(headerRenderer is ISortOrderSelector)) {
+			// shouldn't happen, but might as well check
+			return;
+		}
+		this.updateSortedColumn(state.column, headerRenderer);
 	}
 
 	private function gridView_headerRenderer_resizeHandler(event:Event):Void {
