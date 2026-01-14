@@ -105,6 +105,14 @@ class FeathersEvent extends Event {
 	**/
 	public static inline var DISABLE:EventType<FeathersEvent> = "disable";
 
+	/**
+		The `FeathersEvent.SORT_ORDER_CHANGE` event type is dispatched when the
+		`sortOrder` property of a component changes value.
+
+		@since 1.0.0
+	**/
+	public static inline var SORT_ORDER_CHANGE:EventType<FeathersEvent> = "sortOrderChange";
+
 	#if !flash
 	private static var _pool = new ObjectPool<FeathersEvent>(() -> return new FeathersEvent(null, false, false), (event) -> {
 		event.target = null;
