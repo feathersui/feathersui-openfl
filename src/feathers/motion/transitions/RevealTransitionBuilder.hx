@@ -21,8 +21,8 @@ import openfl.errors.ArgumentError;
 /**
 	Creates animated transitions for view navigators that slide a display object
 	out of view, by animating the `x` or `y` property, while revealing an
-	existing display object that remains stationary below. The display object
-	may slide up, right, down, or left (or at an arbitrary angle).
+	existing display object that remains stationary behind it. The display
+	object may slide up, right, down, or left (or at an arbitrary angle).
 
 	@see [Transitions for Feathers UI navigators](https://feathersui.com/learn/haxe-openfl/navigator-transitions/)
 

@@ -877,7 +877,7 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 			if ((this._currentThumbSkin is IProgrammaticSkin)) {
 				(cast this._currentThumbSkin : IProgrammaticSkin).uiContext = this;
 			}
-			// add it above the trackSkin and secondaryTrackSkin
+			// add it in front of both the trackSkin and secondaryTrackSkin
 			this.addChild(this._currentThumbSkin);
 		} else {
 			this._thumbSkinMeasurements = null;
@@ -946,7 +946,8 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 				(cast this._currentSecondaryTrackSkin : IProgrammaticSkin).uiContext = this;
 			}
 
-			// on the bottom or above the trackSkin
+			// in front of the trackSkin, if it exists
+			// otherwise, on the bottom
 			var index = this._currentTrackSkin != null ? 1 : 0;
 			this.addChildAt(this._currentSecondaryTrackSkin, index);
 		} else {

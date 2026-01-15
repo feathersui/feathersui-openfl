@@ -1486,7 +1486,7 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 		}
 		icon.addEventListener(Event.RESIZE, button_icon_resizeHandler, false, 0, true);
 		var index = this.getChildIndex(this.textField);
-		// the icon should be below the text
+		// the icon should be behind the text
 		this.addChildAt(icon, index);
 	}
 

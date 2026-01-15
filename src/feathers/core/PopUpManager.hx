@@ -14,7 +14,7 @@ import openfl.display.Stage;
 import openfl.errors.ArgumentError;
 
 /**
-	Adds a display object as a pop-up above all other content on the stage.
+	Adds a display object as a pop-up in front of all other content on the stage.
 
 	@since 1.0.0
 **/

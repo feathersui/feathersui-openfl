@@ -864,7 +864,7 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 			} else {
 				this._thumbSkinMeasurements.save(this._currentThumbSkin);
 			}
-			// add it above the trackSkin and secondaryTrackSkin
+			// add it in front of both the trackSkin and secondaryTrackSkin
 			this.addChild(this._currentThumbSkin);
 			this._currentThumbSkin.addEventListener(MouseEvent.MOUSE_DOWN, thumbSkin_mouseDownHandler);
 			if ((this._currentThumbSkin is IProgrammaticSkin)) {
@@ -937,7 +937,8 @@ class BaseScrollBar extends FeathersControl implements IScrollBar {
 				this._secondaryTrackSkinMeasurements.save(this._currentSecondaryTrackSkin);
 			}
 
-			// on the bottom or above the trackSkin
+			// in front of the trackSkin, if it exists
+			// otherwise, on the bottom
 			var index = this._currentTrackSkin != null ? 1 : 0;
 			this.addChildAt(this._currentSecondaryTrackSkin, index);
 			this._currentSecondaryTrackSkin.addEventListener(MouseEvent.MOUSE_DOWN, trackSkin_mouseDownHandler);

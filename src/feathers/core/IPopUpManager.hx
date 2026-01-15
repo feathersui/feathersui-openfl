@@ -65,8 +65,8 @@ interface IPopUpManager {
 	public function isPopUp(target:DisplayObject):Bool;
 
 	/**
-		Determines if a display object is above the highest modal overlay. If
-		there are no modals overlays, determines if a display object is a
+		Determines if a display object is in front of the highest modal overlay.
+		If there are no modals overlays, determines if a display object is a
 		pop-up.
 
 		@since 1.0.0

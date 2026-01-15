@@ -209,7 +209,7 @@ class BaseProgressBar extends FeathersControl implements IRange {
 
 	/**
 		The primary background to display in the progress bar. The background
-		skin is displayed below the fill skin, and the fill skin is affected by
+		skin is displayed behind the fill skin, and the fill skin is affected by
 		the padding, and the background skin may be seen around the edges.
 
 		The original width or height of the background skin will be one of the
@@ -264,8 +264,8 @@ class BaseProgressBar extends FeathersControl implements IRange {
 
 	/**
 		The primary fill to display in the progress bar. The fill skin is
-		rendered above the background skin, with padding around the edges of the
-		the fill skin to reveal the background skin behind.
+		rendered in front of the background skin, with padding around the edges
+		of the the fill skin to reveal the background skin behind.
 
 		In the following example, the progress bar is given a fill skin:
 

@@ -1585,7 +1585,7 @@ class ToggleButton extends BasicToggleButton implements ITextControl implements 
 		}
 		icon.addEventListener(Event.RESIZE, toggleButton_icon_resizeHandler, false, 0, true);
 		var index = this.getChildIndex(this.textField);
-		// the icon should be below the text
+		// the icon should be behind the text
 		this.addChildAt(icon, index);
 	}
 

@@ -318,9 +318,9 @@ class Drawer extends FeathersControl implements IOpenCloseToggle implements IFoc
 	private var _fallbackOverlaySkin:Sprite;
 
 	/**
-		A display object to display below the drawer and above the primary
-		content when the drawer is opened. Blocks mouse and touch events from
-		reaching the primary content.
+		A display object to display behind the drawer and in front of the
+		primary content when the drawer is opened. Blocks mouse and touch events
+		from reaching the primary content.
 
 		@since 1.0.0
 	**/

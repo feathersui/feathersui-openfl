@@ -329,7 +329,7 @@ class BaseScrollContainer extends FeathersControl implements IFocusObject {
 	/**
 		Determines if the scroll bars are fixed to the edges of the container,
 		without overlapping the container's content, or if the scroll bars are
-		floating above the container's content.
+		floating in front of the container's content.
 
 		In the following example, the scroll bars are fixed:
 

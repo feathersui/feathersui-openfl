@@ -655,7 +655,7 @@ class Alert extends Panel {
 			(cast this._currentIcon : IProgrammaticSkin).uiContext = this;
 		}
 		var index = this.getChildIndex(this.messageLabel);
-		// the icon should be below the text
+		// the icon should be behind the text
 		this.addChildAt(this._currentIcon, index);
 	}
 

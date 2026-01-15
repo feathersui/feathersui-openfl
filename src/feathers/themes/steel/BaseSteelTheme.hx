@@ -195,7 +195,8 @@ class BaseSteelTheme extends ClassVariantTheme implements IDarkModeTheme {
 	private var containerFillColor:Int;
 
 	/**
-		The background fill color for overlays that block content below.
+		The background fill color for overlays that are in front of other
+		content and block mouse/touch below.
 	**/
 	private var overlayFillColor:Int;
 

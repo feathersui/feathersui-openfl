@@ -794,7 +794,7 @@ class DefaultFocusManager extends EventDispatcher implements IFocusManager {
 		var target = cast(event.target, DisplayObject);
 		if (this._focusPane != null) {
 			if (this._focusPane == target || this._focusPane.contains(target)) {
-				// move focusPane to top so that it's not below other pop-ups
+				// move focusPane to top so that it's not behind other pop-ups
 				PopUpManager.forStage(this._root.stage).addPopUp(this._focusPane, false, false);
 				return;
 			}
