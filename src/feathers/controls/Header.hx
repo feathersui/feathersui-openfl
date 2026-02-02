@@ -555,8 +555,14 @@ class Header extends FeathersControl implements ITextControl {
 	}
 
 	override public function dispose():Void {
+		if (this._previousTextFormat != null) {
+			this._previousTextFormat.removeEventListener(Event.CHANGE, header_textFormat_changeHandler);
+			this._previousTextFormat = null;
+		}
+
 		this.leftView = null;
 		this.rightView = null;
+
 		super.dispose();
 	}
 

@@ -649,6 +649,15 @@ class Label extends FeathersControl implements ITextControl implements IHTMLText
 		this.paddingLeft = value;
 	}
 
+	override public function dispose():Void {
+		if (this._previousTextFormat != null) {
+			this._previousTextFormat.removeEventListener(Event.CHANGE, label_textFormat_changeHandler);
+			this._previousTextFormat = null;
+		}
+
+		super.dispose();
+	}
+
 	private function initializeLabelTheme():Void {
 		#if !feathersui_disable_default_theme
 		feathers.themes.steel.components.SteelLabelStyles.initialize();

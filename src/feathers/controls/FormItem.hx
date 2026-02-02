@@ -720,6 +720,15 @@ class FormItem extends FeathersControl implements ITextControl implements IFocus
 	@:style
 	public var textPosition:RelativePosition = TOP;
 
+	override public function dispose():Void {
+		if (this._previousTextFormat != null) {
+			this._previousTextFormat.removeEventListener(Event.CHANGE, formItem_textFormat_changeHandler);
+			this._previousTextFormat = null;
+		}
+
+		super.dispose();
+	}
+
 	/**
 		Returns the measured width of the form item's text. Used by `Form` to
 		position and size all form items correctly.

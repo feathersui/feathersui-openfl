@@ -452,6 +452,11 @@ class ItemRenderer extends ToggleButton implements IFocusContainer implements IL
 	}
 
 	override public function dispose():Void {
+		if (this._previousSecondaryTextFormat != null) {
+			this._previousSecondaryTextFormat.removeEventListener(Event.CHANGE, itemRenderer_secondaryTextFormat_changeHandler);
+			this._previousSecondaryTextFormat = null;
+		}
+
 		this.data = null;
 		this.layoutIndex = -1;
 		this.pointerTarget = null;

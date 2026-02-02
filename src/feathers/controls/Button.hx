@@ -741,6 +741,15 @@ class Button extends BasicButton implements ITextControl implements IHTMLTextCon
 	private var _wrappedOnMeasure:Bool = false;
 	private var _stateToTextFormat:Map<ButtonState, AbstractTextFormat> = new Map();
 
+	override public function dispose():Void {
+		if (this._previousTextFormat != null) {
+			this._previousTextFormat.removeEventListener(Event.CHANGE, button_textFormat_changeHandler);
+			this._previousTextFormat = null;
+		}
+
+		super.dispose();
+	}
+
 	/**
 		Gets the text format to be used by the button when its `currentState`
 		property matches the specified state value.

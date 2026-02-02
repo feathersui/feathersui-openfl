@@ -502,6 +502,19 @@ class ToggleSwitch extends FeathersControl implements IToggle implements IFocusO
 
 	private var _animateSelectionChange:Bool = false;
 
+	override public function dispose():Void {
+		if (this._previousOnTextFormat != null) {
+			this._previousOnTextFormat.removeEventListener(Event.CHANGE, toggleSwitch_onTextFormat_changeHandler);
+			this._previousOnTextFormat = null;
+		}
+		if (this._previousOffTextFormat != null) {
+			this._previousOffTextFormat.removeEventListener(Event.CHANGE, toggleSwitch_offTextFormat_changeHandler);
+			this._previousOffTextFormat = null;
+		}
+
+		super.dispose();
+	}
+
 	/**
 		Changes the `selected` property and animates the position of the thumb.
 
