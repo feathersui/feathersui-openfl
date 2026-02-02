@@ -1235,6 +1235,16 @@ class TextInput extends FeathersControl implements IStateContext<TextInputState>
 
 	override public function dispose():Void {
 		this.destroyErrorCallout();
+
+		if (this._previousTextFormat != null) {
+			this._previousTextFormat.removeEventListener(Event.CHANGE, textInput_textFormat_changeHandler);
+			this._previousTextFormat = null;
+		}
+		if (this._previousPromptTextFormat != null) {
+			this._previousPromptTextFormat.removeEventListener(Event.CHANGE, textInput_promptTextFormat_changeHandler);
+			this._previousPromptTextFormat = null;
+		}
+
 		super.dispose();
 	}
 
