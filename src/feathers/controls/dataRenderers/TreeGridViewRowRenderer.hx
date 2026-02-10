@@ -243,6 +243,7 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 		}
 		this._layoutIndex = value;
 		this.setInvalid(DATA);
+		this.setInvalid(STYLES);
 		return this._layoutIndex;
 	}
 
