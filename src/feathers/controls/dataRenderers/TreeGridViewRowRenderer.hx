@@ -58,7 +58,7 @@ import openfl._internal.utils.ObjectPool;
 **/
 @:styleContext
 class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implements IToggle implements IDataRenderer
-		implements IStateContext<ToggleButtonState> {
+		implements IStateContext<ToggleButtonState> implements ILayoutIndexObject {
 	private static final INVALIDATION_FLAG_CELL_RENDERER_FACTORY = InvalidationFlag.CUSTOM("cellRendererFactory");
 
 	private static final RESET_CELL_STATE = new TreeGridViewCellState();
@@ -457,6 +457,25 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 		return this._customColumnWidths;
 	}
 
+	/**
+		The display object to use as the background skin when the alternate
+		skin is enabled.
+
+		The following example passes a bitmap to use as an alternate background
+		skin:
+
+		```haxe
+		rowRenderer.alternateBackgroundSkin = new Bitmap(bitmapData);
+		```
+
+		@default null
+
+		@since 1.4.0
+
+	**/
+	@:style
+	public var alternateBackgroundSkin:DisplayObject = null;
+
 	private var _rowLayout:GridViewRowLayout;
 
 	private var _pointerToState:PointerToState<ToggleButtonState>;
@@ -600,6 +619,16 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 			(cast skin : IStateObserver).stateContext = null;
 		}
 		super.removeCurrentBackgroundSkin(skin);
+	}
+
+	override private function getCurrentBackgroundSkin():DisplayObject {
+		if (!this._enabled && this.disabledBackgroundSkin != null) {
+			return this.disabledBackgroundSkin;
+		}
+		if (this.alternateBackgroundSkin != null && (this._layoutIndex % 2) == 1) {
+			return this.alternateBackgroundSkin;
+		}
+		return this.backgroundSkin;
 	}
 
 	private function updateCells():Void {

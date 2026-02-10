@@ -56,7 +56,7 @@ import openfl._internal.utils.ObjectPool;
 	@since 1.0.0
 **/
 @:styleContext
-class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements IToggle implements IDataRenderer implements IStateContext<ToggleButtonState> {
+class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements IToggle implements IDataRenderer implements IStateContext<ToggleButtonState> implements ILayoutIndexObject {
 	private static final INVALIDATION_FLAG_CELL_RENDERER_FACTORY = InvalidationFlag.CUSTOM("cellRendererFactory");
 
 	private static final RESET_CELL_STATE = new GridViewCellState();
@@ -379,6 +379,46 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		return this._customColumnWidths;
 	}
 
+	private var _layoutIndex:Int = -1;
+
+	/**
+		@see `feathers.layout.ILayoutIndexObject.layoutIndex`
+	**/
+	public var layoutIndex(get, set):Int;
+
+	private function get_layoutIndex():Int {
+		return this._layoutIndex;
+	}
+
+	private function set_layoutIndex(value:Int):Int {
+		if (this._layoutIndex == value) {
+			return this._layoutIndex;
+		}
+		this._layoutIndex = value;
+		this.setInvalid(DATA);
+		this.setInvalid(STYLES);
+		return this._layoutIndex;
+	}
+
+	/**
+		The display object to use as the background skin when the alternate
+		skin is enabled.
+
+		The following example passes a bitmap to use as an alternate background
+		skin:
+
+		```haxe
+		rowRenderer.alternateBackgroundSkin = new Bitmap(bitmapData);
+		```
+
+		@default null
+
+		@since 1.4.0
+
+	**/
+	@:style
+	public var alternateBackgroundSkin:DisplayObject = null;
+
 	private var _rowLayout:GridViewRowLayout;
 
 	private var _pointerToState:PointerToState<ToggleButtonState>;
@@ -522,6 +562,16 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 			(cast skin : IStateObserver).stateContext = null;
 		}
 		super.removeCurrentBackgroundSkin(skin);
+	}
+
+	override private function getCurrentBackgroundSkin():DisplayObject {
+		if (!this._enabled && this.disabledBackgroundSkin != null) {
+			return this.disabledBackgroundSkin;
+		}
+		if (this.alternateBackgroundSkin != null && (this._layoutIndex % 2) == 1) {
+			return this.alternateBackgroundSkin;
+		}
+		return this.backgroundSkin;
 	}
 
 	private function updateCells():Void {
