@@ -109,7 +109,7 @@ class FeathersEvent extends Event {
 		The `FeathersEvent.SORT_ORDER_CHANGE` event type is dispatched when the
 		`sortOrder` property of a component changes value.
 
-		@since 1.0.0
+		@since 1.4.0
 	**/
 	public static inline var SORT_ORDER_CHANGE:EventType<FeathersEvent> = "sortOrderChange";
 
