@@ -554,7 +554,7 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> i
 		var result:Array<U> = [];
 		for (i in 0...this.length) {
 			var item = this.get(i);
-			result.push(callback(item, i, this));
+			result[i] = callback(item, i, this);
 		}
 		return new ArrayCollection(result);
 	}
@@ -586,10 +586,12 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> i
 			} else {
 				result = [];
 			}
+			var resultIndex = 0;
 			for (i in 0...this._array.length) {
 				var item = this._array[i];
 				if (this._filterFunction(item)) {
-					result.push(item);
+					result[resultIndex] = item;
+					resultIndex++;
 				}
 			}
 			this._filterAndSortData = result;

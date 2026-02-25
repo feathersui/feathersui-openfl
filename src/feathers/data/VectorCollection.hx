@@ -567,10 +567,12 @@ class VectorCollection<T> extends EventDispatcher implements IFlatCollection<T> 
 			} else {
 				result = new Vector<T>();
 			}
+			var resultIndex = 0;
 			for (i in 0...this._vector.length) {
 				var item = this._vector[i];
 				if (this._filterFunction(item)) {
-					result.push(item);
+					result[resultIndex] = item;
+					resultIndex++;
 				}
 			}
 			this._filterAndSortData = result;
