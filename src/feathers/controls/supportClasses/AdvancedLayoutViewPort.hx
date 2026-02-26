@@ -329,6 +329,8 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 		this.runWithInvalidationFlagsOnly(() -> {
 			this._layoutActive = true;
 			var loopCount = 0;
+			var oldVisibleWidth = visibleWidth;
+			var oldVisibleHeight = visibleHeight;
 			do {
 				this._layoutChanged = false;
 				this.refreshLayout();
@@ -340,6 +342,15 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 					var parentClassName = Type.getClassName(Type.getClass(this.parent));
 					var layoutClassName = this._layout != null ? Type.getClassName(Type.getClass(this._layout)) : "The layout";
 					throw new openfl.errors.IllegalOperationError('${parentClassName} is stuck in an infinite loop during layout. ${layoutClassName} may be dispatching Event.CHANGE too frequently.');
+				}
+				var newVisibleWidth = visibleWidth;
+				var newVisibleHeight = visibleHeight;
+				if (oldVisibleWidth != newVisibleWidth || oldVisibleHeight != newVisibleHeight) {
+					// if the dimensions changed, the visible items may have
+					// changed, so try a second pass
+					oldVisibleWidth = newVisibleWidth;
+					oldVisibleHeight = newVisibleHeight;
+					this._layoutChanged = true;
 				}
 			} while (this._layoutChanged);
 			this._layoutActive = false;
