@@ -347,7 +347,11 @@ class AdvancedLayoutViewPort extends FeathersControl implements IViewPort {
 	}
 
 	private function refreshLayout():Void {
+		var oldIgnoreLayoutChanges = this._ignoreLayoutChanges;
+		this._ignoreLayoutChanges = true;
 		this.refreshChildren(this._layoutItems);
+		this._ignoreLayoutChanges = oldIgnoreLayoutChanges;
+
 		this._layoutResult.reset();
 		if (this._layout != null) {
 			this._layout.layout(this._layoutItems, this._layoutMeasurements, this._layoutResult);
