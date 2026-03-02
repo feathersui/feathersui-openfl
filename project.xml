@@ -10,6 +10,9 @@
 
 	<haxeflag name="--macro" value="include('feathers')"/>
 
+	<!--
+		use custom templates to build a SWC file when targeting Flash
+	-->
 	<template path="templates" if="flash"/>
 
 	<!--
