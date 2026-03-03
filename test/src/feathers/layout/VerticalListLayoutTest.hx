@@ -507,4 +507,144 @@ class VerticalListLayoutTest extends Test {
 		Assert.equals(maxWidth, result.viewPortWidth);
 		Assert.equals(maxWidth, result.contentWidth);
 	}
+
+	public function testGetVisibleIndicesNoVirtualCacheNoTypicalItem():Void {
+		this._layout.scrollX = 0.0;
+		this._layout.scrollY = 0.0;
+		this._layout.virtualCache = null;
+		this._layout.typicalItem = null;
+		var range = this._layout.getVisibleIndices(10000, 10000.0, 10000.0);
+		// no cache and no typical item always returns start 0 and end 0
+		// because there is nothing available to estimate the height of an item
+		// so it asks for the first item so that it can be added to the cache,
+		// and getVisibleIndices() will be called again with that cache.
+		Assert.equals(0, range.start);
+		Assert.equals(0, range.end);
+	}
+
+	public function testGetVisibleIndicesWithVirtualCache():Void {
+		this._layout.scrollX = 0.0;
+		this._layout.scrollY = 0.0;
+		this._layout.virtualCache = [new VerticalListLayout.VirtualCacheItem(CHILD1_WIDTH, CHILD1_HEIGHT)];
+		this._layout.typicalItem = null;
+		var range = this._layout.getVisibleIndices(10000, 0.0, CHILD1_HEIGHT);
+		Assert.equals(0, range.start);
+		// if the scroll position changes, a second item may become visible,
+		// so while the second item isn't currently visible, it is still
+		// included because the layout tries to keep the minimum number of items
+		// relatively stable
+		Assert.equals(1, range.end);
+
+		this._layout.scrollX = 0.0;
+		this._layout.scrollY = 0.0;
+		this._layout.virtualCache = [new VerticalListLayout.VirtualCacheItem(CHILD1_WIDTH, CHILD1_HEIGHT)];
+		this._layout.typicalItem = null;
+		var range = this._layout.getVisibleIndices(10000, 0.0, CHILD1_HEIGHT / 2.0);
+		Assert.equals(0, range.start);
+		// even if the view port is smaller than a single item, it's still
+		// possible for at two items to be partially visible at the same time
+		// at certain scroll positions
+		Assert.equals(1, range.end);
+
+		this._layout.scrollX = 0.0;
+		this._layout.scrollY = 0.0;
+		this._layout.virtualCache = [new VerticalListLayout.VirtualCacheItem(CHILD1_WIDTH, CHILD1_HEIGHT)];
+		this._layout.typicalItem = null;
+		var range = this._layout.getVisibleIndices(10000, 0.0, CHILD1_HEIGHT * 2.0);
+		Assert.equals(0, range.start);
+		Assert.equals(2, range.end);
+
+		this._layout.scrollX = 0.0;
+		this._layout.scrollY = 0.0;
+		this._layout.virtualCache = [
+			new VerticalListLayout.VirtualCacheItem(CHILD1_WIDTH, CHILD1_HEIGHT),
+			// the first item will be used for the estimated height, but the
+			// following items are larger. however, the layout still requests
+			// its preferred minimum based on the estimated height.
+			new VerticalListLayout.VirtualCacheItem(CHILD1_WIDTH, CHILD1_HEIGHT * 2.0),
+			new VerticalListLayout.VirtualCacheItem(CHILD1_WIDTH, CHILD1_HEIGHT * 2.0),
+		];
+		this._layout.typicalItem = null;
+		var range = this._layout.getVisibleIndices(10000, 0.0, CHILD1_HEIGHT * 2.0);
+		Assert.equals(0, range.start);
+		Assert.equals(2, range.end);
+
+		this._layout.scrollX = 0.0;
+		this._layout.scrollY = 0.0;
+		this._layout.virtualCache = [
+			new VerticalListLayout.VirtualCacheItem(CHILD1_WIDTH, CHILD1_HEIGHT),
+			// the first item will be used for the estimated height, but the
+			// following items are smaller, so the layout will need to request
+			// an extra item.
+			new VerticalListLayout.VirtualCacheItem(CHILD1_WIDTH, CHILD1_HEIGHT / 3.0),
+			new VerticalListLayout.VirtualCacheItem(CHILD1_WIDTH, CHILD1_HEIGHT / 3.0),
+		];
+		this._layout.typicalItem = null;
+		var range = this._layout.getVisibleIndices(10000, 0.0, CHILD1_HEIGHT * 2.0);
+		Assert.equals(0, range.start);
+		Assert.equals(3, range.end);
+
+		this._layout.scrollX = 0.0;
+		this._layout.scrollY = 0.0;
+		this._layout.virtualCache = [new VerticalListLayout.VirtualCacheItem(CHILD1_WIDTH, CHILD1_HEIGHT)];
+		this._layout.typicalItem = null;
+		var range = this._layout.getVisibleIndices(10000, 0.0, CHILD1_HEIGHT * 1.5);
+		Assert.equals(0, range.start);
+		Assert.equals(2, range.end);
+
+		this._layout.scrollX = 0.0;
+		this._layout.scrollY = -CHILD1_HEIGHT * 10;
+		this._layout.virtualCache = [new VerticalListLayout.VirtualCacheItem(CHILD1_WIDTH, CHILD1_HEIGHT)];
+		this._layout.typicalItem = null;
+		var range = this._layout.getVisibleIndices(10, 0.0, CHILD1_HEIGHT * 1.5);
+		Assert.equals(0, range.start);
+		// even at a negative scroll position where none of the items are
+		// visible, the layout will prefer to ask for a minimum number of items
+		Assert.equals(2, range.end);
+
+		this._layout.scrollX = 0.0;
+		this._layout.scrollY = CHILD1_HEIGHT * 20000;
+		this._layout.virtualCache = [new VerticalListLayout.VirtualCacheItem(CHILD1_WIDTH, CHILD1_HEIGHT)];
+		this._layout.typicalItem = null;
+		var range = this._layout.getVisibleIndices(10000, 0.0, CHILD1_HEIGHT * 1.5);
+		// even if the scroll position is beyond the final item where none of
+		// the items are visible, the layout will prefer to ask for a minimum
+		// number of items. however, it will try to ask for items at the end
+		Assert.equals(9997, range.start);
+		Assert.equals(9999, range.end);
+	}
+
+	public function testGetVisibleIndicesWithTypicalItem():Void {
+		this._layout.scrollX = 0.0;
+		this._layout.scrollY = 0.0;
+		this._layout.virtualCache = null;
+		this._layout.typicalItem = this._child1;
+		var range = this._layout.getVisibleIndices(10000, 0.0, CHILD1_HEIGHT);
+		Assert.equals(0, range.start);
+		Assert.equals(1, range.end);
+
+		this._layout.scrollX = 0.0;
+		this._layout.scrollY = 0.0;
+		this._layout.virtualCache = null;
+		this._layout.typicalItem = this._child1;
+		var range = this._layout.getVisibleIndices(10000, 0.0, CHILD1_HEIGHT / 2.0);
+		Assert.equals(0, range.start);
+		Assert.equals(1, range.end);
+
+		this._layout.scrollX = 0.0;
+		this._layout.scrollY = 0.0;
+		this._layout.virtualCache = null;
+		this._layout.typicalItem = this._child1;
+		var range = this._layout.getVisibleIndices(10000, 0.0, CHILD1_HEIGHT * 2.0);
+		Assert.equals(0, range.start);
+		Assert.equals(2, range.end);
+
+		this._layout.scrollX = 0.0;
+		this._layout.scrollY = 0.0;
+		this._layout.virtualCache = null;
+		this._layout.typicalItem = this._child1;
+		var range = this._layout.getVisibleIndices(10000, 0.0, CHILD1_HEIGHT * 1.5);
+		Assert.equals(0, range.start);
+		Assert.equals(2, range.end);
+	}
 }

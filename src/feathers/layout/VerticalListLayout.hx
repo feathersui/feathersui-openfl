@@ -36,7 +36,8 @@ import openfl.ui.Keyboard;
 	@since 1.0.0
 **/
 @:event(openfl.events.Event.CHANGE)
-class VerticalListLayout extends EventDispatcher implements IVirtualLayout implements IKeyboardNavigationLayout implements IDragDropLayout {
+class VerticalListLayout extends EventDispatcher implements IVirtualLayout implements IKeyboardNavigationLayout implements IDragDropLayout
+		implements ITypicalItemLayout {
 	/**
 		Creates a new `VerticalListLayout` object.
 
@@ -525,6 +526,26 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 		return this._widthResetEnabled;
 	}
 
+	private var _typicalItem:DisplayObject;
+
+	/**
+		@see `feathers.layout.ITypicalItemLayout.typicalItem`
+	**/
+	public var typicalItem(get, set):DisplayObject;
+
+	private function get_typicalItem():DisplayObject {
+		return this._typicalItem;
+	}
+
+	private function set_typicalItem(value:DisplayObject):DisplayObject {
+		if (this._typicalItem == value) {
+			return this._typicalItem;
+		}
+		this._typicalItem = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._typicalItem;
+	}
+
 	/**
 		Sets all four padding properties to the same value.
 
@@ -718,6 +739,13 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 	}
 
 	private function calculateVirtualRowHeight(items:Array<DisplayObject>, itemWidth:Float):Float {
+		if (this._typicalItem != null) {
+			this._typicalItem.width = itemWidth;
+			if ((this._typicalItem is IValidating)) {
+				(cast this._typicalItem : IValidating).validateNow();
+			}
+			return this._typicalItem.height;
+		}
 		for (i in 0...items.length) {
 			var item = items[i];
 			if (item == null) {
@@ -767,65 +795,85 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 
 		var startIndex = -1;
 		var endIndex = -1;
+		var minItems = 0;
 		var estimatedItemHeight:Null<Float> = null;
+		if (this._typicalItem != null) {
+			var itemWidth = width - this._paddingLeft - this._paddingRight;
+			if (itemWidth < 0.0) {
+				itemWidth = 0.0;
+			}
+			this._typicalItem.width = itemWidth;
+			if ((this._typicalItem is IValidating)) {
+				(cast this._typicalItem : IValidating).validateNow();
+			}
+			estimatedItemHeight = this._typicalItem.height;
+			// it's possible for two separate items to both be partially
+			// visible in the view port, so ceil alone may not be enough
+			minItems = Math.ceil(height / (estimatedItemHeight + adjustedGap)) + 1;
+		}
 		var positionY = this._paddingTop;
 		var scrollY = this._scrollY;
 		if (scrollY < 0.0) {
 			scrollY = 0.0;
 		}
-		var minItems = 0;
 		var maxY = scrollY + height;
+		var reachedFinalItem = false;
 		var skippedMissingItems = 0;
+		var lastIndex = itemCount - 1;
 		for (i in 0...itemCount) {
 			var itemHeight = 0.0;
+			var cacheItem:VirtualCacheItem = null;
 			if (this._virtualCache != null) {
-				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
-				if (cacheItem != null && cacheItem.itemHeight != null) {
-					itemHeight = cacheItem.itemHeight;
-					if (estimatedItemHeight == null) {
-						estimatedItemHeight = itemHeight;
-						minItems = Math.ceil(height / (estimatedItemHeight + adjustedGap)) + 1;
-						if (skippedMissingItems > 0) {
-							// include the heights of any items that were missing
-							for (j in 0...skippedMissingItems) {
-								positionY += estimatedItemHeight + adjustedGap;
-								if (startIndex == -1 && positionY >= scrollY) {
-									startIndex = j;
-								}
-								if (startIndex != -1) {
-									endIndex = j;
-									if (positionY >= maxY && (endIndex - startIndex + 1) >= minItems) {
-										break;
-									}
+				cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+			}
+			if (cacheItem != null && cacheItem.itemHeight != null) {
+				itemHeight = cacheItem.itemHeight;
+				if (estimatedItemHeight == null) {
+					estimatedItemHeight = itemHeight;
+					minItems = Math.ceil(height / (estimatedItemHeight + adjustedGap)) + 1;
+					if (skippedMissingItems > 0) {
+						// include the heights of any items that were missing
+						for (j in 0...skippedMissingItems) {
+							positionY += estimatedItemHeight + adjustedGap;
+							if (startIndex == -1 && positionY >= scrollY) {
+								startIndex = j;
+							}
+							if (startIndex != -1) {
+								endIndex = j;
+								if (positionY >= maxY && (endIndex - startIndex + 1) >= minItems) {
+									break;
 								}
 							}
-							skippedMissingItems = 0;
 						}
+						skippedMissingItems = 0;
 					}
-				} else if (estimatedItemHeight != null) {
-					itemHeight = estimatedItemHeight;
-				} else {
-					// to avoid performance issues, we should avoid looping
-					// through all items, because there could be hundreds,
-					// thousands, or even millions of them. we need a limit.
-					// the limit should be greater than 1, to avoid an expensive
-					// recovery when the height of the first item is cleared
-					// from the cache by dataProvider.updateAt() or something.
-					if (skippedMissingItems < 5) {
-						skippedMissingItems++;
-						continue;
-					}
-					// if we can't find an estimated height, we return a range
-					// where only the first item is visible. this allows the
-					// first item to be measured, and the container can
-					// request the visible items again using that measurement
-					startIndex = 0;
-					endIndex = 0;
-					break;
 				}
+			} else if (estimatedItemHeight != null) {
+				itemHeight = estimatedItemHeight;
+			} else {
+				// to avoid performance issues, we should avoid looping
+				// through all items, because there could be hundreds,
+				// thousands, or even millions of them. we need a limit.
+				// the limit should be greater than 1, to avoid an expensive
+				// recovery when the height of the first item is cleared
+				// from the cache by dataProvider.updateAt() or something.
+				if (skippedMissingItems < 5) {
+					skippedMissingItems++;
+					continue;
+				}
+				// if we can't find an estimated height, we return a range
+				// where only the first item is visible. this allows the
+				// first item to be measured, and the container can
+				// request the visible items again using that measurement
+				startIndex = 0;
+				endIndex = 0;
+				break;
 			}
 			positionY += itemHeight + adjustedGap;
-			if (startIndex == -1 && positionY >= scrollY) {
+			if (i == lastIndex) {
+				reachedFinalItem = true;
+			}
+			if (startIndex == -1 && (positionY >= scrollY || reachedFinalItem)) {
 				startIndex = i;
 			}
 			if (startIndex != -1) {
@@ -847,20 +895,21 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 			do {
 				startIndex--;
 				var itemHeight = 0.0;
+				var cacheItem:VirtualCacheItem = null;
 				if (this._virtualCache != null) {
-					var cacheItem = Std.downcast(this._virtualCache[startIndex], VirtualCacheItem);
-					if (cacheItem != null && cacheItem.itemHeight != null) {
-						itemHeight = cacheItem.itemHeight;
-						if (estimatedItemHeight == null) {
-							estimatedItemHeight = itemHeight;
-							minItems = Math.ceil(height / (estimatedItemHeight + adjustedGap)) + 1;
-						}
-					} else if (estimatedItemHeight != null) {
-						itemHeight = estimatedItemHeight;
+					cacheItem = Std.downcast(this._virtualCache[startIndex], VirtualCacheItem);
+				}
+				if (cacheItem != null && cacheItem.itemHeight != null) {
+					itemHeight = cacheItem.itemHeight;
+					if (estimatedItemHeight == null) {
+						estimatedItemHeight = itemHeight;
+						minItems = Math.ceil(height / (estimatedItemHeight + adjustedGap)) + 1;
 					}
+				} else if (estimatedItemHeight != null) {
+					itemHeight = estimatedItemHeight;
 				}
 				positionY += itemHeight + adjustedGap;
-				if (positionY >= maxY && (endIndex - startIndex + 1) >= minItems) {
+				if ((positionY >= maxY || reachedFinalItem) && (endIndex - startIndex + 1) >= minItems) {
 					break;
 				}
 			} while (startIndex > 0);
@@ -897,21 +946,33 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 		}
 
 		var estimatedItemHeight:Null<Float> = null;
+		if (this._typicalItem != null) {
+			var itemWidth = width - this._paddingLeft - this._paddingRight;
+			if (itemWidth < 0.0) {
+				itemWidth = 0.0;
+			}
+			this._typicalItem.width = itemWidth;
+			if ((this._typicalItem is IValidating)) {
+				(cast this._typicalItem : IValidating).validateNow();
+			}
+			estimatedItemHeight = this._typicalItem.height;
+		}
 		var minY = 0.0;
 		var maxY = 0.0;
 		var positionY = this._paddingTop;
 		for (i in 0...itemCount) {
 			var itemHeight = 0.0;
+			var cacheItem:VirtualCacheItem = null;
 			if (this._virtualCache != null) {
-				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
-				if (cacheItem != null && cacheItem.itemHeight != null) {
-					itemHeight = cacheItem.itemHeight;
-					if (estimatedItemHeight == null) {
-						estimatedItemHeight = itemHeight;
-					}
-				} else if (estimatedItemHeight != null) {
-					itemHeight = estimatedItemHeight;
+				cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+			}
+			if (cacheItem != null && cacheItem.itemHeight != null) {
+				itemHeight = cacheItem.itemHeight;
+				if (estimatedItemHeight == null) {
+					estimatedItemHeight = itemHeight;
 				}
+			} else if (estimatedItemHeight != null) {
+				itemHeight = estimatedItemHeight;
 			}
 			if (i == index) {
 				maxY = positionY;
@@ -948,21 +1009,33 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 		}
 
 		var estimatedItemHeight:Null<Float> = null;
+		if (this._typicalItem != null) {
+			var itemWidth = width - this._paddingLeft - this._paddingRight;
+			if (itemWidth < 0.0) {
+				itemWidth = 0.0;
+			}
+			this._typicalItem.width = itemWidth;
+			if ((this._typicalItem is IValidating)) {
+				(cast this._typicalItem : IValidating).validateNow();
+			}
+			estimatedItemHeight = this._typicalItem.height;
+		}
 		var positionY = this._paddingTop;
 		for (i in 0...items.length) {
 			var item = items[i];
-			var itemHeight = estimatedItemHeight;
+			var itemHeight = 0.0;
 			if (item == null) {
+				var cacheItem:VirtualCacheItem = null;
 				if (this._virtualCache != null) {
-					var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
-					if (cacheItem != null && cacheItem.itemHeight != null) {
-						itemHeight = cacheItem.itemHeight;
-						if (estimatedItemHeight == null) {
-							estimatedItemHeight = itemHeight;
-						}
-					} else if (estimatedItemHeight != null) {
-						itemHeight = estimatedItemHeight;
+					cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+				}
+				if (cacheItem != null && cacheItem.itemHeight != null) {
+					itemHeight = cacheItem.itemHeight;
+					if (estimatedItemHeight == null) {
+						estimatedItemHeight = itemHeight;
 					}
+				} else if (estimatedItemHeight != null) {
+					itemHeight = estimatedItemHeight;
 				}
 			} else {
 				itemHeight = item.height;
@@ -996,21 +1069,33 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 		}
 
 		var estimatedItemHeight:Null<Float> = null;
+		if (this._typicalItem != null) {
+			var itemWidth = width - this._paddingLeft - this._paddingRight;
+			if (itemWidth < 0.0) {
+				itemWidth = 0.0;
+			}
+			this._typicalItem.width = itemWidth;
+			if ((this._typicalItem is IValidating)) {
+				(cast this._typicalItem : IValidating).validateNow();
+			}
+			estimatedItemHeight = this._typicalItem.height;
+		}
 		var positionY = this._paddingTop;
 		for (i in 0...maxIndex) {
 			var item = items[i];
 			var itemHeight = 0.0;
 			if (item == null) {
+				var cacheItem:VirtualCacheItem = null;
 				if (this._virtualCache != null) {
-					var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
-					if (cacheItem != null && cacheItem.itemHeight != null) {
-						itemHeight = cacheItem.itemHeight;
-						if (estimatedItemHeight == null) {
-							estimatedItemHeight = itemHeight;
-						}
-					} else if (estimatedItemHeight != null) {
-						itemHeight = estimatedItemHeight;
+					cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+				}
+				if (cacheItem != null && cacheItem.itemHeight != null) {
+					itemHeight = cacheItem.itemHeight;
+					if (estimatedItemHeight == null) {
+						estimatedItemHeight = itemHeight;
 					}
+				} else if (estimatedItemHeight != null) {
+					itemHeight = estimatedItemHeight;
 				}
 			} else {
 				itemHeight = item.height;
@@ -1042,15 +1127,27 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 		}
 
 		var estimatedItemHeight:Null<Float> = null;
-		for (i in 0...items.length) {
-			var itemHeight = 0.0;
-			if (this._virtualCache != null) {
-				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
-				if (cacheItem != null && cacheItem.itemHeight != null) {
-					itemHeight = cacheItem.itemHeight;
-					if (estimatedItemHeight == null) {
-						estimatedItemHeight = itemHeight;
-						break;
+		if (this._typicalItem != null) {
+			var itemWidth = viewPortWidth - this._paddingLeft - this._paddingRight;
+			if (itemWidth < 0.0) {
+				itemWidth = 0.0;
+			}
+			this._typicalItem.width = itemWidth;
+			if ((this._typicalItem is IValidating)) {
+				(cast this._typicalItem : IValidating).validateNow();
+			}
+			estimatedItemHeight = this._typicalItem.height;
+		} else {
+			for (i in 0...items.length) {
+				var itemHeight = 0.0;
+				if (this._virtualCache != null) {
+					var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+					if (cacheItem != null && cacheItem.itemHeight != null) {
+						itemHeight = cacheItem.itemHeight;
+						if (estimatedItemHeight == null) {
+							estimatedItemHeight = itemHeight;
+							break;
+						}
 					}
 				}
 			}
@@ -1088,13 +1185,16 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 					var i = startIndex;
 					while (i >= 0) {
 						var item = items[i];
-						var itemHeight = estimatedItemHeight;
+						var itemHeight = 0.0;
 						if (item == null) {
+							var cacheItem:VirtualCacheItem = null;
 							if (this._virtualCache != null) {
-								var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
-								if (cacheItem != null && cacheItem.itemHeight != null) {
-									itemHeight = cacheItem.itemHeight;
-								}
+								cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+							}
+							if (cacheItem != null && cacheItem.itemHeight != null) {
+								itemHeight = cacheItem.itemHeight;
+							} else if (estimatedItemHeight != null) {
+								itemHeight = estimatedItemHeight;
 							}
 						} else {
 							itemHeight = item.height;
@@ -1117,13 +1217,16 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 					var yPosition = 0.0;
 					for (i in startIndex...items.length) {
 						var item = items[i];
-						var itemHeight = estimatedItemHeight;
+						var itemHeight = 0.0;
 						if (item == null) {
+							var cacheItem:VirtualCacheItem = null;
 							if (this._virtualCache != null) {
-								var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
-								if (cacheItem != null && cacheItem.itemHeight != null) {
-									itemHeight = cacheItem.itemHeight;
-								}
+								cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+							}
+							if (cacheItem != null && cacheItem.itemHeight != null) {
+								itemHeight = cacheItem.itemHeight;
+							} else if (estimatedItemHeight != null) {
+								itemHeight = estimatedItemHeight;
 							}
 						} else {
 							itemHeight = item.height;
@@ -1236,7 +1339,7 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 }
 
 @:dox(hide)
-private class VirtualCacheItem {
+class VirtualCacheItem {
 	public function new(itemWidth:Float, itemHeight:Null<Float>) {
 		this.itemWidth = itemWidth;
 		this.itemHeight = itemHeight;
