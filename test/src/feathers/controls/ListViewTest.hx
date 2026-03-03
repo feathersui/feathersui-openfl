@@ -8,23 +8,24 @@
 
 package feathers.controls;
 
-import feathers.core.ITextControl;
-import openfl.events.TouchEvent;
-import feathers.events.ListViewEvent;
-import openfl.events.MouseEvent;
-import feathers.events.TriggerEvent;
-import openfl.errors.RangeError;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.IListViewItemRenderer;
 import feathers.controls.dataRenderers.ItemRenderer;
+import feathers.core.ITextControl;
 import feathers.data.ArrayCollection;
 import feathers.data.ListViewItemState;
+import feathers.events.ListViewEvent;
 import feathers.events.ScrollEvent;
+import feathers.events.TriggerEvent;
 import feathers.layout.ILayoutIndexObject;
+import feathers.layout.VerticalListLayout;
 import feathers.style.IVariantStyleObject;
 import feathers.utils.DisplayObjectRecycler;
 import openfl.Lib;
+import openfl.errors.RangeError;
 import openfl.events.Event;
+import openfl.events.MouseEvent;
+import openfl.events.TouchEvent;
 import utest.Assert;
 import utest.Test;
 
@@ -599,10 +600,12 @@ class ListViewTest extends Test {
 		Assert.equals(0, updatedIndices[0]);
 		Assert.equals(1, updatedIndices[1]);
 		Assert.equals(2, updatedIndices[2]);
+		this._listView.dataProvider.updateAt(0);
 		this._listView.dataProvider.updateAt(1);
 		this._listView.validateNow();
-		Assert.equals(4, updatedIndices.length);
-		Assert.equals(1, updatedIndices[3]);
+		Assert.equals(5, updatedIndices.length);
+		Assert.equals(0, updatedIndices[3]);
+		Assert.equals(1, updatedIndices[4]);
 	}
 
 	public function testUpdateAllCallsDisplayObjectRecyclerUpdate():Void {
@@ -1138,6 +1141,53 @@ class ListViewTest extends Test {
 		var state2 = this._listView.itemToItemState(collection.get(2));
 		Assert.notNull(state2);
 		Assert.equals("alternate2", state2.recyclerID);
+	}
+
+	private function testVirtualLayoutAndTypicalItem():Void {
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}, {text: "Four"}, {text: "Five"}]);
+		this._listView.dataProvider = collection;
+		this._listView.layout = new VerticalListLayout();
+		this._listView.virtualLayout = true;
+		this._listView.itemRendererRecycler = DisplayObjectRecycler.withFunction(() -> {
+			var itemRenderer = new ItemRenderer();
+			itemRenderer.height = 10.0;
+			return itemRenderer;
+		});
+		this._listView.height = 15.0;
+		this._listView.validateNow();
+		// first three items have visible item renderers
+		var itemRenderer0 = this._listView.itemToItemRenderer(collection.get(0));
+		Assert.notNull(itemRenderer0);
+		Assert.isTrue(itemRenderer0.visible);
+		var itemRenderer1 = this._listView.itemToItemRenderer(collection.get(1));
+		Assert.notNull(itemRenderer1);
+		Assert.isTrue(itemRenderer1.visible);
+		var itemRenderer2 = this._listView.itemToItemRenderer(collection.get(2));
+		Assert.notNull(itemRenderer2);
+		Assert.isTrue(itemRenderer2.visible);
+		var itemRenderer3 = this._listView.itemToItemRenderer(collection.get(3));
+		Assert.isNull(itemRenderer3);
+		var itemRenderer4 = this._listView.itemToItemRenderer(collection.get(4));
+		Assert.isNull(itemRenderer4);
+		// scroll to end, and the last three items will have visible item
+		// renderers, but the first item will have an invisible item renderer
+		// because it is the "typical" item used for measurement
+		this._listView.scrollY = 35.0;
+		this._listView.validateNow();
+		var itemRenderer0 = this._listView.itemToItemRenderer(collection.get(0));
+		Assert.notNull(itemRenderer0);
+		Assert.isFalse(itemRenderer0.visible);
+		var itemRenderer1 = this._listView.itemToItemRenderer(collection.get(1));
+		Assert.isNull(itemRenderer1);
+		var itemRenderer2 = this._listView.itemToItemRenderer(collection.get(2));
+		Assert.notNull(itemRenderer2);
+		Assert.isTrue(itemRenderer2.visible);
+		var itemRenderer3 = this._listView.itemToItemRenderer(collection.get(3));
+		Assert.notNull(itemRenderer3);
+		Assert.isTrue(itemRenderer3.visible);
+		var itemRenderer4 = this._listView.itemToItemRenderer(collection.get(4));
+		Assert.notNull(itemRenderer4);
+		Assert.isTrue(itemRenderer4.visible);
 	}
 }
 
