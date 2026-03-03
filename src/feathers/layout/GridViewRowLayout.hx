@@ -253,6 +253,9 @@ class GridViewRowLayout extends EventDispatcher implements ILayout {
 	}
 
 	private function applyColumnWidths(items:Array<DisplayObject>, explicitWidth:Null<Float>, explicitMinWidth:Null<Float>, explicitMaxWidth:Null<Float>):Void {
+		if (this._columns == null || this._columns.length == 0) {
+			return;
+		}
 		var pendingIndices:Array<Int> = [];
 		var totalMeasuredWidth = 0.0;
 		var totalPercentWidth = 0.0;
