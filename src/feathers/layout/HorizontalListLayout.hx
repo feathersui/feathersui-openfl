@@ -565,7 +565,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 			if (item == null) {
 				var itemWidth = virtualColumnWidth;
 				if (this._virtualCache != null) {
-					var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+					var cacheItem = Std.downcast(this._virtualCache[i], HorizontalListVirtualCacheItem);
 					if (cacheItem != null && cacheItem.itemWidth != null) {
 						itemWidth = cacheItem.itemWidth;
 					}
@@ -586,8 +586,8 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 			}
 			var itemWidth = item.width;
 			if (this._virtualCache != null) {
-				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
-				if (cacheItem != null && cacheItem.itemWidth != itemWidth) {
+				var cacheItem = Std.downcast(this._virtualCache[i], HorizontalListVirtualCacheItem);
+				if (cacheItem != null && (cacheItem.itemWidth == null || cacheItem.itemWidth != itemWidth)) {
 					var cachedWidth = cacheItem.itemWidth;
 					cacheItem.itemWidth = itemWidth;
 					if (cachedWidth == null && positionX < scrollX) {
@@ -661,7 +661,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 		for (i in 0...items.length) {
 			var item = items[i];
 			if (this._virtualCache != null && this._virtualCache.length > i) {
-				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+				var cacheItem = Std.downcast(this._virtualCache[i], HorizontalListVirtualCacheItem);
 				if (cacheItem != null) {
 					// prefer the cached height because that's the original
 					// measured height and not the justified height
@@ -691,14 +691,14 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 				maxItemHeight = itemHeight;
 			}
 			if (this._virtualCache != null) {
-				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+				var cacheItem = Std.downcast(this._virtualCache[i], HorizontalListVirtualCacheItem);
 				if (cacheItem == null) {
 					if ((item is IValidating)) {
 						(cast item : IValidating).validateNow();
 					}
 					// save the original measured height in the cache to be used
 					// again in future calculations
-					cacheItem = new VirtualCacheItem(null, itemHeight);
+					cacheItem = new HorizontalListVirtualCacheItem(null, itemHeight);
 					this._virtualCache[i] = cacheItem;
 				}
 			}
@@ -729,7 +729,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 				if (this._virtualCache == null || this._virtualCache.length <= i) {
 					continue;
 				}
-				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+				var cacheItem = Std.downcast(this._virtualCache[i], HorizontalListVirtualCacheItem);
 				if (cacheItem == null || cacheItem.itemWidth == null) {
 					continue;
 				}
@@ -747,7 +747,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 			}
 			var itemWidth = item.width;
 			if (this._virtualCache != null) {
-				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+				var cacheItem = Std.downcast(this._virtualCache[i], HorizontalListVirtualCacheItem);
 				if (cacheItem != null && (cacheItem.itemWidth == null || cacheItem.itemWidth != itemWidth)) {
 					cacheItem.itemWidth = itemWidth;
 					// this new measurement may cause the number of visible
@@ -780,57 +780,63 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 		}
 		var minItems = 0;
 		var maxX = scrollX + width;
+		var reachedFinalItem = false;
+		var lastIndex = itemCount - 1;
 		var skippedMissingItems = 0;
 		for (i in 0...itemCount) {
 			var itemWidth = 0.0;
+			var cacheItem:HorizontalListVirtualCacheItem = null;
 			if (this._virtualCache != null) {
-				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
-				if (cacheItem != null && cacheItem.itemWidth != null) {
-					itemWidth = cacheItem.itemWidth;
-					if (estimatedItemWidth == null) {
-						estimatedItemWidth = itemWidth;
-						minItems = Math.ceil(width / (estimatedItemWidth) + adjustedGap) + 1;
-						if (skippedMissingItems > 0) {
-							// include the heights of any items that were missing
-							for (j in 0...skippedMissingItems) {
-								positionX += estimatedItemWidth + adjustedGap;
-								if (startIndex == -1 && positionX >= scrollX) {
-									startIndex = j;
-								}
-								if (startIndex != -1) {
-									endIndex = j;
-									if (positionX >= maxX && (endIndex - startIndex + 1) >= minItems) {
-										break;
-									}
+				cacheItem = Std.downcast(this._virtualCache[i], HorizontalListVirtualCacheItem);
+			}
+			if (cacheItem != null && cacheItem.itemWidth != null) {
+				itemWidth = cacheItem.itemWidth;
+				if (estimatedItemWidth == null) {
+					estimatedItemWidth = itemWidth;
+					minItems = Math.ceil(width / (estimatedItemWidth) + adjustedGap) + 1;
+					if (skippedMissingItems > 0) {
+						// include the heights of any items that were missing
+						for (j in 0...skippedMissingItems) {
+							positionX += estimatedItemWidth + adjustedGap;
+							if (startIndex == -1 && positionX >= scrollX) {
+								startIndex = j;
+							}
+							if (startIndex != -1) {
+								endIndex = j;
+								if (positionX >= maxX && (endIndex - startIndex + 1) >= minItems) {
+									break;
 								}
 							}
-							skippedMissingItems = 0;
 						}
+						skippedMissingItems = 0;
 					}
-				} else if (estimatedItemWidth != null) {
-					itemWidth = estimatedItemWidth;
-				} else {
-					// to avoid performance issues, we should avoid looping
-					// through all items, because there could be hundreds,
-					// thousands, or even millions of them. we need a limit.
-					// the limit should be greater than 1, to avoid an expensive
-					// recovery when the width of the first item is cleared
-					// from the cache by dataProvider.updateAt() or something.
-					if (skippedMissingItems < 5) {
-						skippedMissingItems++;
-						continue;
-					}
-					// if we can't find an estimated height, we return a range
-					// where only the first item is visible. this allows the
-					// first item to be measured, and the container can
-					// request the visible items again using that measurement
-					startIndex = 0;
-					endIndex = 0;
-					break;
 				}
+			} else if (estimatedItemWidth != null) {
+				itemWidth = estimatedItemWidth;
+			} else {
+				// to avoid performance issues, we should avoid looping
+				// through all items, because there could be hundreds,
+				// thousands, or even millions of them. we need a limit.
+				// the limit should be greater than 1, to avoid an expensive
+				// recovery when the width of the first item is cleared
+				// from the cache by dataProvider.updateAt() or something.
+				if (skippedMissingItems < 5) {
+					skippedMissingItems++;
+					continue;
+				}
+				// if we can't find an estimated height, we return a range
+				// where only the first item is visible. this allows the
+				// first item to be measured, and the container can
+				// request the visible items again using that measurement
+				startIndex = 0;
+				endIndex = 0;
+				break;
 			}
 			positionX += itemWidth + adjustedGap;
-			if (startIndex == -1 && positionX >= scrollX) {
+			if (i == lastIndex) {
+				reachedFinalItem = true;
+			}
+			if (startIndex == -1 && (positionX >= scrollX || reachedFinalItem)) {
 				startIndex = i;
 			}
 			if (startIndex != -1) {
@@ -852,20 +858,21 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 			do {
 				startIndex--;
 				var itemWidth = 0.0;
+				var cacheItem:HorizontalListVirtualCacheItem = null;
 				if (this._virtualCache != null) {
-					var cacheItem = Std.downcast(this._virtualCache[startIndex], VirtualCacheItem);
-					if (cacheItem != null && cacheItem.itemWidth != null) {
-						itemWidth = cacheItem.itemWidth;
-						if (estimatedItemWidth == null) {
-							estimatedItemWidth = itemWidth;
-							minItems = Math.ceil(width / (estimatedItemWidth) + adjustedGap) + 1;
-						}
-					} else if (estimatedItemWidth != null) {
-						itemWidth = estimatedItemWidth;
+					cacheItem = Std.downcast(this._virtualCache[startIndex], HorizontalListVirtualCacheItem);
+				}
+				if (cacheItem != null && cacheItem.itemWidth != null) {
+					itemWidth = cacheItem.itemWidth;
+					if (estimatedItemWidth == null) {
+						estimatedItemWidth = itemWidth;
+						minItems = Math.ceil(width / (estimatedItemWidth) + adjustedGap) + 1;
 					}
+				} else if (estimatedItemWidth != null) {
+					itemWidth = estimatedItemWidth;
 				}
 				positionX += itemWidth + adjustedGap;
-				if (positionX >= maxX && (endIndex - startIndex + 1) >= minItems) {
+				if ((positionX >= maxX || reachedFinalItem) && (endIndex - startIndex + 1) >= minItems) {
 					break;
 				}
 			} while (startIndex > 0);
@@ -907,16 +914,17 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 		var positionX = this._paddingLeft;
 		for (i in 0...itemCount) {
 			var itemWidth = 0.0;
+			var cacheItem:HorizontalListVirtualCacheItem = null;
 			if (this._virtualCache != null) {
-				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
-				if (cacheItem != null && cacheItem.itemWidth != null) {
-					itemWidth = cacheItem.itemWidth;
-					if (estimatedItemWidth == null) {
-						estimatedItemWidth = itemWidth;
-					}
-				} else if (estimatedItemWidth != null) {
-					itemWidth = estimatedItemWidth;
+				cacheItem = Std.downcast(this._virtualCache[i], HorizontalListVirtualCacheItem);
+			}
+			if (cacheItem != null && cacheItem.itemWidth != null) {
+				itemWidth = cacheItem.itemWidth;
+				if (estimatedItemWidth == null) {
+					estimatedItemWidth = itemWidth;
 				}
+			} else if (estimatedItemWidth != null) {
+				itemWidth = estimatedItemWidth;
 			}
 			if (i == index) {
 				maxX = positionX;
@@ -957,8 +965,11 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 		for (i in 0...items.length) {
 			var item = items[i];
 			var itemWidth = 0.0;
-			if (this._virtualCache != null) {
-				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+			if (item == null) {
+				var cacheItem:HorizontalListVirtualCacheItem = null;
+				if (this._virtualCache != null) {
+					cacheItem = Std.downcast(this._virtualCache[i], HorizontalListVirtualCacheItem);
+				}
 				if (cacheItem != null && cacheItem.itemWidth != null) {
 					itemWidth = cacheItem.itemWidth;
 					if (estimatedItemWidth == null) {
@@ -967,6 +978,8 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 				} else if (estimatedItemWidth != null) {
 					itemWidth = estimatedItemWidth;
 				}
+			} else {
+				itemWidth = item.width;
 			}
 			if (x < (positionX + (itemWidth / 2.0))) {
 				return i;
@@ -1002,16 +1015,17 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 			var item = items[i];
 			var itemWidth = 0.0;
 			if (item == null) {
+				var cacheItem:HorizontalListVirtualCacheItem = null;
 				if (this._virtualCache != null) {
-					var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
-					if (cacheItem != null && cacheItem.itemWidth != null) {
-						itemWidth = cacheItem.itemWidth;
-						if (estimatedItemWidth == null) {
-							estimatedItemWidth = itemWidth;
-						}
-					} else if (estimatedItemWidth != null) {
-						itemWidth = estimatedItemWidth;
+					cacheItem = Std.downcast(this._virtualCache[i], HorizontalListVirtualCacheItem);
+				}
+				if (cacheItem != null && cacheItem.itemWidth != null) {
+					itemWidth = cacheItem.itemWidth;
+					if (estimatedItemWidth == null) {
+						estimatedItemWidth = itemWidth;
 					}
+				} else if (estimatedItemWidth != null) {
+					itemWidth = estimatedItemWidth;
 				}
 			} else {
 				itemWidth = item.width;
@@ -1046,7 +1060,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 		for (i in 0...items.length) {
 			var itemWidth = 0.0;
 			if (this._virtualCache != null) {
-				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+				var cacheItem = Std.downcast(this._virtualCache[i], HorizontalListVirtualCacheItem);
 				if (cacheItem != null && cacheItem.itemWidth != null) {
 					itemWidth = cacheItem.itemWidth;
 					if (estimatedItemWidth == null) {
@@ -1089,13 +1103,16 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 					var i = startIndex;
 					while (i >= 0) {
 						var item = items[i];
-						var itemWidth = estimatedItemWidth;
+						var itemWidth = 0.0;
 						if (item == null) {
+							var cacheItem:HorizontalListVirtualCacheItem = null;
 							if (this._virtualCache != null) {
-								var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
-								if (cacheItem != null && cacheItem.itemWidth != null) {
-									itemWidth = cacheItem.itemWidth;
-								}
+								cacheItem = Std.downcast(this._virtualCache[i], HorizontalListVirtualCacheItem);
+							}
+							if (cacheItem != null && cacheItem.itemWidth != null) {
+								itemWidth = cacheItem.itemWidth;
+							} else if (estimatedItemWidth != null) {
+								itemWidth = estimatedItemWidth;
 							}
 						} else {
 							itemWidth = item.width;
@@ -1118,13 +1135,16 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 					var xPosition = 0.0;
 					for (i in startIndex...items.length) {
 						var item = items[i];
-						var itemWidth = estimatedItemWidth;
+						var itemWidth = 0.0;
 						if (item == null) {
+							var cacheItem:HorizontalListVirtualCacheItem = null;
 							if (this._virtualCache != null) {
-								var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
-								if (cacheItem != null && cacheItem.itemWidth != null) {
-									itemWidth = cacheItem.itemWidth;
-								}
+								cacheItem = Std.downcast(this._virtualCache[i], HorizontalListVirtualCacheItem);
+							}
+							if (cacheItem != null && cacheItem.itemWidth != null) {
+								itemWidth = cacheItem.itemWidth;
+							} else if (estimatedItemWidth != null) {
+								itemWidth = estimatedItemWidth;
 							}
 						} else {
 							itemWidth = item.width;
@@ -1237,7 +1257,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 }
 
 @:dox(hide)
-private class VirtualCacheItem {
+class HorizontalListVirtualCacheItem {
 	public function new(itemWidth:Null<Float>, itemHeight:Float) {
 		this.itemWidth = itemWidth;
 		this.itemHeight = itemHeight;

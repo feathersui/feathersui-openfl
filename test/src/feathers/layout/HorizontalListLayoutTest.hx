@@ -506,4 +506,100 @@ class HorizontalListLayoutTest extends Test {
 		Assert.equals(maxHeight, result.viewPortHeight);
 		Assert.equals(maxHeight, result.contentHeight);
 	}
+
+	public function testGetVisibleIndicesWithVirtualCache():Void {
+		this._layout.scrollX = 0.0;
+		this._layout.scrollY = 0.0;
+		this._layout.virtualCache = [
+			new HorizontalListLayout.HorizontalListVirtualCacheItem(CHILD1_WIDTH, CHILD1_HEIGHT)
+		];
+		var range = this._layout.getVisibleIndices(10000, CHILD1_WIDTH, 0.0);
+		Assert.equals(0, range.start);
+		// if the scroll position changes, a second item may become visible,
+		// so while the second item isn't currently visible, it is still
+		// included because the layout tries to keep the minimum number of items
+		// relatively stable
+		Assert.equals(1, range.end);
+
+		this._layout.scrollX = 0.0;
+		this._layout.scrollY = 0.0;
+		this._layout.virtualCache = [
+			new HorizontalListLayout.HorizontalListVirtualCacheItem(CHILD1_WIDTH, CHILD1_HEIGHT)
+		];
+		var range = this._layout.getVisibleIndices(10000, CHILD1_WIDTH / 2.0, 0.0);
+		Assert.equals(0, range.start);
+		// even if the view port is smaller than a single item, it's still
+		// possible for at two items to be partially visible at the same time
+		// at certain scroll positions
+		Assert.equals(1, range.end);
+
+		this._layout.scrollX = 0.0;
+		this._layout.scrollY = 0.0;
+		this._layout.virtualCache = [
+			new HorizontalListLayout.HorizontalListVirtualCacheItem(CHILD1_WIDTH, CHILD1_HEIGHT)
+		];
+		var range = this._layout.getVisibleIndices(10000, CHILD1_WIDTH * 2.0, 0.0);
+		Assert.equals(0, range.start);
+		Assert.equals(2, range.end);
+
+		this._layout.scrollX = 0.0;
+		this._layout.scrollY = 0.0;
+		this._layout.virtualCache = [
+			new HorizontalListLayout.HorizontalListVirtualCacheItem(CHILD1_WIDTH, CHILD1_HEIGHT),
+			// the first item will be used for the estimated width, but the
+			// following items are larger. however, the layout still requests
+			// its preferred minimum based on the estimated height.
+			new HorizontalListLayout.HorizontalListVirtualCacheItem(CHILD1_WIDTH * 2.0, CHILD1_HEIGHT),
+			new HorizontalListLayout.HorizontalListVirtualCacheItem(CHILD1_WIDTH * 2.0, CHILD1_HEIGHT),
+		];
+		var range = this._layout.getVisibleIndices(10000, CHILD1_WIDTH * 2.0, 0.0);
+		Assert.equals(0, range.start);
+		Assert.equals(2, range.end);
+
+		this._layout.scrollX = 0.0;
+		this._layout.scrollY = 0.0;
+		this._layout.virtualCache = [
+			new HorizontalListLayout.HorizontalListVirtualCacheItem(CHILD1_WIDTH, CHILD1_HEIGHT),
+			// the first item will be used for the estimated width, but the
+			// following items are smaller, so the layout will need to request
+			// an extra item.
+			new HorizontalListLayout.HorizontalListVirtualCacheItem(CHILD1_WIDTH / 3.0, CHILD1_HEIGHT),
+			new HorizontalListLayout.HorizontalListVirtualCacheItem(CHILD1_WIDTH / 3.0, CHILD1_HEIGHT),
+		];
+		var range = this._layout.getVisibleIndices(10000, CHILD1_WIDTH * 2.0, 0.0);
+		Assert.equals(0, range.start);
+		Assert.equals(3, range.end);
+
+		this._layout.scrollX = 0.0;
+		this._layout.scrollY = 0.0;
+		this._layout.virtualCache = [
+			new HorizontalListLayout.HorizontalListVirtualCacheItem(CHILD1_WIDTH, CHILD1_HEIGHT)
+		];
+		var range = this._layout.getVisibleIndices(10000, CHILD1_WIDTH * 1.5, 0.0);
+		Assert.equals(0, range.start);
+		Assert.equals(2, range.end);
+
+		this._layout.scrollX = -CHILD1_WIDTH * 10.0;
+		this._layout.scrollY = 0.0;
+		this._layout.virtualCache = [
+			new HorizontalListLayout.HorizontalListVirtualCacheItem(CHILD1_WIDTH, CHILD1_HEIGHT)
+		];
+		var range = this._layout.getVisibleIndices(10, CHILD1_WIDTH * 1.5, 0.0);
+		Assert.equals(0, range.start);
+		// even at a negative scroll position where none of the items are
+		// visible, the layout will prefer to ask for a minimum number of items
+		Assert.equals(2, range.end);
+
+		this._layout.scrollX = CHILD1_WIDTH * 20000.0;
+		this._layout.scrollY = 0.0;
+		this._layout.virtualCache = [
+			new HorizontalListLayout.HorizontalListVirtualCacheItem(CHILD1_WIDTH, CHILD1_HEIGHT)
+		];
+		var range = this._layout.getVisibleIndices(10000, CHILD1_WIDTH * 1.5, 0.0);
+		// even if the scroll position is beyond the final item where none of
+		// the items are visible, the layout will prefer to ask for a minimum
+		// number of items. however, it will try to ask for items at the end
+		Assert.equals(9997, range.start);
+		Assert.equals(9999, range.end);
+	}
 }
