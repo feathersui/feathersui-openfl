@@ -8,27 +8,28 @@
 
 package feathers.controls;
 
-import feathers.core.ITextControl;
-import openfl.errors.ArgumentError;
-import feathers.events.TriggerEvent;
-import openfl.events.TouchEvent;
-import openfl.events.MouseEvent;
-import feathers.events.TreeViewEvent;
-import openfl.errors.RangeError;
 import feathers.controls.dataRenderers.HierarchicalItemRenderer;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.ITreeViewItemRenderer;
 import feathers.core.IOpenCloseToggle;
+import feathers.core.ITextControl;
 import feathers.data.ArrayHierarchicalCollection;
 import feathers.data.TreeCollection;
 import feathers.data.TreeNode;
 import feathers.data.TreeViewItemState;
 import feathers.events.ScrollEvent;
+import feathers.events.TreeViewEvent;
+import feathers.events.TriggerEvent;
 import feathers.layout.ILayoutIndexObject;
+import feathers.layout.VerticalListLayout;
 import feathers.style.IVariantStyleObject;
 import feathers.utils.DisplayObjectRecycler;
 import openfl.Lib;
+import openfl.errors.ArgumentError;
+import openfl.errors.RangeError;
 import openfl.events.Event;
+import openfl.events.MouseEvent;
+import openfl.events.TouchEvent;
 import utest.Assert;
 import utest.Test;
 
@@ -735,10 +736,12 @@ import utest.Test;
 		Assert.equals(0, CompareLocations.compareLocations([0], updatedLocations[0]));
 		Assert.equals(0, CompareLocations.compareLocations([1], updatedLocations[1]));
 		Assert.equals(0, CompareLocations.compareLocations([2], updatedLocations[2]));
+		this._treeView.dataProvider.updateAt([0]);
 		this._treeView.dataProvider.updateAt([1]);
 		this._treeView.validateNow();
-		Assert.equals(4, updatedLocations.length);
-		Assert.equals(0, CompareLocations.compareLocations([1], updatedLocations[3]));
+		Assert.equals(5, updatedLocations.length);
+		Assert.equals(0, CompareLocations.compareLocations([0], updatedLocations[3]));
+		Assert.equals(0, CompareLocations.compareLocations([1], updatedLocations[4]));
 	}
 
 	public function testUpdateAllCallsDisplayObjectRecyclerUpdate():Void {
@@ -1403,6 +1406,53 @@ import utest.Test;
 		var state2 = this._treeView.itemToItemState(collection.get([2]));
 		Assert.notNull(state2);
 		Assert.equals("alternate2", state2.recyclerID);
+	}
+
+	private function testVirtualLayoutAndTypicalItem():Void {
+		var collection = new ArrayHierarchicalCollection([{text: "One"}, {text: "Two"}, {text: "Three"}, {text: "Four"}, {text: "Five"}]);
+		this._treeView.dataProvider = collection;
+		this._treeView.layout = new VerticalListLayout();
+		this._treeView.virtualLayout = true;
+		this._treeView.itemRendererRecycler = DisplayObjectRecycler.withFunction(() -> {
+			var itemRenderer = new HierarchicalItemRenderer();
+			itemRenderer.height = 10.0;
+			return itemRenderer;
+		});
+		this._treeView.height = 15.0;
+		this._treeView.validateNow();
+		// first three items have visible item renderers
+		var itemRenderer0 = this._treeView.itemToItemRenderer(collection.get([0]));
+		Assert.notNull(itemRenderer0);
+		Assert.isTrue(itemRenderer0.visible);
+		var itemRenderer1 = this._treeView.itemToItemRenderer(collection.get([1]));
+		Assert.notNull(itemRenderer1);
+		Assert.isTrue(itemRenderer1.visible);
+		var itemRenderer2 = this._treeView.itemToItemRenderer(collection.get([2]));
+		Assert.notNull(itemRenderer2);
+		Assert.isTrue(itemRenderer2.visible);
+		var itemRenderer3 = this._treeView.itemToItemRenderer(collection.get([3]));
+		Assert.isNull(itemRenderer3);
+		var itemRenderer4 = this._treeView.itemToItemRenderer(collection.get([4]));
+		Assert.isNull(itemRenderer4);
+		// scroll to end, and the last three items will have visible item
+		// renderers, but the first item will have an invisible item renderer
+		// because it is the "typical" item used for measurement
+		this._treeView.scrollY = 35.0;
+		this._treeView.validateNow();
+		var itemRenderer0 = this._treeView.itemToItemRenderer(collection.get([0]));
+		Assert.notNull(itemRenderer0);
+		Assert.isFalse(itemRenderer0.visible);
+		var itemRenderer1 = this._treeView.itemToItemRenderer(collection.get([1]));
+		Assert.isNull(itemRenderer1);
+		var itemRenderer2 = this._treeView.itemToItemRenderer(collection.get([2]));
+		Assert.notNull(itemRenderer2);
+		Assert.isTrue(itemRenderer2.visible);
+		var itemRenderer3 = this._treeView.itemToItemRenderer(collection.get([3]));
+		Assert.notNull(itemRenderer3);
+		Assert.isTrue(itemRenderer3.visible);
+		var itemRenderer4 = this._treeView.itemToItemRenderer(collection.get([4]));
+		Assert.notNull(itemRenderer4);
+		Assert.isTrue(itemRenderer4.visible);
 	}
 }
 

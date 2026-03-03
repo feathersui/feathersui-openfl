@@ -32,6 +32,7 @@ import feathers.layout.IKeyboardNavigationLayout;
 import feathers.layout.ILayout;
 import feathers.layout.ILayoutIndexObject;
 import feathers.layout.IScrollLayout;
+import feathers.layout.ITypicalItemLayout;
 import feathers.layout.IVirtualLayout;
 import feathers.layout.Measurements;
 import feathers.style.IVariantStyleObject;
@@ -868,6 +869,8 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 	private var _tempVisibleIndices:VirtualLayoutRange = new VirtualLayoutRange(0, 0);
 	private var _layoutItems:Array<DisplayObject> = [];
 	private var _totalLayoutCount:Int = 0;
+	private var _typicalItemRenderer:DisplayObject;
+	private var _createdTypicalItemRenderer:Bool = false;
 
 	private var _selectable:Bool = true;
 
@@ -1501,6 +1504,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 
 	private function refreshItemRenderers(items:Array<DisplayObject>):Void {
 		this._layoutItems = items;
+		this._createdTypicalItemRenderer = false;
 
 		if (this._defaultStorage.itemRendererRecycler.update == null) {
 			this._defaultStorage.itemRendererRecycler.update = defaultUpdateItemRenderer;
@@ -1530,6 +1534,9 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 				this.refreshInactiveItemRenderers(storage, itemRendererInvalid);
 			}
 		}
+
+		this.refreshTypicalItemRenderer();
+
 		this.findUnrenderedData();
 		this.recoverInactiveItemRenderers(this._defaultStorage);
 		if (this._additionalStorage != null) {
@@ -1562,6 +1569,21 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: active item renderers should be empty before updating.');
 		}
 		if (factoryInvalid) {
+			if (this._typicalItemRenderer != null) {
+				var typicalItemState = this.itemRendererToItemState.get(this._typicalItemRenderer);
+				var oldStorage = this.itemStateToStorage(typicalItemState);
+				if (storage == oldStorage) {
+					this.itemRendererToItemState.remove(this._typicalItemRenderer);
+					if ((typicalItemState.data is String)) {
+						this.stringDataToItemRenderer.remove(cast typicalItemState.data);
+					} else {
+						this.objectDataToItemRenderer.remove(typicalItemState.data);
+					}
+					var recycler = storage.oldItemRendererRecycler != null ? storage.oldItemRendererRecycler : storage.itemRendererRecycler;
+					this.destroyItemRenderer(this._typicalItemRenderer, recycler);
+					this._typicalItemRenderer = null;
+				}
+			}
 			this.recoverInactiveItemRenderers(storage);
 			this.freeInactiveItemRenderers(storage);
 			storage.oldItemRendererRecycler = null;
@@ -1638,6 +1660,25 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			this._visibleIndices.end = this._layoutItems.length - 1;
 		}
 		this.findUnrenderedDataForLocation([], 0);
+		// update the typical item renderer's visibility
+		if (this._typicalItemRenderer != null) {
+			if (this._virtualLayout && (this.layout is IVirtualLayout)) {
+				var typicalItemState = this.itemRendererToItemState.get(this._typicalItemRenderer);
+				if (typicalItemState.layoutIndex >= this._visibleIndices.start
+					&& typicalItemState.layoutIndex <= this._visibleIndices.end) {
+					this._typicalItemRenderer.visible = true;
+				} else {
+					this._typicalItemRenderer.visible = false;
+					// uncomment these lines to see a hidden typical item for
+					// debugging purposes...
+					/*this._typicalItemRenderer.visible = true;
+						this._typicalItemRenderer.x = this.scrollX;
+						this._typicalItemRenderer.y = this.scrollY; */
+				}
+			} else {
+				this._typicalItemRenderer.visible = true;
+			}
+		}
 	}
 
 	private function findUnrenderedDataForLocation(location:Array<Int>, layoutIndex:Int):Int {
@@ -1682,7 +1723,13 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			return;
 		}
 		var state = this.itemRendererToItemState.get(itemRenderer);
-		var changed = this.populateCurrentItemState(item, location, layoutIndex, state, this._forceItemStateUpdate);
+		var forceChange = this._forceItemStateUpdate;
+		if (forceChange && this._createdTypicalItemRenderer && itemRenderer == this._typicalItemRenderer) {
+			// if the typical item renderer was just created, then
+			// updateItemRenderer() was already forced to be called
+			forceChange = false;
+		}
+		var changed = this.populateCurrentItemState(item, location, layoutIndex, state, forceChange);
 		var oldRecyclerID = state.recyclerID;
 		var storage = this.itemStateToStorage(state);
 		if (storage.id != oldRecyclerID) {
@@ -1697,11 +1744,16 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		// it isn't anymore, it may have been set invisible
 		itemRenderer.visible = true;
 		this._layoutItems[layoutIndex] = itemRenderer;
-		var removed = storage.inactiveItemRenderers.remove(itemRenderer);
-		if (!removed) {
-			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: item renderer map contains bad data for item at location ${location}. This may be caused by duplicate items in the data provider, which is not allowed.');
+		// the typical item renderer is a special case, and we will
+		// have already put it into the active renderers, so we don't
+		// want to do it again!
+		if (this._typicalItemRenderer != itemRenderer) {
+			var removed = storage.inactiveItemRenderers.remove(itemRenderer);
+			if (!removed) {
+				throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: item renderer map contains bad data for item at location ${location}. This may be caused by duplicate items in the data provider, which is not allowed.');
+			}
+			storage.activeItemRenderers.push(itemRenderer);
 		}
-		storage.activeItemRenderers.push(itemRenderer);
 	}
 
 	private function populateCurrentItemState(item:Dynamic, location:Array<Int>, layoutIndex:Int, state:TreeViewItemState, force:Bool):Bool {
@@ -1840,10 +1892,10 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		#end
 	}
 
-	private function createItemRenderer(state:TreeViewItemState):DisplayObject {
+	private function createItemRenderer(state:TreeViewItemState, useCache:Bool = true):DisplayObject {
 		var storage = this.itemStateToStorage(state);
 		var itemRenderer:DisplayObject = null;
-		if (storage.inactiveItemRenderers.length == 0) {
+		if (storage.inactiveItemRenderers.length == 0 || !useCache) {
 			itemRenderer = storage.itemRendererRecycler.create();
 			if ((itemRenderer is IVariantStyleObject)) {
 				var variantItemRenderer:IVariantStyleObject = cast itemRenderer;
@@ -1904,6 +1956,59 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 		this.treeViewPort.removeChild(itemRenderer);
 		if (recycler != null && recycler.destroy != null) {
 			recycler.destroy(itemRenderer);
+		}
+	}
+
+	private function refreshTypicalItemRenderer():Void {
+		var newTypicalItemLocation:Array<Int> = null;
+		var newTypicalItemLayoutIndex:Int = -1;
+		var newTypicalItem:Any = null;
+		if ((this.layout is ITypicalItemLayout) && this._dataProvider != null && this._dataProvider.getLength() > 0) {
+			newTypicalItemLocation = [0];
+			newTypicalItemLayoutIndex = 0;
+			newTypicalItem = this._dataProvider.get(newTypicalItemLocation);
+		}
+
+		var newTypicalItemRenderer:DisplayObject = null;
+		var newTypicalItemState:TreeViewItemState = null;
+		if (newTypicalItem != null) {
+			// try to reuse the existing item renderer, if available
+			newTypicalItemRenderer = this.itemToItemRenderer(newTypicalItem);
+			if (newTypicalItemRenderer == null) {
+				this._createdTypicalItemRenderer = true;
+				newTypicalItemState = this.itemStatePool.get();
+				this.populateCurrentItemState(newTypicalItem, newTypicalItemLocation, newTypicalItemLayoutIndex, newTypicalItemState, true);
+				newTypicalItemRenderer = this.createItemRenderer(newTypicalItemState, false);
+				this.treeViewPort.addChild(newTypicalItemRenderer);
+			} else {
+				newTypicalItemState = this.itemRendererToItemState.get(newTypicalItemRenderer);
+			}
+		}
+		if (this._typicalItemRenderer != newTypicalItemRenderer) {
+			if (this._typicalItemRenderer != null) {
+				// it may have been hidden if it was out of the view port bounds
+				this._typicalItemRenderer.visible = true;
+			}
+			this._typicalItemRenderer = newTypicalItemRenderer;
+
+			var typicalItemLayout:ITypicalItemLayout = cast this.layout;
+			typicalItemLayout.typicalItem = this._typicalItemRenderer;
+		}
+
+		if (this._typicalItemRenderer != null) {
+			var newTypicalItemState = this.itemRendererToItemState.get(this._typicalItemRenderer);
+			var storage = this.itemStateToStorage(newTypicalItemState);
+			var inactiveItemRenderers = storage.inactiveItemRenderers;
+			var activeItemRenderers = storage.activeItemRenderers;
+			// this renderer is already is use by the typical item, so we
+			// don't want to allow it to be used by other items.
+			var inactiveIndex = inactiveItemRenderers.indexOf(this._typicalItemRenderer);
+			if (inactiveIndex != -1) {
+				inactiveItemRenderers.splice(inactiveIndex, 1);
+			}
+			if (activeItemRenderers.length == 0) {
+				activeItemRenderers.push(this._typicalItemRenderer);
+			}
 		}
 	}
 
