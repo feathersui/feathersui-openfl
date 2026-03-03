@@ -8,30 +8,30 @@
 
 package feathers.controls;
 
-import feathers.core.ITextControl;
-import openfl.events.TouchEvent;
-import feathers.events.GroupListViewEvent;
-import openfl.events.MouseEvent;
-import feathers.events.TriggerEvent;
-import openfl.errors.ArgumentError;
-import openfl.errors.RangeError;
-import feathers.data.GroupListViewItemState;
-import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.IGroupListViewItemRenderer;
+import feathers.controls.dataRenderers.ItemRenderer;
+import feathers.core.ITextControl;
 import feathers.data.ArrayHierarchicalCollection;
+import feathers.data.GroupListViewItemState;
 import feathers.data.TreeCollection;
 import feathers.data.TreeNode;
+import feathers.events.GroupListViewEvent;
+import feathers.events.TriggerEvent;
 import feathers.layout.ILayoutIndexObject;
+import feathers.layout.VerticalListLayout;
 import feathers.style.IVariantStyleObject;
 import feathers.utils.DisplayObjectRecycler;
 import openfl.Lib;
+import openfl.errors.ArgumentError;
+import openfl.errors.RangeError;
 import openfl.events.Event;
+import openfl.events.MouseEvent;
+import openfl.events.TouchEvent;
 import utest.Assert;
 import utest.Test;
 
-@:keep
-class GroupListViewTest extends Test {
+@:keep class GroupListViewTest extends Test {
 	private var _listView:GroupListView;
 
 	public function new() {
@@ -322,8 +322,8 @@ class GroupListViewTest extends Test {
 		});
 		this._listView.validateNow();
 		Assert.equals(4, updatedLocations.length);
-		Assert.equals(0, CompareLocations.compareLocations([0], updatedLocations[0]));
-		Assert.equals(0, CompareLocations.compareLocations([0, 0], updatedLocations[1]));
+		Assert.equals(0, CompareLocations.compareLocations([0, 0], updatedLocations[0]));
+		Assert.equals(0, CompareLocations.compareLocations([0], updatedLocations[1]));
 		Assert.equals(0, CompareLocations.compareLocations([0, 1], updatedLocations[2]));
 		Assert.equals(0, CompareLocations.compareLocations([0, 2], updatedLocations[3]));
 		this._listView.setInvalid(DATA);
@@ -371,14 +371,16 @@ class GroupListViewTest extends Test {
 		});
 		this._listView.validateNow();
 		Assert.equals(4, updatedLocations.length);
-		Assert.equals(0, CompareLocations.compareLocations([0], updatedLocations[0]));
-		Assert.equals(0, CompareLocations.compareLocations([0, 0], updatedLocations[1]));
+		Assert.equals(0, CompareLocations.compareLocations([0, 0], updatedLocations[0]));
+		Assert.equals(0, CompareLocations.compareLocations([0], updatedLocations[1]));
 		Assert.equals(0, CompareLocations.compareLocations([0, 1], updatedLocations[2]));
 		Assert.equals(0, CompareLocations.compareLocations([0, 2], updatedLocations[3]));
+		this._listView.dataProvider.updateAt([0, 0]);
 		this._listView.dataProvider.updateAt([0, 1]);
 		this._listView.validateNow();
-		Assert.equals(5, updatedLocations.length);
-		Assert.equals(0, CompareLocations.compareLocations([0, 1], updatedLocations[4]));
+		Assert.equals(6, updatedLocations.length);
+		Assert.equals(0, CompareLocations.compareLocations([0, 0], updatedLocations[4]));
+		Assert.equals(0, CompareLocations.compareLocations([0, 1], updatedLocations[5]));
 	}
 
 	public function testUpdateAllCallsDisplayObjectRecyclerUpdate():Void {
@@ -395,8 +397,8 @@ class GroupListViewTest extends Test {
 		});
 		this._listView.validateNow();
 		Assert.equals(4, updatedLocations.length);
-		Assert.equals(0, CompareLocations.compareLocations([0], updatedLocations[0]));
-		Assert.equals(0, CompareLocations.compareLocations([0, 0], updatedLocations[1]));
+		Assert.equals(0, CompareLocations.compareLocations([0, 0], updatedLocations[0]));
+		Assert.equals(0, CompareLocations.compareLocations([0], updatedLocations[1]));
 		Assert.equals(0, CompareLocations.compareLocations([0, 1], updatedLocations[2]));
 		Assert.equals(0, CompareLocations.compareLocations([0, 2], updatedLocations[3]));
 		this._listView.dataProvider.updateAll();
@@ -919,6 +921,64 @@ class GroupListViewTest extends Test {
 		var state2 = this._listView.itemToItemState(collection.get([2]));
 		Assert.notNull(state2);
 		Assert.equals("alternate2", state2.recyclerID);
+	}
+
+	private function testVirtualLayoutAndTypicalItem():Void {
+		var collection = new ArrayHierarchicalCollection(([
+			{text: "Header", children: [{text: "One"}, {text: "Two"}, {text: "Three"}, {text: "Four"}, {text: "Five"}]}
+		] : Array<Dynamic>), (item:Dynamic) -> item.children);
+		this._listView.dataProvider = collection;
+		this._listView.layout = new VerticalListLayout();
+		this._listView.virtualLayout = true;
+		this._listView.itemRendererRecycler = DisplayObjectRecycler.withFunction(() -> {
+			var itemRenderer = new ItemRenderer();
+			itemRenderer.height = 10.0;
+			return itemRenderer;
+		});
+		this._listView.headerRendererRecycler = DisplayObjectRecycler.withFunction(() -> {
+			var itemRenderer = new ItemRenderer();
+			itemRenderer.height = 10.0;
+			return itemRenderer;
+		});
+		this._listView.height = 15.0;
+		this._listView.validateNow();
+		// first three items have visible item renderers
+		var itemRenderer0 = this._listView.itemToItemRenderer(collection.get([0]));
+		Assert.notNull(itemRenderer0);
+		Assert.isTrue(itemRenderer0.visible);
+		var itemRenderer1 = this._listView.itemToItemRenderer(collection.get([0, 0]));
+		Assert.notNull(itemRenderer1);
+		Assert.isTrue(itemRenderer1.visible);
+		var itemRenderer2 = this._listView.itemToItemRenderer(collection.get([0, 1]));
+		Assert.notNull(itemRenderer2);
+		Assert.isTrue(itemRenderer2.visible);
+		var itemRenderer3 = this._listView.itemToItemRenderer(collection.get([0, 2]));
+		Assert.isNull(itemRenderer3);
+		var itemRenderer4 = this._listView.itemToItemRenderer(collection.get([0, 3]));
+		Assert.isNull(itemRenderer4);
+		var itemRenderer5 = this._listView.itemToItemRenderer(collection.get([0, 4]));
+		Assert.isNull(itemRenderer5);
+		// scroll to end, and the last three items will have visible item
+		// renderers, but the first item will have an invisible item renderer
+		// because it is the "typical" item used for measurement
+		this._listView.scrollY = 45.0;
+		this._listView.validateNow();
+		var itemRenderer0 = this._listView.itemToItemRenderer(collection.get([0]));
+		Assert.isNull(itemRenderer0);
+		var itemRenderer1 = this._listView.itemToItemRenderer(collection.get([0, 0]));
+		Assert.notNull(itemRenderer1);
+		Assert.isFalse(itemRenderer1.visible);
+		var itemRenderer2 = this._listView.itemToItemRenderer(collection.get([0, 1]));
+		Assert.isNull(itemRenderer2);
+		var itemRenderer3 = this._listView.itemToItemRenderer(collection.get([0, 2]));
+		Assert.notNull(itemRenderer3);
+		Assert.isTrue(itemRenderer3.visible);
+		var itemRenderer4 = this._listView.itemToItemRenderer(collection.get([0, 3]));
+		Assert.notNull(itemRenderer4);
+		Assert.isTrue(itemRenderer4.visible);
+		var itemRenderer5 = this._listView.itemToItemRenderer(collection.get([0, 4]));
+		Assert.notNull(itemRenderer5);
+		Assert.isTrue(itemRenderer5.visible);
 	}
 }
 
