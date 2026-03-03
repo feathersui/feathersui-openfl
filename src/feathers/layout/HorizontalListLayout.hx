@@ -32,7 +32,8 @@ import openfl.ui.Keyboard;
 	@since 1.0.0
 **/
 @:event(openfl.events.Event.CHANGE)
-class HorizontalListLayout extends EventDispatcher implements IVirtualLayout implements IKeyboardNavigationLayout implements IDragDropLayout {
+class HorizontalListLayout extends EventDispatcher implements IVirtualLayout implements IKeyboardNavigationLayout implements IDragDropLayout
+		implements ITypicalItemLayout {
 	/**
 		Creates a new `HorizontalListLayout` object.
 
@@ -521,6 +522,26 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 		return this._heightResetEnabled;
 	}
 
+	private var _typicalItem:DisplayObject;
+
+	/**
+		@see `feathers.layout.ITypicalItemLayout.typicalItem`
+	**/
+	public var typicalItem(get, set):DisplayObject;
+
+	private function get_typicalItem():DisplayObject {
+		return this._typicalItem;
+	}
+
+	private function set_typicalItem(value:DisplayObject):DisplayObject {
+		if (this._typicalItem == value) {
+			return this._typicalItem;
+		}
+		this._typicalItem = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._typicalItem;
+	}
+
 	/**
 		Sets all four padding properties to the same value.
 
@@ -723,6 +744,13 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 	}
 
 	private function calculateVirtualColumnWidth(items:Array<DisplayObject>, itemHeight:Float):Float {
+		if (this._typicalItem != null) {
+			this._typicalItem.height = itemHeight;
+			if ((this._typicalItem is IValidating)) {
+				(cast this._typicalItem : IValidating).validateNow();
+			}
+			return this._typicalItem.width;
+		}
 		for (i in 0...items.length) {
 			var item = items[i];
 			if (item == null) {
@@ -772,13 +800,27 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 
 		var startIndex = -1;
 		var endIndex = -1;
+		var minItems = 0;
 		var estimatedItemWidth:Null<Float> = null;
+		if (this._typicalItem != null) {
+			var itemHeight = height - this._paddingTop - this._paddingBottom;
+			if (itemHeight < 0.0) {
+				itemHeight = 0.0;
+			}
+			this._typicalItem.height = itemHeight;
+			if ((this._typicalItem is IValidating)) {
+				(cast this._typicalItem : IValidating).validateNow();
+			}
+			estimatedItemWidth = this._typicalItem.width;
+			// it's possible for two separate items to both be partially
+			// visible in the view port, so ceil alone may not be enough
+			minItems = Math.ceil(width / (estimatedItemWidth) + adjustedGap) + 1;
+		}
 		var positionX = this._paddingLeft;
 		var scrollX = this._scrollX;
 		if (scrollX < 0.0) {
 			scrollX = 0.0;
 		}
-		var minItems = 0;
 		var maxX = scrollX + width;
 		var reachedFinalItem = false;
 		var lastIndex = itemCount - 1;
@@ -909,6 +951,17 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 		}
 
 		var estimatedItemWidth:Null<Float> = null;
+		if (this._typicalItem != null) {
+			var itemHeight = height - this._paddingTop - this._paddingBottom;
+			if (itemHeight < 0.0) {
+				itemHeight = 0.0;
+			}
+			this._typicalItem.height = itemHeight;
+			if ((this._typicalItem is IValidating)) {
+				(cast this._typicalItem : IValidating).validateNow();
+			}
+			estimatedItemWidth = this._typicalItem.width;
+		}
 		var minX = 0.0;
 		var maxX = 0.0;
 		var positionX = this._paddingLeft;
@@ -961,6 +1014,17 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 		}
 
 		var estimatedItemWidth:Null<Float> = null;
+		if (this._typicalItem != null) {
+			var itemHeight = height - this._paddingTop - this._paddingBottom;
+			if (itemHeight < 0.0) {
+				itemHeight = 0.0;
+			}
+			this._typicalItem.height = itemHeight;
+			if ((this._typicalItem is IValidating)) {
+				(cast this._typicalItem : IValidating).validateNow();
+			}
+			estimatedItemWidth = this._typicalItem.width;
+		}
 		var positionX = this._paddingLeft;
 		for (i in 0...items.length) {
 			var item = items[i];
@@ -1010,6 +1074,17 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 		}
 
 		var estimatedItemWidth:Null<Float> = null;
+		if (this._typicalItem != null) {
+			var itemHeight = height - this._paddingTop - this._paddingBottom;
+			if (itemHeight < 0.0) {
+				itemHeight = 0.0;
+			}
+			this._typicalItem.height = itemHeight;
+			if ((this._typicalItem is IValidating)) {
+				(cast this._typicalItem : IValidating).validateNow();
+			}
+			estimatedItemWidth = this._typicalItem.width;
+		}
 		var positionX = this._paddingLeft;
 		for (i in 0...maxIndex) {
 			var item = items[i];
@@ -1057,15 +1132,27 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 		}
 
 		var estimatedItemWidth:Null<Float> = null;
-		for (i in 0...items.length) {
-			var itemWidth = 0.0;
-			if (this._virtualCache != null) {
-				var cacheItem = Std.downcast(this._virtualCache[i], HorizontalListVirtualCacheItem);
-				if (cacheItem != null && cacheItem.itemWidth != null) {
-					itemWidth = cacheItem.itemWidth;
-					if (estimatedItemWidth == null) {
-						estimatedItemWidth = itemWidth;
-						break;
+		if (this._typicalItem != null) {
+			var itemHeight = viewPortHeight - this._paddingTop - this._paddingBottom;
+			if (itemHeight < 0.0) {
+				itemHeight = 0.0;
+			}
+			this._typicalItem.height = itemHeight;
+			if ((this._typicalItem is IValidating)) {
+				(cast this._typicalItem : IValidating).validateNow();
+			}
+			estimatedItemWidth = this._typicalItem.width;
+		} else {
+			for (i in 0...items.length) {
+				var itemWidth = 0.0;
+				if (this._virtualCache != null) {
+					var cacheItem = Std.downcast(this._virtualCache[i], HorizontalListVirtualCacheItem);
+					if (cacheItem != null && cacheItem.itemWidth != null) {
+						itemWidth = cacheItem.itemWidth;
+						if (estimatedItemWidth == null) {
+							estimatedItemWidth = itemWidth;
+							break;
+						}
 					}
 				}
 			}

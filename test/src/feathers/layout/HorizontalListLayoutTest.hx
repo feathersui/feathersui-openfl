@@ -513,6 +513,7 @@ class HorizontalListLayoutTest extends Test {
 		this._layout.virtualCache = [
 			new HorizontalListLayout.HorizontalListVirtualCacheItem(CHILD1_WIDTH, CHILD1_HEIGHT)
 		];
+		this._layout.typicalItem = null;
 		var range = this._layout.getVisibleIndices(10000, CHILD1_WIDTH, 0.0);
 		Assert.equals(0, range.start);
 		// if the scroll position changes, a second item may become visible,
@@ -526,6 +527,7 @@ class HorizontalListLayoutTest extends Test {
 		this._layout.virtualCache = [
 			new HorizontalListLayout.HorizontalListVirtualCacheItem(CHILD1_WIDTH, CHILD1_HEIGHT)
 		];
+		this._layout.typicalItem = null;
 		var range = this._layout.getVisibleIndices(10000, CHILD1_WIDTH / 2.0, 0.0);
 		Assert.equals(0, range.start);
 		// even if the view port is smaller than a single item, it's still
@@ -538,6 +540,7 @@ class HorizontalListLayoutTest extends Test {
 		this._layout.virtualCache = [
 			new HorizontalListLayout.HorizontalListVirtualCacheItem(CHILD1_WIDTH, CHILD1_HEIGHT)
 		];
+		this._layout.typicalItem = null;
 		var range = this._layout.getVisibleIndices(10000, CHILD1_WIDTH * 2.0, 0.0);
 		Assert.equals(0, range.start);
 		Assert.equals(2, range.end);
@@ -552,6 +555,7 @@ class HorizontalListLayoutTest extends Test {
 			new HorizontalListLayout.HorizontalListVirtualCacheItem(CHILD1_WIDTH * 2.0, CHILD1_HEIGHT),
 			new HorizontalListLayout.HorizontalListVirtualCacheItem(CHILD1_WIDTH * 2.0, CHILD1_HEIGHT),
 		];
+		this._layout.typicalItem = null;
 		var range = this._layout.getVisibleIndices(10000, CHILD1_WIDTH * 2.0, 0.0);
 		Assert.equals(0, range.start);
 		Assert.equals(2, range.end);
@@ -566,6 +570,7 @@ class HorizontalListLayoutTest extends Test {
 			new HorizontalListLayout.HorizontalListVirtualCacheItem(CHILD1_WIDTH / 3.0, CHILD1_HEIGHT),
 			new HorizontalListLayout.HorizontalListVirtualCacheItem(CHILD1_WIDTH / 3.0, CHILD1_HEIGHT),
 		];
+		this._layout.typicalItem = null;
 		var range = this._layout.getVisibleIndices(10000, CHILD1_WIDTH * 2.0, 0.0);
 		Assert.equals(0, range.start);
 		Assert.equals(3, range.end);
@@ -575,6 +580,7 @@ class HorizontalListLayoutTest extends Test {
 		this._layout.virtualCache = [
 			new HorizontalListLayout.HorizontalListVirtualCacheItem(CHILD1_WIDTH, CHILD1_HEIGHT)
 		];
+		this._layout.typicalItem = null;
 		var range = this._layout.getVisibleIndices(10000, CHILD1_WIDTH * 1.5, 0.0);
 		Assert.equals(0, range.start);
 		Assert.equals(2, range.end);
@@ -584,6 +590,7 @@ class HorizontalListLayoutTest extends Test {
 		this._layout.virtualCache = [
 			new HorizontalListLayout.HorizontalListVirtualCacheItem(CHILD1_WIDTH, CHILD1_HEIGHT)
 		];
+		this._layout.typicalItem = null;
 		var range = this._layout.getVisibleIndices(10, CHILD1_WIDTH * 1.5, 0.0);
 		Assert.equals(0, range.start);
 		// even at a negative scroll position where none of the items are
@@ -595,6 +602,7 @@ class HorizontalListLayoutTest extends Test {
 		this._layout.virtualCache = [
 			new HorizontalListLayout.HorizontalListVirtualCacheItem(CHILD1_WIDTH, CHILD1_HEIGHT)
 		];
+		this._layout.typicalItem = null;
 		var range = this._layout.getVisibleIndices(10000, CHILD1_WIDTH * 1.5, 0.0);
 		// even if the scroll position is beyond the final item where none of
 		// the items are visible, the layout will prefer to ask for a minimum
