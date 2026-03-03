@@ -590,7 +590,7 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 			if (item == null) {
 				var itemHeight = virtualRowHeight;
 				if (this._virtualCache != null) {
-					var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+					var cacheItem = Std.downcast(this._virtualCache[i], VerticalListVirtualCacheItem);
 					if (cacheItem != null && cacheItem.itemHeight != null) {
 						itemHeight = cacheItem.itemHeight;
 					}
@@ -611,7 +611,7 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 			}
 			var itemHeight = item.height;
 			if (this._virtualCache != null) {
-				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+				var cacheItem = Std.downcast(this._virtualCache[i], VerticalListVirtualCacheItem);
 				if (cacheItem != null && (cacheItem.itemHeight == null || cacheItem.itemHeight != itemHeight)) {
 					var cachedHeight = cacheItem.itemHeight;
 					cacheItem.itemHeight = itemHeight;
@@ -677,7 +677,7 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 		for (i in 0...items.length) {
 			var item = items[i];
 			if (this._virtualCache != null && this._virtualCache.length > i) {
-				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+				var cacheItem = Std.downcast(this._virtualCache[i], VerticalListVirtualCacheItem);
 				if (cacheItem != null) {
 					// prefer the cached width because that's the original
 					// measured width and not the justified width
@@ -707,14 +707,14 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 				maxItemWidth = itemWidth;
 			}
 			if (this._virtualCache != null) {
-				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+				var cacheItem = Std.downcast(this._virtualCache[i], VerticalListVirtualCacheItem);
 				if (cacheItem == null) {
 					if ((item is IValidating)) {
 						(cast item : IValidating).validateNow();
 					}
 					// save the original measured width in the cache to be used
 					// again in future calculations
-					cacheItem = new VirtualCacheItem(itemWidth, null);
+					cacheItem = new VerticalListVirtualCacheItem(itemWidth, null);
 					this._virtualCache[i] = cacheItem;
 				}
 			}
@@ -752,7 +752,7 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 				if (this._virtualCache == null || this._virtualCache.length <= i) {
 					continue;
 				}
-				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+				var cacheItem = Std.downcast(this._virtualCache[i], VerticalListVirtualCacheItem);
 				if (cacheItem == null || cacheItem.itemHeight == null) {
 					continue;
 				}
@@ -770,7 +770,7 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 			}
 			var itemHeight = item.height;
 			if (this._virtualCache != null) {
-				var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+				var cacheItem = Std.downcast(this._virtualCache[i], VerticalListVirtualCacheItem);
 				if (cacheItem != null && (cacheItem.itemHeight == null || cacheItem.itemHeight != itemHeight)) {
 					cacheItem.itemHeight = itemHeight;
 					// this new measurement may cause the number of visible
@@ -818,13 +818,13 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 		}
 		var maxY = scrollY + height;
 		var reachedFinalItem = false;
-		var skippedMissingItems = 0;
 		var lastIndex = itemCount - 1;
+		var skippedMissingItems = 0;
 		for (i in 0...itemCount) {
 			var itemHeight = 0.0;
-			var cacheItem:VirtualCacheItem = null;
+			var cacheItem:VerticalListVirtualCacheItem = null;
 			if (this._virtualCache != null) {
-				cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+				cacheItem = Std.downcast(this._virtualCache[i], VerticalListVirtualCacheItem);
 			}
 			if (cacheItem != null && cacheItem.itemHeight != null) {
 				itemHeight = cacheItem.itemHeight;
@@ -895,9 +895,9 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 			do {
 				startIndex--;
 				var itemHeight = 0.0;
-				var cacheItem:VirtualCacheItem = null;
+				var cacheItem:VerticalListVirtualCacheItem = null;
 				if (this._virtualCache != null) {
-					cacheItem = Std.downcast(this._virtualCache[startIndex], VirtualCacheItem);
+					cacheItem = Std.downcast(this._virtualCache[startIndex], VerticalListVirtualCacheItem);
 				}
 				if (cacheItem != null && cacheItem.itemHeight != null) {
 					itemHeight = cacheItem.itemHeight;
@@ -962,9 +962,9 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 		var positionY = this._paddingTop;
 		for (i in 0...itemCount) {
 			var itemHeight = 0.0;
-			var cacheItem:VirtualCacheItem = null;
+			var cacheItem:VerticalListVirtualCacheItem = null;
 			if (this._virtualCache != null) {
-				cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+				cacheItem = Std.downcast(this._virtualCache[i], VerticalListVirtualCacheItem);
 			}
 			if (cacheItem != null && cacheItem.itemHeight != null) {
 				itemHeight = cacheItem.itemHeight;
@@ -1025,9 +1025,9 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 			var item = items[i];
 			var itemHeight = 0.0;
 			if (item == null) {
-				var cacheItem:VirtualCacheItem = null;
+				var cacheItem:VerticalListVirtualCacheItem = null;
 				if (this._virtualCache != null) {
-					cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+					cacheItem = Std.downcast(this._virtualCache[i], VerticalListVirtualCacheItem);
 				}
 				if (cacheItem != null && cacheItem.itemHeight != null) {
 					itemHeight = cacheItem.itemHeight;
@@ -1085,9 +1085,9 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 			var item = items[i];
 			var itemHeight = 0.0;
 			if (item == null) {
-				var cacheItem:VirtualCacheItem = null;
+				var cacheItem:VerticalListVirtualCacheItem = null;
 				if (this._virtualCache != null) {
-					cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+					cacheItem = Std.downcast(this._virtualCache[i], VerticalListVirtualCacheItem);
 				}
 				if (cacheItem != null && cacheItem.itemHeight != null) {
 					itemHeight = cacheItem.itemHeight;
@@ -1141,7 +1141,7 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 			for (i in 0...items.length) {
 				var itemHeight = 0.0;
 				if (this._virtualCache != null) {
-					var cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+					var cacheItem = Std.downcast(this._virtualCache[i], VerticalListVirtualCacheItem);
 					if (cacheItem != null && cacheItem.itemHeight != null) {
 						itemHeight = cacheItem.itemHeight;
 						if (estimatedItemHeight == null) {
@@ -1187,9 +1187,9 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 						var item = items[i];
 						var itemHeight = 0.0;
 						if (item == null) {
-							var cacheItem:VirtualCacheItem = null;
+							var cacheItem:VerticalListVirtualCacheItem = null;
 							if (this._virtualCache != null) {
-								cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+								cacheItem = Std.downcast(this._virtualCache[i], VerticalListVirtualCacheItem);
 							}
 							if (cacheItem != null && cacheItem.itemHeight != null) {
 								itemHeight = cacheItem.itemHeight;
@@ -1219,9 +1219,9 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 						var item = items[i];
 						var itemHeight = 0.0;
 						if (item == null) {
-							var cacheItem:VirtualCacheItem = null;
+							var cacheItem:VerticalListVirtualCacheItem = null;
 							if (this._virtualCache != null) {
-								cacheItem = Std.downcast(this._virtualCache[i], VirtualCacheItem);
+								cacheItem = Std.downcast(this._virtualCache[i], VerticalListVirtualCacheItem);
 							}
 							if (cacheItem != null && cacheItem.itemHeight != null) {
 								itemHeight = cacheItem.itemHeight;
@@ -1339,7 +1339,7 @@ class VerticalListLayout extends EventDispatcher implements IVirtualLayout imple
 }
 
 @:dox(hide)
-class VirtualCacheItem {
+class VerticalListVirtualCacheItem {
 	public function new(itemWidth:Float, itemHeight:Null<Float>) {
 		this.itemWidth = itemWidth;
 		this.itemHeight = itemHeight;
