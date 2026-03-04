@@ -36,6 +36,7 @@ import feathers.layout.IKeyboardNavigationLayout;
 import feathers.layout.ILayout;
 import feathers.layout.ILayoutIndexObject;
 import feathers.layout.IScrollLayout;
+import feathers.layout.ITypicalItemLayout;
 import feathers.layout.IVirtualLayout;
 import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
@@ -354,6 +355,8 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 	private var _headerScrollRect1:Rectangle = new Rectangle();
 	private var _headerScrollRect2:Rectangle = new Rectangle();
 	private var _oldHeaderDividerMouseCursor:MouseCursor;
+
+	private var _typicalRowRenderer:TreeGridViewRowRenderer;
 
 	#if (flash && haxe_ver < 4.3) @:getter(tabEnabled) #end
 	override private function get_tabEnabled():Bool {
@@ -1089,6 +1092,28 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		this._pendingScrollLocation = location;
 		this._pendingScrollDuration = animationDuration;
 		this.setInvalid(SCROLL);
+	}
+
+	/**
+		Returns the current row renderer used to render a specific item from
+		the data provider. May return `null` if an item doesn't currently have
+		a row renderer.
+
+		**Note:** Most grid views use "virtual" layouts, which means that only
+		the currently-visible subset of rows will have a row renderer. As the
+		grid view scrolls, the items with row renderers will change, and row
+		renderers may even be re-used to display different items.
+
+		@since 1.4.0
+	**/
+	public function rowToRowRenderer(item:Dynamic):TreeGridViewRowRenderer {
+		if (item == null) {
+			return null;
+		}
+		if ((item is String)) {
+			return this.stringDataToRowRenderer.get(cast item);
+		}
+		return this.objectDataToRowRenderer.get(item);
 	}
 
 	/**
@@ -2105,6 +2130,9 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 
 		var rowRendererInvalid = this.treeGridViewPort.isInvalid(INVALIDATION_FLAG_ROW_RENDERER_FACTORY);
 		this.refreshInactiveRowRenderers(rowRendererInvalid);
+
+		this.refreshTypicalRowRenderer();
+
 		this.findUnrenderedData();
 		this.recoverInactiveRowRenderers();
 		this.renderUnrenderedData();
@@ -2122,6 +2150,17 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: active row renderers should be empty before updating.');
 		}
 		if (factoryInvalid) {
+			if (this._typicalRowRenderer != null) {
+				var typicalRowState = this.rowRendererToRowState.get(this._typicalRowRenderer);
+				this.rowRendererToRowState.remove(this._typicalRowRenderer);
+				if ((typicalRowState.data is String)) {
+					this.stringDataToRowRenderer.remove(cast typicalRowState.data);
+				} else {
+					this.objectDataToRowRenderer.remove(typicalRowState.data);
+				}
+				this.destroyRowRenderer(this._typicalRowRenderer);
+				this._typicalRowRenderer = null;
+			}
 			this.recoverInactiveRowRenderers();
 			this.freeInactiveRowRenderers();
 			this._oldRowRendererFactory = null;
@@ -2195,6 +2234,24 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			this._visibleIndices.end = this._rowLayoutItems.length - 1;
 		}
 		this.findUnrenderedDataForLocation([], 0);
+		// update the typical row renderer's visibility
+		if (this._typicalRowRenderer != null) {
+			if (this._virtualLayout && (this.layout is IVirtualLayout)) {
+				var typicalRowState = this.rowRendererToRowState.get(this._typicalRowRenderer);
+				if (typicalRowState.layoutIndex >= this._visibleIndices.start && typicalRowState.layoutIndex <= this._visibleIndices.end) {
+					this._typicalRowRenderer.visible = true;
+				} else {
+					this._typicalRowRenderer.visible = false;
+					// uncomment these lines to see a hidden typical row for
+					// debugging purposes...
+					/*this._typicalRowRenderer.visible = true;
+						this._typicalRowRenderer.x = this.scrollX;
+						this._typicalRowRenderer.y = this.scrollY; */
+				}
+			} else {
+				this._typicalRowRenderer.visible = true;
+			}
+		}
 	}
 
 	private function findUnrenderedDataForLocation(location:Array<Int>, layoutIndex:Int):Int {
@@ -2239,7 +2296,8 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 			return;
 		}
 		var state = this.rowRendererToRowState.get(rowRenderer);
-		var changed = this.populateCurrentRowState(row, location, layoutIndex, state, this._forceItemStateUpdate);
+		var forceChange = this._forceItemStateUpdate && rowRenderer != this._typicalRowRenderer;
+		var changed = this.populateCurrentRowState(row, location, layoutIndex, state, forceChange);
 		if (changed) {
 			this.updateRowRenderer(rowRenderer, state);
 		}
@@ -2247,11 +2305,16 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		// it isn't anymore, it may have been set invisible
 		rowRenderer.visible = true;
 		this._rowLayoutItems[layoutIndex] = rowRenderer;
-		var removed = this.inactiveRowRenderers.remove(rowRenderer);
-		if (!removed) {
-			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: row renderer map contains bad data for item at location ${location}. This may be caused by duplicate items in the data provider, which is not allowed.');
+		// the typical row renderer is a special case, and we will
+		// have already put it into the active renderers, so we don't
+		// want to do it again!
+		if (this._typicalRowRenderer != rowRenderer) {
+			var removed = this.inactiveRowRenderers.remove(rowRenderer);
+			if (!removed) {
+				throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: row renderer map contains bad data for item at location ${location}. This may be caused by duplicate items in the data provider, which is not allowed.');
+			}
+			this.activeRowRenderers.push(rowRenderer);
 		}
-		this.activeRowRenderers.push(rowRenderer);
 	}
 
 	private function renderUnrenderedData():Void {
@@ -2272,9 +2335,9 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		#end
 	}
 
-	private function createRowRenderer(state:TreeGridViewRowState):TreeGridViewRowRenderer {
+	private function createRowRenderer(state:TreeGridViewRowState, useCache:Bool = true):TreeGridViewRowRenderer {
 		var rowRenderer:TreeGridViewRowRenderer = null;
-		if (this.inactiveRowRenderers.length == 0) {
+		if (this.inactiveRowRenderers.length == 0 || !useCache) {
 			rowRenderer = this._rowRendererFactory.create();
 			if (this._rowRendererMeasurements == null) {
 				this._rowRendererMeasurements = new Measurements(rowRenderer);
@@ -2308,6 +2371,68 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		this.treeGridViewPort.removeChild(rowRenderer);
 		if (factory.destroy != null) {
 			factory.destroy(rowRenderer);
+		}
+	}
+
+	private function refreshTypicalRowRenderer():Void {
+		var newTypicalItemLocation:Array<Int> = null;
+		var newTypicalItemLayoutIndex:Int = -1;
+		var newTypicalItem:Any = null;
+		if ((this.layout is ITypicalItemLayout) && this._dataProvider != null && this._dataProvider.getLength() > 0) {
+			newTypicalItemLocation = [0];
+			newTypicalItemLayoutIndex = 0;
+			newTypicalItem = this._dataProvider.get(newTypicalItemLocation);
+		}
+
+		var newTypicalRowRenderer:TreeGridViewRowRenderer = null;
+		var newTypicalRowState:TreeGridViewRowState = null;
+		if (newTypicalItem != null) {
+			// try to reuse the existing item renderer, if available
+			if ((newTypicalItem is String)) {
+				newTypicalRowRenderer = this.stringDataToRowRenderer.get(cast newTypicalItem);
+			} else {
+				newTypicalRowRenderer = this.objectDataToRowRenderer.get(newTypicalItem);
+			}
+			var needsNewRowRenderer = newTypicalRowRenderer == null;
+			if (!needsNewRowRenderer) {
+				newTypicalRowState = this.rowRendererToRowState.get(newTypicalRowRenderer);
+				var changed = this.populateCurrentRowState(newTypicalItem, newTypicalItemLocation, newTypicalItemLayoutIndex, newTypicalRowState,
+					this._forceItemStateUpdate);
+				if (changed) {
+					this.updateRowRenderer(newTypicalRowRenderer, newTypicalRowState);
+				}
+			}
+			if (needsNewRowRenderer) {
+				newTypicalRowState = this.rowStatePool.get();
+				this.populateCurrentRowState(newTypicalItem, newTypicalItemLocation, newTypicalItemLayoutIndex, newTypicalRowState, true);
+				newTypicalRowRenderer = this.createRowRenderer(newTypicalRowState, false);
+				this.treeGridViewPort.addChild(newTypicalRowRenderer);
+			}
+		}
+
+		if (this._typicalRowRenderer != newTypicalRowRenderer) {
+			if (this._typicalRowRenderer != null) {
+				// it may have been hidden if it was out of the view port bounds
+				this._typicalRowRenderer.visible = true;
+			}
+			this._typicalRowRenderer = newTypicalRowRenderer;
+
+			if ((this.layout is ITypicalItemLayout)) {
+				var typicalItemLayout:ITypicalItemLayout = cast this.layout;
+				typicalItemLayout.typicalItem = this._typicalRowRenderer;
+			}
+		}
+
+		if (this._typicalRowRenderer != null) {
+			// this renderer is already is use by the typical item, so we
+			// don't want to allow it to be used by other items.
+			var inactiveIndex = this.inactiveRowRenderers.indexOf(this._typicalRowRenderer);
+			if (inactiveIndex != -1) {
+				this.inactiveRowRenderers.splice(inactiveIndex, 1);
+			}
+			if (this.activeRowRenderers.length == 0) {
+				this.activeRowRenderers.push(this._typicalRowRenderer);
+			}
 		}
 	}
 

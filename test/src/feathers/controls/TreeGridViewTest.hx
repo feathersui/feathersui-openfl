@@ -8,26 +8,30 @@
 
 package feathers.controls;
 
-import feathers.core.ITextControl;
-import openfl.events.MouseEvent;
-import feathers.events.TriggerEvent;
-import openfl.events.TouchEvent;
-import feathers.events.TreeGridViewEvent;
-import openfl.errors.RangeError;
-import feathers.data.TreeGridViewCellState;
 import feathers.controls.dataRenderers.HierarchicalItemRenderer;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.ITreeGridViewCellRenderer;
+import feathers.controls.dataRenderers.ItemRenderer;
+import feathers.controls.dataRenderers.TreeGridViewRowRenderer;
 import feathers.core.IOpenCloseToggle;
+import feathers.core.ITextControl;
 import feathers.data.ArrayCollection;
 import feathers.data.ArrayHierarchicalCollection;
 import feathers.data.TreeCollection;
+import feathers.data.TreeGridViewCellState;
 import feathers.data.TreeNode;
 import feathers.events.ScrollEvent;
+import feathers.events.TreeGridViewEvent;
+import feathers.events.TriggerEvent;
 import feathers.layout.ILayoutIndexObject;
+import feathers.layout.VerticalListLayout;
+import feathers.utils.DisplayObjectFactory;
 import feathers.utils.DisplayObjectRecycler;
 import openfl.Lib;
+import openfl.errors.RangeError;
 import openfl.events.Event;
+import openfl.events.MouseEvent;
+import openfl.events.TouchEvent;
 import utest.Assert;
 import utest.Test;
 
@@ -368,6 +372,7 @@ import utest.Test;
 		Assert.equals(1, setBranchValues.length);
 		Assert.equals(1, setTreeGridViewOwnerValues.length);
 
+		item.text = "New Text";
 		this._treeGridView.dataProvider.updateAt(itemLocation);
 		this._treeGridView.validateNow();
 
@@ -376,7 +381,89 @@ import utest.Test;
 		Assert.equals(3, setTextValues.length);
 		Assert.equals("Two", setTextValues[0]);
 		Assert.isNull(setTextValues[1]);
-		Assert.equals("Two", setTextValues[2]);
+		Assert.equals("New Text", setTextValues[2]);
+
+		Assert.equals(3, setDataValues.length);
+		Assert.equals(item, setDataValues[0]);
+		Assert.isNull(setDataValues[1]);
+		Assert.equals(item, setDataValues[2]);
+
+		Assert.equals(3, setLayoutIndexValues.length);
+		Assert.equals(2, setLayoutIndexValues[0]);
+		Assert.equals(-1, setLayoutIndexValues[1]);
+		Assert.equals(2, setLayoutIndexValues[2]);
+
+		Assert.equals(3, setSelectedValues.length);
+		Assert.equals(true, setSelectedValues[0]);
+		Assert.equals(false, setSelectedValues[1]);
+		Assert.equals(true, setSelectedValues[2]);
+
+		Assert.equals(3, setRowLocationValues.length);
+		Assert.equals(0, CompareLocations.compareLocations(itemLocation, setRowLocationValues[0]));
+		Assert.isNull(setRowLocationValues[1]);
+		Assert.equals(0, CompareLocations.compareLocations(itemLocation, setRowLocationValues[2]));
+
+		Assert.equals(3, setBranchValues.length);
+		Assert.equals(true, setBranchValues[0]);
+		Assert.equals(false, setBranchValues[1]);
+		Assert.equals(true, setBranchValues[2]);
+
+		Assert.equals(3, setOpenedValues.length);
+		Assert.equals(true, setOpenedValues[0]);
+		Assert.equals(false, setOpenedValues[1]);
+		Assert.equals(true, setOpenedValues[2]);
+
+		Assert.equals(3, setTreeGridViewOwnerValues.length);
+		Assert.equals(this._treeGridView, setTreeGridViewOwnerValues[0]);
+		Assert.isNull(setTreeGridViewOwnerValues[1]);
+		Assert.equals(this._treeGridView, setTreeGridViewOwnerValues[2]);
+	}
+
+	public function testUpdateAllSetsInterfaceProperties():Void {
+		var children:Array<Dynamic> = [{text: "One"}, {text: "Two", children: []}, {text: "Three"}];
+		var items:Array<Dynamic> = [{text: "A", children: children}];
+		this._treeGridView.dataProvider = new ArrayHierarchicalCollection(items, (item:Dynamic) -> item.children);
+		var textColumn = new TreeGridViewColumn("Text", item -> item.text);
+		this._treeGridView.columns = new ArrayCollection([textColumn]);
+		var itemLocation = [0, 1];
+		var item = this._treeGridView.dataProvider.get(itemLocation);
+		this._treeGridView.selectedLocation = itemLocation;
+		this._treeGridView.toggleBranch(this._treeGridView.dataProvider.get([0]), true);
+		this._treeGridView.toggleBranch(item, true);
+		this._treeGridView.cellRendererRecycler = DisplayObjectRecycler.withClass(CustomRendererWithInterfaces);
+		this._treeGridView.validateNow();
+		var sampleItemRenderer = cast(this._treeGridView.itemAndColumnToCellRenderer(item, textColumn), CustomRendererWithInterfaces);
+		var setTextValues = sampleItemRenderer.setTextValues;
+		var setDataValues = sampleItemRenderer.setDataValues;
+		var setLayoutIndexValues = sampleItemRenderer.setLayoutIndexValues;
+		var setColumnValues = sampleItemRenderer.setColumnValues;
+		var setColumnIndexValues = sampleItemRenderer.setColumnIndexValues;
+		var setSelectedValues = sampleItemRenderer.setSelectedValues;
+		var setRowLocationValues = sampleItemRenderer.setRowLocationValues;
+		var setOpenedValues = sampleItemRenderer.setOpenedValues;
+		var setBranchValues = sampleItemRenderer.setBranchValues;
+		var setTreeGridViewOwnerValues = sampleItemRenderer.setTreeGridViewOwnerValues;
+		Assert.equals(1, setTextValues.length);
+		Assert.equals(1, setDataValues.length);
+		Assert.equals(1, setLayoutIndexValues.length);
+		Assert.equals(1, setColumnValues.length);
+		Assert.equals(1, setColumnIndexValues.length);
+		Assert.equals(1, setSelectedValues.length);
+		Assert.equals(1, setRowLocationValues.length);
+		Assert.equals(1, setOpenedValues.length);
+		Assert.equals(1, setBranchValues.length);
+		Assert.equals(1, setTreeGridViewOwnerValues.length);
+
+		item.text = "New Text";
+		this._treeGridView.dataProvider.updateAll();
+		this._treeGridView.validateNow();
+
+		Assert.equals(sampleItemRenderer, cast(this._treeGridView.itemAndColumnToCellRenderer(item, textColumn), CustomRendererWithInterfaces));
+
+		Assert.equals(3, setTextValues.length);
+		Assert.equals("Two", setTextValues[0]);
+		Assert.isNull(setTextValues[1]);
+		Assert.equals("New Text", setTextValues[2]);
 
 		Assert.equals(3, setDataValues.length);
 		Assert.equals(item, setDataValues[0]);
@@ -1123,6 +1210,61 @@ import utest.Test;
 		var state2 = this._treeGridView.itemAndColumnToCellState(collection.get([2]), column0);
 		Assert.notNull(state2);
 		Assert.equals("alternate2", state2.recyclerID);
+	}
+
+	private function testVirtualLayoutAndTypicalItem():Void {
+		var collection = new ArrayHierarchicalCollection([{text: "One"}, {text: "Two"}, {text: "Three"}, {text: "Four"}, {text: "Five"}]);
+		var column0 = new TreeGridViewColumn("A", item -> item.text);
+		var columns = new ArrayCollection([column0,]);
+		this._treeGridView.dataProvider = collection;
+		this._treeGridView.columns = columns;
+		this._treeGridView.layout = new VerticalListLayout();
+		this._treeGridView.virtualLayout = true;
+		this._treeGridView.headerRendererRecycler = DisplayObjectRecycler.withFunction(() -> {
+			var headerRenderer = new ItemRenderer();
+			headerRenderer.height = 10.0;
+			return headerRenderer;
+		});
+		this._treeGridView.rowRendererFactory = DisplayObjectFactory.withFunction(() -> {
+			var itemRenderer = new TreeGridViewRowRenderer();
+			itemRenderer.height = 10.0;
+			return itemRenderer;
+		});
+		this._treeGridView.height = 25.0;
+		this._treeGridView.validateNow();
+		// first three items have visible item renderers
+		var itemRenderer0 = this._treeGridView.rowToRowRenderer(collection.get([0]));
+		Assert.notNull(itemRenderer0);
+		Assert.isTrue(itemRenderer0.visible);
+		var itemRenderer1 = this._treeGridView.rowToRowRenderer(collection.get([1]));
+		Assert.notNull(itemRenderer1);
+		Assert.isTrue(itemRenderer1.visible);
+		var itemRenderer2 = this._treeGridView.rowToRowRenderer(collection.get([2]));
+		Assert.notNull(itemRenderer2);
+		Assert.isTrue(itemRenderer2.visible);
+		var itemRenderer3 = this._treeGridView.rowToRowRenderer(collection.get([3]));
+		Assert.isNull(itemRenderer3);
+		var itemRenderer4 = this._treeGridView.rowToRowRenderer(collection.get([4]));
+		Assert.isNull(itemRenderer4);
+		// scroll to end, and the last three items will have visible item
+		// renderers, but the first item will have an invisible item renderer
+		// because it is the "typical" item used for measurement
+		this._treeGridView.scrollY = 35.0;
+		this._treeGridView.validateNow();
+		var itemRenderer0 = this._treeGridView.rowToRowRenderer(collection.get([0]));
+		Assert.notNull(itemRenderer0);
+		Assert.isFalse(itemRenderer0.visible);
+		var itemRenderer1 = this._treeGridView.rowToRowRenderer(collection.get([1]));
+		Assert.isNull(itemRenderer1);
+		var itemRenderer2 = this._treeGridView.rowToRowRenderer(collection.get([2]));
+		Assert.notNull(itemRenderer2);
+		Assert.isTrue(itemRenderer2.visible);
+		var itemRenderer3 = this._treeGridView.rowToRowRenderer(collection.get([3]));
+		Assert.notNull(itemRenderer3);
+		Assert.isTrue(itemRenderer3.visible);
+		var itemRenderer4 = this._treeGridView.rowToRowRenderer(collection.get([4]));
+		Assert.notNull(itemRenderer4);
+		Assert.isTrue(itemRenderer4.visible);
 	}
 }
 

@@ -15,6 +15,7 @@ import feathers.events.TriggerEvent;
 import feathers.events.GridViewEvent;
 import openfl.errors.RangeError;
 import feathers.skins.RectangleSkin;
+import feathers.controls.dataRenderers.GridViewRowRenderer;
 import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.IGridViewCellRenderer;
@@ -22,6 +23,8 @@ import feathers.data.ArrayCollection;
 import feathers.data.GridViewCellState;
 import feathers.events.ScrollEvent;
 import feathers.layout.ILayoutIndexObject;
+import feathers.layout.VerticalListLayout;
+import feathers.utils.DisplayObjectFactory;
 import feathers.utils.DisplayObjectRecycler;
 import openfl.Lib;
 import openfl.events.Event;
@@ -598,6 +601,7 @@ class GridViewTest extends Test {
 		Assert.equals(1, setColumnValues.length);
 		Assert.equals(1, setGridViewOwnerValues.length);
 
+		item.text = "New Text";
 		this._gridView.dataProvider.updateAt(rowIndex);
 		this._gridView.validateNow();
 
@@ -606,7 +610,84 @@ class GridViewTest extends Test {
 		Assert.equals(3, setTextValues.length);
 		Assert.equals("Two", setTextValues[0]);
 		Assert.isNull(setTextValues[1]);
-		Assert.equals("Two", setTextValues[2]);
+		Assert.equals("New Text", setTextValues[2]);
+
+		Assert.equals(3, setDataValues.length);
+		Assert.equals(item, setDataValues[0]);
+		Assert.isNull(setDataValues[1]);
+		Assert.equals(item, setDataValues[2]);
+
+		Assert.equals(3, setLayoutIndexValues.length);
+		Assert.equals(rowIndex, setLayoutIndexValues[0]);
+		Assert.equals(-1, setLayoutIndexValues[1]);
+		Assert.equals(rowIndex, setLayoutIndexValues[2]);
+
+		Assert.equals(3, setSelectedValues.length);
+		Assert.equals(true, setSelectedValues[0]);
+		Assert.equals(false, setSelectedValues[1]);
+		Assert.equals(true, setSelectedValues[2]);
+
+		Assert.equals(3, setRowIndexValues.length);
+		Assert.equals(rowIndex, setRowIndexValues[0]);
+		Assert.equals(-1, setRowIndexValues[1]);
+		Assert.equals(rowIndex, setRowIndexValues[2]);
+
+		Assert.equals(3, setColumnIndexValues.length);
+		Assert.equals(columnIndex, setColumnIndexValues[0]);
+		Assert.equals(-1, setColumnIndexValues[1]);
+		Assert.equals(columnIndex, setColumnIndexValues[2]);
+
+		Assert.equals(3, setColumnValues.length);
+		Assert.equals(column, setColumnValues[0]);
+		Assert.isNull(setColumnValues[1]);
+		Assert.equals(column, setColumnValues[2]);
+
+		Assert.equals(3, setGridViewOwnerValues.length);
+		Assert.equals(this._gridView, setGridViewOwnerValues[0]);
+		Assert.isNull(setGridViewOwnerValues[1]);
+		Assert.equals(this._gridView, setGridViewOwnerValues[2]);
+	}
+
+	public function testUpdateAllSetsInterfaceProperties():Void {
+		this._gridView.width = 300;
+		this._gridView.height = 300;
+		this._gridView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._gridView.columns = new ArrayCollection([new GridViewColumn("Text", item -> item.text)]);
+		var rowIndex = 1;
+		var columnIndex = 0;
+		var item = this._gridView.dataProvider.get(rowIndex);
+		var column = this._gridView.columns.get(columnIndex);
+		this._gridView.selectedIndex = rowIndex;
+		this._gridView.cellRendererRecycler = DisplayObjectRecycler.withClass(CustomRendererWithInterfaces);
+		this._gridView.validateNow();
+		var sampleItemRenderer = cast(this._gridView.itemAndColumnToCellRenderer(item, column), CustomRendererWithInterfaces);
+		var setTextValues = sampleItemRenderer.setTextValues;
+		var setDataValues = sampleItemRenderer.setDataValues;
+		var setLayoutIndexValues = sampleItemRenderer.setLayoutIndexValues;
+		var setSelectedValues = sampleItemRenderer.setSelectedValues;
+		var setRowIndexValues = sampleItemRenderer.setRowIndexValues;
+		var setColumnIndexValues = sampleItemRenderer.setColumnIndexValues;
+		var setColumnValues = sampleItemRenderer.setColumnValues;
+		var setGridViewOwnerValues = sampleItemRenderer.setGridViewOwnerValues;
+		Assert.equals(1, setTextValues.length);
+		Assert.equals(1, setDataValues.length);
+		Assert.equals(1, setLayoutIndexValues.length);
+		Assert.equals(1, setSelectedValues.length);
+		Assert.equals(1, setRowIndexValues.length);
+		Assert.equals(1, setColumnIndexValues.length);
+		Assert.equals(1, setColumnValues.length);
+		Assert.equals(1, setGridViewOwnerValues.length);
+
+		item.text = "New Text";
+		this._gridView.dataProvider.updateAll();
+		this._gridView.validateNow();
+
+		Assert.equals(sampleItemRenderer, cast(this._gridView.itemAndColumnToCellRenderer(item, column), CustomRendererWithInterfaces));
+
+		Assert.equals(3, setTextValues.length);
+		Assert.equals("Two", setTextValues[0]);
+		Assert.isNull(setTextValues[1]);
+		Assert.equals("New Text", setTextValues[2]);
 
 		Assert.equals(3, setDataValues.length);
 		Assert.equals(item, setDataValues[0]);
@@ -1467,6 +1548,61 @@ class GridViewTest extends Test {
 		var state2 = this._gridView.itemAndColumnToCellState(collection.get(2), column0);
 		Assert.notNull(state2);
 		Assert.equals("alternate2", state2.recyclerID);
+	}
+
+	private function testVirtualLayoutAndTypicalItem():Void {
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}, {text: "Four"}, {text: "Five"}]);
+		var column0 = new GridViewColumn("A", item -> item.text);
+		var columns = new ArrayCollection([column0,]);
+		this._gridView.dataProvider = collection;
+		this._gridView.columns = columns;
+		this._gridView.layout = new VerticalListLayout();
+		this._gridView.virtualLayout = true;
+		this._gridView.headerRendererRecycler = DisplayObjectRecycler.withFunction(() -> {
+			var headerRenderer = new ItemRenderer();
+			headerRenderer.height = 10.0;
+			return headerRenderer;
+		});
+		this._gridView.rowRendererFactory = DisplayObjectFactory.withFunction(() -> {
+			var rowRenderer = new GridViewRowRenderer();
+			rowRenderer.height = 10.0;
+			return rowRenderer;
+		});
+		this._gridView.height = 25.0;
+		this._gridView.validateNow();
+		// first three items have visible item renderers
+		var itemRenderer0 = this._gridView.rowToRowRenderer(collection.get(0));
+		Assert.notNull(itemRenderer0);
+		Assert.isTrue(itemRenderer0.visible);
+		var itemRenderer1 = this._gridView.rowToRowRenderer(collection.get(1));
+		Assert.notNull(itemRenderer1);
+		Assert.isTrue(itemRenderer1.visible);
+		var itemRenderer2 = this._gridView.rowToRowRenderer(collection.get(2));
+		Assert.notNull(itemRenderer2);
+		Assert.isTrue(itemRenderer2.visible);
+		var itemRenderer3 = this._gridView.rowToRowRenderer(collection.get(3));
+		Assert.isNull(itemRenderer3);
+		var itemRenderer4 = this._gridView.rowToRowRenderer(collection.get(4));
+		Assert.isNull(itemRenderer4);
+		// scroll to end, and the last three items will have visible item
+		// renderers, but the first item will have an invisible item renderer
+		// because it is the "typical" item used for measurement
+		this._gridView.scrollY = 35.0;
+		this._gridView.validateNow();
+		var itemRenderer0 = this._gridView.rowToRowRenderer(collection.get(0));
+		Assert.notNull(itemRenderer0);
+		Assert.isFalse(itemRenderer0.visible);
+		var itemRenderer1 = this._gridView.rowToRowRenderer(collection.get(1));
+		Assert.isNull(itemRenderer1);
+		var itemRenderer2 = this._gridView.rowToRowRenderer(collection.get(2));
+		Assert.notNull(itemRenderer2);
+		Assert.isTrue(itemRenderer2.visible);
+		var itemRenderer3 = this._gridView.rowToRowRenderer(collection.get(3));
+		Assert.notNull(itemRenderer3);
+		Assert.isTrue(itemRenderer3.visible);
+		var itemRenderer4 = this._gridView.rowToRowRenderer(collection.get(4));
+		Assert.notNull(itemRenderer4);
+		Assert.isTrue(itemRenderer4.visible);
 	}
 }
 

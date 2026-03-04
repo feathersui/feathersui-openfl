@@ -44,6 +44,7 @@ import feathers.layout.IKeyboardNavigationLayout;
 import feathers.layout.ILayout;
 import feathers.layout.ILayoutIndexObject;
 import feathers.layout.IScrollLayout;
+import feathers.layout.ITypicalItemLayout;
 import feathers.layout.IVirtualLayout;
 import feathers.layout.Measurements;
 import feathers.skins.IProgrammaticSkin;
@@ -331,6 +332,8 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	private var _headerScrollRect1:Rectangle = new Rectangle();
 	private var _headerScrollRect2:Rectangle = new Rectangle();
 	private var _oldHeaderDividerMouseCursor:MouseCursor;
+
+	private var _typicalRowRenderer:GridViewRowRenderer;
 
 	#if (flash && haxe_ver < 4.3) @:getter(tabEnabled) #end
 	override private function get_tabEnabled():Bool {
@@ -1488,6 +1491,28 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 	}
 
 	/**
+		Returns the current row renderer used to render a specific item from
+		the data provider. May return `null` if an item doesn't currently have
+		a row renderer.
+
+		**Note:** Most grid views use "virtual" layouts, which means that only
+		the currently-visible subset of rows will have a row renderer. As the
+		grid view scrolls, the items with row renderers will change, and row
+		renderers may even be re-used to display different items.
+
+		@since 1.4.0
+	**/
+	public function rowToRowRenderer(item:Dynamic):GridViewRowRenderer {
+		if (item == null) {
+			return null;
+		}
+		if ((item is String)) {
+			return this.stringDataToRowRenderer.get(cast item);
+		}
+		return this.objectDataToRowRenderer.get(item);
+	}
+
+	/**
 		Returns the current cell renderer used to render a specific column from
 		an item from the data provider. May return `null` if an item and column
 		doesn't currently have a cell renderer.
@@ -2426,6 +2451,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		var rowRendererInvalid = this.gridViewPort.isInvalid(INVALIDATION_FLAG_ROW_RENDERER_FACTORY);
 		this.refreshInactiveRowRenderers(rowRendererInvalid);
+
+		this.refreshTypicalRowRenderer();
+
 		this.findUnrenderedData();
 		this.recoverInactiveRowRenderers();
 		this.renderUnrenderedData();
@@ -2443,6 +2471,17 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: active row renderers should be empty before updating.');
 		}
 		if (factoryInvalid) {
+			if (this._typicalRowRenderer != null) {
+				var typicalRowState = this.rowRendererToRowState.get(this._typicalRowRenderer);
+				this.rowRendererToRowState.remove(this._typicalRowRenderer);
+				if ((typicalRowState.data is String)) {
+					this.stringDataToRowRenderer.remove(cast typicalRowState.data);
+				} else {
+					this.objectDataToRowRenderer.remove(typicalRowState.data);
+				}
+				this.destroyRowRenderer(this._typicalRowRenderer);
+				this._typicalRowRenderer = null;
+			}
 			this.recoverInactiveRowRenderers();
 			this.freeInactiveRowRenderers();
 			this._oldRowRendererFactory = null;
@@ -2531,18 +2570,42 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 			}
 			if (rowRenderer != null) {
 				var state = this.rowRendererToRowState.get(rowRenderer);
-				var changed = this.populateCurrentRowState(item, i, state, this._forceItemStateUpdate);
+				var forceChange = this._forceItemStateUpdate && rowRenderer != this._typicalRowRenderer;
+				var changed = this.populateCurrentRowState(item, i, state, forceChange);
 				if (changed) {
 					this.updateRowRenderer(rowRenderer, state);
 				}
 				this._rowLayoutItems[i] = rowRenderer;
-				var removed = this.inactiveRowRenderers.remove(rowRenderer);
-				if (!removed) {
-					throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: row renderer map contains bad data for item at index ${i}. This may be caused by duplicate items in the data provider, which is not allowed.');
+				// the typical row renderer is a special case, and we will
+				// have already put it into the active renderers, so we don't
+				// want to do it again!
+				if (this._typicalRowRenderer != rowRenderer) {
+					var removed = this.inactiveRowRenderers.remove(rowRenderer);
+					if (!removed) {
+						throw new IllegalOperationError('${Type.getClassName(Type.getClass(this))}: row renderer map contains bad data for item at index ${i}. This may be caused by duplicate items in the data provider, which is not allowed.');
+					}
+					this.activeRowRenderers.push(rowRenderer);
 				}
-				this.activeRowRenderers.push(rowRenderer);
 			} else {
 				this._unrenderedData.push(item);
+			}
+		}
+		// update the typical row renderer's visibility
+		if (this._typicalRowRenderer != null) {
+			if (this._virtualLayout && (this.layout is IVirtualLayout)) {
+				var typicalRowState = this.rowRendererToRowState.get(this._typicalRowRenderer);
+				if (typicalRowState.rowIndex >= this._visibleIndices.start && typicalRowState.rowIndex <= this._visibleIndices.end) {
+					this._typicalRowRenderer.visible = true;
+				} else {
+					this._typicalRowRenderer.visible = false;
+					// uncomment these lines to see a hidden typical row for
+					// debugging purposes...
+					/*this._typicalRowRenderer.visible = true;
+						this._typicalRowRenderer.x = this.scrollX;
+						this._typicalRowRenderer.y = this.scrollY; */
+				}
+			} else {
+				this._typicalRowRenderer.visible = true;
 			}
 		}
 	}
@@ -2565,9 +2628,9 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		#end
 	}
 
-	private function createRowRenderer(state:GridViewRowState):GridViewRowRenderer {
+	private function createRowRenderer(state:GridViewRowState, useCache:Bool = true):GridViewRowRenderer {
 		var rowRenderer:GridViewRowRenderer = null;
-		if (this.inactiveRowRenderers.length == 0) {
+		if (this.inactiveRowRenderers.length == 0 || !useCache) {
 			rowRenderer = this._rowRendererFactory.create();
 			if (this._rowRendererMeasurements == null) {
 				this._rowRendererMeasurements = new Measurements(rowRenderer);
@@ -2599,6 +2662,65 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		this.gridViewPort.removeChild(rowRenderer);
 		if (factory.destroy != null) {
 			factory.destroy(rowRenderer);
+		}
+	}
+
+	private function refreshTypicalRowRenderer():Void {
+		var newTypicalRowIndex = -1;
+		var newTypicalItem:Any = null;
+		if ((this.layout is ITypicalItemLayout) && this._dataProvider != null && this._dataProvider.length > 0) {
+			newTypicalRowIndex = 0;
+			newTypicalItem = this._dataProvider.get(newTypicalRowIndex);
+		}
+
+		var newTypicalRowRenderer:GridViewRowRenderer = null;
+		var newTypicalRowState:GridViewRowState = null;
+		if (newTypicalItem != null) {
+			// try to reuse the existing item renderer, if available
+			if ((newTypicalItem is String)) {
+				newTypicalRowRenderer = this.stringDataToRowRenderer.get(cast newTypicalItem);
+			} else {
+				newTypicalRowRenderer = this.objectDataToRowRenderer.get(newTypicalItem);
+			}
+			var needsNewRowRenderer = newTypicalRowRenderer == null;
+			if (!needsNewRowRenderer) {
+				newTypicalRowState = this.rowRendererToRowState.get(newTypicalRowRenderer);
+				var changed = this.populateCurrentRowState(newTypicalItem, newTypicalRowIndex, newTypicalRowState, this._forceItemStateUpdate);
+				if (changed) {
+					this.updateRowRenderer(newTypicalRowRenderer, newTypicalRowState);
+				}
+			}
+			if (needsNewRowRenderer) {
+				newTypicalRowState = this.rowStatePool.get();
+				this.populateCurrentRowState(newTypicalItem, newTypicalRowIndex, newTypicalRowState, true);
+				newTypicalRowRenderer = this.createRowRenderer(newTypicalRowState, false);
+				this.gridViewPort.addChild(newTypicalRowRenderer);
+			}
+		}
+
+		if (this._typicalRowRenderer != newTypicalRowRenderer) {
+			if (this._typicalRowRenderer != null) {
+				// it may have been hidden if it was out of the view port bounds
+				this._typicalRowRenderer.visible = true;
+			}
+			this._typicalRowRenderer = newTypicalRowRenderer;
+
+			if ((this.layout is ITypicalItemLayout)) {
+				var typicalItemLayout:ITypicalItemLayout = cast this.layout;
+				typicalItemLayout.typicalItem = this._typicalRowRenderer;
+			}
+		}
+
+		if (this._typicalRowRenderer != null) {
+			// this renderer is already is use by the typical item, so we
+			// don't want to allow it to be used by other items.
+			var inactiveIndex = this.inactiveRowRenderers.indexOf(this._typicalRowRenderer);
+			if (inactiveIndex != -1) {
+				this.inactiveRowRenderers.splice(inactiveIndex, 1);
+			}
+			if (this.activeRowRenderers.length == 0) {
+				this.activeRowRenderers.push(this._typicalRowRenderer);
+			}
 		}
 	}
 

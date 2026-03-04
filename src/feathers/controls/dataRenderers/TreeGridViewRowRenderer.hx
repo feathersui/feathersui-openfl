@@ -647,7 +647,7 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 		this._rowLayout.columns = cast this._columns;
 		this._rowLayout.customColumnWidths = this._customColumnWidths;
 
-		if (this._defaultStorage.cellRendererRecycler != null && this._defaultStorage.cellRendererRecycler.update == null) {
+		if (this._defaultStorage.cellRendererRecycler.update == null) {
 			this._defaultStorage.cellRendererRecycler.update = defaultUpdateCellRenderer;
 			if (this._defaultStorage.cellRendererRecycler.reset == null) {
 				this._defaultStorage.cellRendererRecycler.reset = defaultResetCellRenderer;
