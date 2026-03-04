@@ -189,9 +189,10 @@ class StyleMacro {
 						field.pos);
 			}
 		});
-		if (extraFields.length > 0) {
-			fields = fields.concat(extraFields);
+		if (extraFields.length == 0) {
+			return null;
 		}
+		fields = fields.concat(extraFields);
 		return fields;
 	}
 }

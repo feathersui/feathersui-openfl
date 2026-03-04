@@ -35,7 +35,7 @@ class StyleContextMacro {
 		var localClass = Context.getLocalClass().get();
 		if (!localClass.meta.has(":styleContext")) {
 			// nothing to add
-			return fields;
+			return null;
 		}
 		var localClassName = localClass.name;
 		var styleObject = "Class<feathers.style.IStyleObject>";
