@@ -272,6 +272,7 @@ import utest.Test;
 		Assert.equals(1, setLocationValues.length);
 		Assert.equals(1, setGroupListViewOwnerValues.length);
 
+		item.text = "New Text";
 		this._listView.dataProvider.updateAt(itemLocation);
 		this._listView.validateNow();
 
@@ -280,7 +281,67 @@ import utest.Test;
 		Assert.equals(3, setTextValues.length);
 		Assert.equals("Two", setTextValues[0]);
 		Assert.isNull(setTextValues[1]);
-		Assert.equals("Two", setTextValues[2]);
+		Assert.equals("New Text", setTextValues[2]);
+
+		Assert.equals(3, setDataValues.length);
+		Assert.equals(item, setDataValues[0]);
+		Assert.isNull(setDataValues[1]);
+		Assert.equals(item, setDataValues[2]);
+
+		Assert.equals(3, setLayoutIndexValues.length);
+		Assert.equals(2, setLayoutIndexValues[0]);
+		Assert.equals(-1, setLayoutIndexValues[1]);
+		Assert.equals(2, setLayoutIndexValues[2]);
+
+		Assert.equals(3, setSelectedValues.length);
+		Assert.equals(true, setSelectedValues[0]);
+		Assert.equals(false, setSelectedValues[1]);
+		Assert.equals(true, setSelectedValues[2]);
+
+		Assert.equals(3, setLocationValues.length);
+		Assert.equals(0, CompareLocations.compareLocations(itemLocation, setLocationValues[0]));
+		Assert.isNull(setLocationValues[1]);
+		Assert.equals(0, CompareLocations.compareLocations(itemLocation, setLocationValues[2]));
+
+		Assert.equals(3, setGroupListViewOwnerValues.length);
+		Assert.equals(this._listView, setGroupListViewOwnerValues[0]);
+		Assert.isNull(setGroupListViewOwnerValues[1]);
+		Assert.equals(this._listView, setGroupListViewOwnerValues[2]);
+	}
+
+	public function testUpdateAllSetsInterfaceProperties():Void {
+		this._listView.dataProvider = new ArrayHierarchicalCollection([{text: "A", children: [{text: "One"}, {text: "Two"}, {text: "Three"}]}],
+			(item:Dynamic) -> item.children);
+		this._listView.itemToText = (item:Dynamic) -> item.text;
+		var itemLocation = [0, 1];
+		var item = this._listView.dataProvider.get(itemLocation);
+		this._listView.selectedLocation = itemLocation;
+		this._listView.itemRendererRecycler = DisplayObjectRecycler.withClass(CustomRendererWithInterfaces);
+		this._listView.validateNow();
+		var sampleItemRenderer = cast(this._listView.itemToItemRenderer(item), CustomRendererWithInterfaces);
+		var setTextValues = sampleItemRenderer.setTextValues;
+		var setDataValues = sampleItemRenderer.setDataValues;
+		var setLayoutIndexValues = sampleItemRenderer.setLayoutIndexValues;
+		var setSelectedValues = sampleItemRenderer.setSelectedValues;
+		var setLocationValues = sampleItemRenderer.setLocationValues;
+		var setGroupListViewOwnerValues = sampleItemRenderer.setGroupListViewOwnerValues;
+		Assert.equals(1, setTextValues.length);
+		Assert.equals(1, setDataValues.length);
+		Assert.equals(1, setLayoutIndexValues.length);
+		Assert.equals(1, setSelectedValues.length);
+		Assert.equals(1, setLocationValues.length);
+		Assert.equals(1, setGroupListViewOwnerValues.length);
+
+		item.text = "New Text";
+		this._listView.dataProvider.updateAll();
+		this._listView.validateNow();
+
+		Assert.equals(sampleItemRenderer, cast(this._listView.itemToItemRenderer(item), CustomRendererWithInterfaces));
+
+		Assert.equals(3, setTextValues.length);
+		Assert.equals("Two", setTextValues[0]);
+		Assert.isNull(setTextValues[1]);
+		Assert.equals("New Text", setTextValues[2]);
 
 		Assert.equals(3, setDataValues.length);
 		Assert.equals(item, setDataValues[0]);
@@ -351,8 +412,8 @@ import utest.Test;
 		this._listView.setInvalid(DATA);
 		this._listView.validateNow();
 		Assert.equals(prevLength + 4, updatedLocations.length);
-		Assert.equals(0, CompareLocations.compareLocations([0], updatedLocations[prevLength + 0]));
-		Assert.equals(0, CompareLocations.compareLocations([0, 0], updatedLocations[prevLength + 1]));
+		Assert.equals(0, CompareLocations.compareLocations([0, 0], updatedLocations[prevLength + 0]));
+		Assert.equals(0, CompareLocations.compareLocations([0], updatedLocations[prevLength + 1]));
 		Assert.equals(0, CompareLocations.compareLocations([0, 1], updatedLocations[prevLength + 2]));
 		Assert.equals(0, CompareLocations.compareLocations([0, 2], updatedLocations[prevLength + 3]));
 	}
@@ -404,8 +465,8 @@ import utest.Test;
 		this._listView.dataProvider.updateAll();
 		this._listView.validateNow();
 		Assert.equals(8, updatedLocations.length);
-		Assert.equals(0, CompareLocations.compareLocations([0], updatedLocations[4]));
-		Assert.equals(0, CompareLocations.compareLocations([0, 0], updatedLocations[5]));
+		Assert.equals(0, CompareLocations.compareLocations([0, 0], updatedLocations[4]));
+		Assert.equals(0, CompareLocations.compareLocations([0], updatedLocations[5]));
 		Assert.equals(0, CompareLocations.compareLocations([0, 1], updatedLocations[6]));
 		Assert.equals(0, CompareLocations.compareLocations([0, 2], updatedLocations[7]));
 	}

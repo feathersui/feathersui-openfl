@@ -639,6 +639,7 @@ import utest.Test;
 		Assert.equals(1, setBranchValues.length);
 		Assert.equals(1, setTreeViewOwnerValues.length);
 
+		item.text = "New Text";
 		this._treeView.dataProvider.updateAt(itemLocation);
 		this._treeView.validateNow();
 
@@ -647,7 +648,85 @@ import utest.Test;
 		Assert.equals(3, setTextValues.length);
 		Assert.equals("Two", setTextValues[0]);
 		Assert.isNull(setTextValues[1]);
-		Assert.equals("Two", setTextValues[2]);
+		Assert.equals("New Text", setTextValues[2]);
+
+		Assert.equals(3, setDataValues.length);
+		Assert.equals(item, setDataValues[0]);
+		Assert.isNull(setDataValues[1]);
+		Assert.equals(item, setDataValues[2]);
+
+		Assert.equals(3, setLayoutIndexValues.length);
+		Assert.equals(2, setLayoutIndexValues[0]);
+		Assert.equals(-1, setLayoutIndexValues[1]);
+		Assert.equals(2, setLayoutIndexValues[2]);
+
+		Assert.equals(3, setSelectedValues.length);
+		Assert.equals(true, setSelectedValues[0]);
+		Assert.equals(false, setSelectedValues[1]);
+		Assert.equals(true, setSelectedValues[2]);
+
+		Assert.equals(3, setLocationValues.length);
+		Assert.equals(0, CompareLocations.compareLocations(itemLocation, setLocationValues[0]));
+		Assert.isNull(setLocationValues[1]);
+		Assert.equals(0, CompareLocations.compareLocations(itemLocation, setLocationValues[2]));
+
+		Assert.equals(3, setBranchValues.length);
+		Assert.equals(true, setBranchValues[0]);
+		Assert.equals(false, setBranchValues[1]);
+		Assert.equals(true, setBranchValues[2]);
+
+		Assert.equals(3, setOpenedValues.length);
+		Assert.equals(true, setOpenedValues[0]);
+		Assert.equals(false, setOpenedValues[1]);
+		Assert.equals(true, setOpenedValues[2]);
+
+		Assert.equals(3, setTreeViewOwnerValues.length);
+		Assert.equals(this._treeView, setTreeViewOwnerValues[0]);
+		Assert.isNull(setTreeViewOwnerValues[1]);
+		Assert.equals(this._treeView, setTreeViewOwnerValues[2]);
+	}
+
+	public function testUpdateAllSetsInterfaceProperties():Void {
+		var children:Array<Dynamic> = [{text: "One"}, {text: "Two", children: []}, {text: "Three"}];
+		var items:Array<Dynamic> = [{text: "A", children: children}];
+		this._treeView.dataProvider = new ArrayHierarchicalCollection(items, (item:Dynamic) -> item.children);
+		this._treeView.itemToText = (item:Dynamic) -> item.text;
+		var itemLocation = [0, 1];
+		var item = this._treeView.dataProvider.get(itemLocation);
+		Assert.notNull(item);
+		this._treeView.selectedLocation = itemLocation;
+		this._treeView.toggleBranch(this._treeView.dataProvider.get([0]), true);
+		this._treeView.toggleBranch(item, true);
+		this._treeView.itemRendererRecycler = DisplayObjectRecycler.withClass(CustomRendererWithInterfaces);
+		this._treeView.validateNow();
+		var sampleItemRenderer = cast(this._treeView.itemToItemRenderer(item), CustomRendererWithInterfaces);
+		var setTextValues = sampleItemRenderer.setTextValues;
+		var setDataValues = sampleItemRenderer.setDataValues;
+		var setLayoutIndexValues = sampleItemRenderer.setLayoutIndexValues;
+		var setSelectedValues = sampleItemRenderer.setSelectedValues;
+		var setLocationValues = sampleItemRenderer.setLocationValues;
+		var setOpenedValues = sampleItemRenderer.setOpenedValues;
+		var setBranchValues = sampleItemRenderer.setBranchValues;
+		var setTreeViewOwnerValues = sampleItemRenderer.setTreeViewOwnerValues;
+		Assert.equals(1, setTextValues.length);
+		Assert.equals(1, setDataValues.length);
+		Assert.equals(1, setLayoutIndexValues.length);
+		Assert.equals(1, setSelectedValues.length);
+		Assert.equals(1, setLocationValues.length);
+		Assert.equals(1, setOpenedValues.length);
+		Assert.equals(1, setBranchValues.length);
+		Assert.equals(1, setTreeViewOwnerValues.length);
+
+		item.text = "New Text";
+		this._treeView.dataProvider.updateAt(itemLocation);
+		this._treeView.validateNow();
+
+		Assert.equals(sampleItemRenderer, cast(this._treeView.itemToItemRenderer(item), CustomRendererWithInterfaces));
+
+		Assert.equals(3, setTextValues.length);
+		Assert.equals("Two", setTextValues[0]);
+		Assert.isNull(setTextValues[1]);
+		Assert.equals("New Text", setTextValues[2]);
 
 		Assert.equals(3, setDataValues.length);
 		Assert.equals(item, setDataValues[0]);

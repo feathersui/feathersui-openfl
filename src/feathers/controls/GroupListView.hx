@@ -776,7 +776,6 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 	private var _layoutItems:Array<DisplayObject> = [];
 	private var _layoutHeaderIndices:Array<Int> = [];
 	private var _typicalItemRenderer:DisplayObject;
-	private var _createdTypicalItemRenderer:Bool = false;
 
 	private var _selectable:Bool = true;
 
@@ -1306,7 +1305,6 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 	private function refreshItemRenderers(items:Array<DisplayObject>):Void {
 		this._layoutItems = items;
-		this._createdTypicalItemRenderer = false;
 
 		if (this._defaultItemStorage.itemRendererRecycler.update == null) {
 			this._defaultItemStorage.itemRendererRecycler.update = defaultUpdateItemRenderer;
@@ -1363,10 +1361,10 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 				this.refreshInactiveItemRenderers(storage, headerRendererInvalid);
 			}
 		}
-		this.findUnrenderedData();
 
 		this.refreshTypicalItemRenderer();
 
+		this.findUnrenderedData();
 		this.recoverInactiveItemRenderers(this._defaultItemStorage);
 		if (this._additionalItemStorage != null) {
 			for (i in 0...this._additionalItemStorage.length) {
@@ -1581,12 +1579,7 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 		}
 		var type = location.length == 1 ? HEADER : STANDARD;
 		var state = this.itemRendererToItemState.get(itemRenderer);
-		var forceChange = this._forceItemStateUpdate;
-		if (forceChange && this._createdTypicalItemRenderer && itemRenderer == this._typicalItemRenderer) {
-			// if the typical item renderer was just created, then
-			// updateItemRenderer() was already forced to be called
-			forceChange = false;
-		}
+		var forceChange = this._forceItemStateUpdate && itemRenderer != this._typicalItemRenderer;
 		var changed = this.populateCurrentItemState(item, type, location, layoutIndex, state, forceChange);
 		var oldRecyclerID = state.recyclerID;
 		var storage = this.itemStateToStorage(state);
@@ -1723,19 +1716,34 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		var newTypicalItemRenderer:DisplayObject = null;
 		var newTypicalItemState:GroupListViewItemState = null;
+		var newTypicalItemStorage:ItemRendererStorage = null;
 		if (newTypicalItem != null) {
 			// try to reuse the existing item renderer, if available
 			newTypicalItemRenderer = this.itemToItemRenderer(newTypicalItem);
-			if (newTypicalItemRenderer == null) {
-				this._createdTypicalItemRenderer = true;
+			var needsNewItemRenderer = newTypicalItemRenderer == null;
+			if (!needsNewItemRenderer) {
+				newTypicalItemState = this.itemRendererToItemState.get(newTypicalItemRenderer);
+				var changed = this.populateCurrentItemState(newTypicalItem, STANDARD, newTypicalItemLocation, newTypicalItemLayoutIndex, newTypicalItemState,
+					this._forceItemStateUpdate);
+				var oldRecyclerID = newTypicalItemState.recyclerID;
+				newTypicalItemStorage = this.itemStateToStorage(newTypicalItemState);
+				if (newTypicalItemStorage.id != oldRecyclerID) {
+					needsNewItemRenderer = true;
+				} else {
+					if (changed) {
+						this.updateItemRenderer(newTypicalItemRenderer, newTypicalItemState, newTypicalItemStorage);
+					}
+				}
+			}
+			if (needsNewItemRenderer) {
 				newTypicalItemState = this.itemStatePool.get();
 				this.populateCurrentItemState(newTypicalItem, STANDARD, newTypicalItemLocation, newTypicalItemLayoutIndex, newTypicalItemState, true);
 				newTypicalItemRenderer = this.createItemRenderer(newTypicalItemState, false);
 				this.groupViewPort.addChild(newTypicalItemRenderer);
-			} else {
-				newTypicalItemState = this.itemRendererToItemState.get(newTypicalItemRenderer);
+				newTypicalItemStorage = this.itemStateToStorage(newTypicalItemState);
 			}
 		}
+
 		if (this._typicalItemRenderer != newTypicalItemRenderer) {
 			if (this._typicalItemRenderer != null) {
 				// it may have been hidden if it was out of the view port bounds
@@ -1743,15 +1751,15 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 			}
 			this._typicalItemRenderer = newTypicalItemRenderer;
 
-			var typicalItemLayout:ITypicalItemLayout = cast this.layout;
-			typicalItemLayout.typicalItem = this._typicalItemRenderer;
+			if ((this.layout is ITypicalItemLayout)) {
+				var typicalItemLayout:ITypicalItemLayout = cast this.layout;
+				typicalItemLayout.typicalItem = this._typicalItemRenderer;
+			}
 		}
 
 		if (this._typicalItemRenderer != null) {
-			var newTypicalItemState = this.itemRendererToItemState.get(this._typicalItemRenderer);
-			var storage = this.itemStateToStorage(newTypicalItemState);
-			var inactiveItemRenderers = storage.inactiveItemRenderers;
-			var activeItemRenderers = storage.activeItemRenderers;
+			var inactiveItemRenderers = newTypicalItemStorage.inactiveItemRenderers;
+			var activeItemRenderers = newTypicalItemStorage.activeItemRenderers;
 			// this renderer is already is use by the typical item, so we
 			// don't want to allow it to be used by other items.
 			var inactiveIndex = inactiveItemRenderers.indexOf(this._typicalItemRenderer);

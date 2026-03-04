@@ -794,7 +794,6 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 	private var _tempVisibleIndices:VirtualLayoutRange = new VirtualLayoutRange(0, 0);
 	private var _layoutItems:Array<DisplayObject> = [];
 	private var _typicalItemRenderer:DisplayObject;
-	private var _createdTypicalItemRenderer:Bool = false;
 
 	private var _selectable:Bool = true;
 
@@ -1412,7 +1411,6 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 	private function refreshItemRenderers(items:Array<DisplayObject>):Void {
 		this._layoutItems = items;
-		this._createdTypicalItemRenderer = false;
 
 		if (this._defaultStorage.itemRendererRecycler.update == null) {
 			this._defaultStorage.itemRendererRecycler.update = defaultUpdateItemRenderer;
@@ -1581,12 +1579,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			}
 			if (itemRenderer != null) {
 				var state = this.itemRendererToItemState.get(itemRenderer);
-				var forceChange = this._forceItemStateUpdate;
-				if (forceChange && this._createdTypicalItemRenderer && itemRenderer == this._typicalItemRenderer) {
-					// if the typical item renderer was just created, then
-					// updateItemRenderer() was already forced to be called
-					forceChange = false;
-				}
+				var forceChange = this._forceItemStateUpdate && itemRenderer != this._typicalItemRenderer;
 				var changed = this.populateCurrentItemState(item, i, state, forceChange);
 				var oldRecyclerID = state.recyclerID;
 				var storage = this.itemStateToStorage(state);
@@ -1805,19 +1798,33 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		var newTypicalItemRenderer:DisplayObject = null;
 		var newTypicalItemState:ListViewItemState = null;
+		var newTypicalItemStorage:ItemRendererStorage = null;
 		if (newTypicalItem != null) {
 			// try to reuse the existing item renderer, if available
 			newTypicalItemRenderer = this.itemToItemRenderer(newTypicalItem);
-			if (newTypicalItemRenderer == null) {
-				this._createdTypicalItemRenderer = true;
+			var needsNewItemRenderer = newTypicalItemRenderer == null;
+			if (!needsNewItemRenderer) {
+				newTypicalItemState = this.itemRendererToItemState.get(newTypicalItemRenderer);
+				var changed = this.populateCurrentItemState(newTypicalItem, newTypicalItemIndex, newTypicalItemState, this._forceItemStateUpdate);
+				var oldRecyclerID = newTypicalItemState.recyclerID;
+				newTypicalItemStorage = this.itemStateToStorage(newTypicalItemState);
+				if (newTypicalItemStorage.id != oldRecyclerID) {
+					needsNewItemRenderer = true;
+				} else {
+					if (changed) {
+						this.updateItemRenderer(newTypicalItemRenderer, newTypicalItemState, newTypicalItemStorage);
+					}
+				}
+			}
+			if (needsNewItemRenderer) {
 				newTypicalItemState = this.itemStatePool.get();
 				this.populateCurrentItemState(newTypicalItem, newTypicalItemIndex, newTypicalItemState, true);
 				newTypicalItemRenderer = this.createItemRenderer(newTypicalItemState, false);
 				this.listViewPort.addChild(newTypicalItemRenderer);
-			} else {
-				newTypicalItemState = this.itemRendererToItemState.get(newTypicalItemRenderer);
+				newTypicalItemStorage = this.itemStateToStorage(newTypicalItemState);
 			}
 		}
+
 		if (this._typicalItemRenderer != newTypicalItemRenderer) {
 			if (this._typicalItemRenderer != null) {
 				// it may have been hidden if it was out of the view port bounds
@@ -1825,15 +1832,15 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 			}
 			this._typicalItemRenderer = newTypicalItemRenderer;
 
-			var typicalItemLayout:ITypicalItemLayout = cast this.layout;
-			typicalItemLayout.typicalItem = this._typicalItemRenderer;
+			if ((this.layout is ITypicalItemLayout)) {
+				var typicalItemLayout:ITypicalItemLayout = cast this.layout;
+				typicalItemLayout.typicalItem = this._typicalItemRenderer;
+			}
 		}
 
 		if (this._typicalItemRenderer != null) {
-			var newTypicalItemState = this.itemRendererToItemState.get(this._typicalItemRenderer);
-			var storage = this.itemStateToStorage(newTypicalItemState);
-			var inactiveItemRenderers = storage.inactiveItemRenderers;
-			var activeItemRenderers = storage.activeItemRenderers;
+			var inactiveItemRenderers = newTypicalItemStorage.inactiveItemRenderers;
+			var activeItemRenderers = newTypicalItemStorage.activeItemRenderers;
 			// this renderer is already is use by the typical item, so we
 			// don't want to allow it to be used by other items.
 			var inactiveIndex = inactiveItemRenderers.indexOf(this._typicalItemRenderer);

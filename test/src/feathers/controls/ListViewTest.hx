@@ -491,7 +491,8 @@ class ListViewTest extends Test {
 	}
 
 	public function testUpdateItemSetsInterfaceProperties():Void {
-		this._listView.dataProvider = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._listView.dataProvider = collection;
 		this._listView.itemToText = (item:Dynamic) -> item.text;
 		var itemIndex = 1;
 		var item = this._listView.dataProvider.get(itemIndex);
@@ -512,7 +513,8 @@ class ListViewTest extends Test {
 		Assert.equals(1, setIndexValues.length);
 		Assert.equals(1, setListViewOwnerValues.length);
 
-		this._listView.dataProvider.updateAt(itemIndex);
+		item.text = "New Text";
+		collection.updateAt(itemIndex);
 		this._listView.validateNow();
 
 		Assert.equals(sampleItemRenderer, cast(this._listView.itemToItemRenderer(item), CustomRendererWithInterfaces));
@@ -520,7 +522,67 @@ class ListViewTest extends Test {
 		Assert.equals(3, setTextValues.length);
 		Assert.equals("Two", setTextValues[0]);
 		Assert.isNull(setTextValues[1]);
-		Assert.equals("Two", setTextValues[2]);
+		Assert.equals("New Text", setTextValues[2]);
+
+		Assert.equals(3, setDataValues.length);
+		Assert.equals(item, setDataValues[0]);
+		Assert.isNull(setDataValues[1]);
+		Assert.equals(item, setDataValues[2]);
+
+		Assert.equals(3, setLayoutIndexValues.length);
+		Assert.equals(itemIndex, setLayoutIndexValues[0]);
+		Assert.equals(-1, setLayoutIndexValues[1]);
+		Assert.equals(itemIndex, setLayoutIndexValues[2]);
+
+		Assert.equals(3, setSelectedValues.length);
+		Assert.equals(true, setSelectedValues[0]);
+		Assert.equals(false, setSelectedValues[1]);
+		Assert.equals(true, setSelectedValues[2]);
+
+		Assert.equals(3, setIndexValues.length);
+		Assert.equals(itemIndex, setIndexValues[0]);
+		Assert.equals(-1, setIndexValues[1]);
+		Assert.equals(itemIndex, setIndexValues[2]);
+
+		Assert.equals(3, setListViewOwnerValues.length);
+		Assert.equals(this._listView, setListViewOwnerValues[0]);
+		Assert.isNull(setListViewOwnerValues[1]);
+		Assert.equals(this._listView, setListViewOwnerValues[2]);
+	}
+
+	public function testUpdateAllSetsInterfaceProperties():Void {
+		var collection = new ArrayCollection([{text: "One"}, {text: "Two"}, {text: "Three"}]);
+		this._listView.dataProvider = collection;
+		this._listView.itemToText = (item:Dynamic) -> item.text;
+		var itemIndex = 1;
+		var item = this._listView.dataProvider.get(itemIndex);
+		this._listView.selectedIndex = itemIndex;
+		this._listView.itemRendererRecycler = DisplayObjectRecycler.withClass(CustomRendererWithInterfaces);
+		this._listView.validateNow();
+		var sampleItemRenderer = cast(this._listView.itemToItemRenderer(item), CustomRendererWithInterfaces);
+		var setTextValues = sampleItemRenderer.setTextValues;
+		var setDataValues = sampleItemRenderer.setDataValues;
+		var setLayoutIndexValues = sampleItemRenderer.setLayoutIndexValues;
+		var setSelectedValues = sampleItemRenderer.setSelectedValues;
+		var setIndexValues = sampleItemRenderer.setIndexValues;
+		var setListViewOwnerValues = sampleItemRenderer.setListViewOwnerValues;
+		Assert.equals(1, setTextValues.length);
+		Assert.equals(1, setDataValues.length);
+		Assert.equals(1, setLayoutIndexValues.length);
+		Assert.equals(1, setSelectedValues.length);
+		Assert.equals(1, setIndexValues.length);
+		Assert.equals(1, setListViewOwnerValues.length);
+
+		item.text = "New Text";
+		collection.updateAll();
+		this._listView.validateNow();
+
+		Assert.equals(sampleItemRenderer, cast(this._listView.itemToItemRenderer(item), CustomRendererWithInterfaces));
+
+		Assert.equals(3, setTextValues.length);
+		Assert.equals("Two", setTextValues[0]);
+		Assert.isNull(setTextValues[1]);
+		Assert.equals("New Text", setTextValues[2]);
 
 		Assert.equals(3, setDataValues.length);
 		Assert.equals(item, setDataValues[0]);
