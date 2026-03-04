@@ -1439,11 +1439,12 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 
 		this.treeGridViewPort.refreshChildren = this.refreshRowRenderers;
 
-		for (flag in this._invalidationFlags.keys()) {
-			this.treeGridViewPort.setInvalid(flag);
-		}
 		if (this._allInvalid) {
 			this.treeGridViewPort.setInvalid();
+		} else {
+			for (flag in this._invalidationFlags.keys()) {
+				this.treeGridViewPort.setInvalid(flag);
+			}
 		}
 
 		super.update();

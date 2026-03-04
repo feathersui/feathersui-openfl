@@ -1445,11 +1445,12 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 
 		this.treeViewPort.refreshChildren = this.refreshItemRenderers;
 
-		for (flag in this._invalidationFlags.keys()) {
-			this.treeViewPort.setInvalid(flag);
-		}
 		if (this._allInvalid) {
 			this.treeViewPort.setInvalid();
+		} else {
+			for (flag in this._invalidationFlags.keys()) {
+				this.treeViewPort.setInvalid(flag);
+			}
 		}
 
 		super.update();

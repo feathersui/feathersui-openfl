@@ -1758,11 +1758,12 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 
 		this.gridViewPort.refreshChildren = this.refreshRowRenderers;
 
-		for (flag in this._invalidationFlags.keys()) {
-			this.gridViewPort.setInvalid(flag);
-		}
 		if (this._allInvalid) {
 			this.gridViewPort.setInvalid();
+		} else {
+			for (flag in this._invalidationFlags.keys()) {
+				this.gridViewPort.setInvalid(flag);
+			}
 		}
 
 		super.update();

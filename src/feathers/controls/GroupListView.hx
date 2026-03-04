@@ -1246,11 +1246,12 @@ class GroupListView extends BaseScrollContainer implements IDataSelector<Dynamic
 
 		this.groupViewPort.refreshChildren = this.refreshItemRenderers;
 
-		for (flag in this._invalidationFlags.keys()) {
-			this.groupViewPort.setInvalid(flag);
-		}
 		if (this._allInvalid) {
 			this.groupViewPort.setInvalid();
+		} else {
+			for (flag in this._invalidationFlags.keys()) {
+				this.groupViewPort.setInvalid(flag);
+			}
 		}
 
 		super.update();

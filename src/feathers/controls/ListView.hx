@@ -1353,11 +1353,12 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 
 		this.listViewPort.refreshChildren = this.refreshItemRenderers;
 
-		for (flag in this._invalidationFlags.keys()) {
-			this.listViewPort.setInvalid(flag);
-		}
 		if (this._allInvalid) {
 			this.listViewPort.setInvalid();
+		} else {
+			for (flag in this._invalidationFlags.keys()) {
+				this.listViewPort.setInvalid(flag);
+			}
 		}
 
 		super.update();

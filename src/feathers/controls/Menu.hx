@@ -1157,11 +1157,12 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 
 		this.menuViewPort.refreshChildren = this.refreshItemRenderers;
 
-		for (flag in this._invalidationFlags.keys()) {
-			this.menuViewPort.setInvalid(flag);
-		}
 		if (this._allInvalid) {
 			this.menuViewPort.setInvalid();
+		} else {
+			for (flag in this._invalidationFlags.keys()) {
+				this.menuViewPort.setInvalid(flag);
+			}
 		}
 
 		super.update();
