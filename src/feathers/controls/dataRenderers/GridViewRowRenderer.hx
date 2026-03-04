@@ -56,7 +56,8 @@ import openfl._internal.utils.ObjectPool;
 	@since 1.0.0
 **/
 @:styleContext
-class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements IToggle implements IDataRenderer implements IStateContext<ToggleButtonState> implements ILayoutIndexObject {
+class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements IToggle implements IDataRenderer implements IStateContext<ToggleButtonState>
+		implements ILayoutIndexObject {
 	private static final INVALIDATION_FLAG_CELL_RENDERER_FACTORY = InvalidationFlag.CUSTOM("cellRendererFactory");
 
 	private static final RESET_CELL_STATE = new GridViewCellState();
@@ -589,31 +590,33 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 		this._rowLayout.columns = cast this._columns;
 		this._rowLayout.customColumnWidths = this._customColumnWidths;
 
-		if (this._defaultStorage.cellRendererRecycler.update == null) {
+		if (this._defaultStorage.cellRendererRecycler != null && this._defaultStorage.cellRendererRecycler.update == null) {
 			this._defaultStorage.cellRendererRecycler.update = defaultUpdateCellRenderer;
 			if (this._defaultStorage.cellRendererRecycler.reset == null) {
 				this._defaultStorage.cellRendererRecycler.reset = defaultResetCellRenderer;
 			}
 		}
-		for (column in this._columns) {
-			if (column.cellRendererRecycler != null) {
-				if (column.cellRendererRecycler.update == null) {
-					column.cellRendererRecycler.update = defaultUpdateCellRenderer;
-					// don't replace reset if we didn't replace update too
-					if (column.cellRendererRecycler.reset == null) {
-						column.cellRendererRecycler.reset = defaultResetCellRenderer;
+		if (this._columns != null) {
+			for (column in this._columns) {
+				if (column.cellRendererRecycler != null) {
+					if (column.cellRendererRecycler.update == null) {
+						column.cellRendererRecycler.update = defaultUpdateCellRenderer;
+						// don't replace reset if we didn't replace update too
+						if (column.cellRendererRecycler.reset == null) {
+							column.cellRendererRecycler.reset = defaultResetCellRenderer;
+						}
 					}
 				}
-			}
-			var recyclerMap = @:privateAccess column._recyclerMap;
-			if (recyclerMap != null) {
-				for (recycler in recyclerMap) {
-					if (recycler.update == null) {
+				var recyclerMap = @:privateAccess column._recyclerMap;
+				if (recyclerMap != null) {
+					for (recycler in recyclerMap) {
 						if (recycler.update == null) {
-							recycler.update = defaultUpdateCellRenderer;
-							// don't replace reset if we didn't replace update too
-							if (recycler.reset == null) {
-								recycler.reset = defaultResetCellRenderer;
+							if (recycler.update == null) {
+								recycler.update = defaultUpdateCellRenderer;
+								// don't replace reset if we didn't replace update too
+								if (recycler.reset == null) {
+									recycler.reset = defaultResetCellRenderer;
+								}
 							}
 						}
 					}
@@ -672,6 +675,9 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 	}
 
 	private function findUnrenderedData():Void {
+		if (this._columns == null || this._columns.length == 0) {
+			return;
+		}
 		var currentChildIndex = 0;
 		for (i in 0...this._columns.length) {
 			var column = this._columns.get(i);
@@ -1122,6 +1128,9 @@ class GridViewRowRenderer extends LayoutGroup implements ITriggerView implements
 
 	private function gridViewRowRenderer_gridView_keyDownHandler(event:KeyboardEvent):Void {
 		if (!this._enabled || event.isDefaultPrevented()) {
+			return;
+		}
+		if (this._columns == null || this._columns.length == 0) {
 			return;
 		}
 		if (event.keyCode == Keyboard.SPACE || event.keyCode == Keyboard.ENTER) {

@@ -647,31 +647,33 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 		this._rowLayout.columns = cast this._columns;
 		this._rowLayout.customColumnWidths = this._customColumnWidths;
 
-		if (this._defaultStorage.cellRendererRecycler.update == null) {
+		if (this._defaultStorage.cellRendererRecycler != null && this._defaultStorage.cellRendererRecycler.update == null) {
 			this._defaultStorage.cellRendererRecycler.update = defaultUpdateCellRenderer;
 			if (this._defaultStorage.cellRendererRecycler.reset == null) {
 				this._defaultStorage.cellRendererRecycler.reset = defaultResetCellRenderer;
 			}
 		}
-		for (column in this._columns) {
-			if (column.cellRendererRecycler != null) {
-				if (column.cellRendererRecycler.update == null) {
-					column.cellRendererRecycler.update = defaultUpdateCellRenderer;
-					// don't replace reset if we didn't replace update too
-					if (column.cellRendererRecycler.reset == null) {
-						column.cellRendererRecycler.reset = defaultResetCellRenderer;
+		if (this._columns != null) {
+			for (column in this._columns) {
+				if (column.cellRendererRecycler != null) {
+					if (column.cellRendererRecycler.update == null) {
+						column.cellRendererRecycler.update = defaultUpdateCellRenderer;
+						// don't replace reset if we didn't replace update too
+						if (column.cellRendererRecycler.reset == null) {
+							column.cellRendererRecycler.reset = defaultResetCellRenderer;
+						}
 					}
 				}
-			}
-			var recyclerMap = @:privateAccess column._recyclerMap;
-			if (recyclerMap != null) {
-				for (recycler in recyclerMap) {
-					if (recycler.update == null) {
+				var recyclerMap = @:privateAccess column._recyclerMap;
+				if (recyclerMap != null) {
+					for (recycler in recyclerMap) {
 						if (recycler.update == null) {
-							recycler.update = defaultUpdateCellRenderer;
-							// don't replace reset if we didn't replace update too
-							if (recycler.reset == null) {
-								recycler.reset = defaultResetCellRenderer;
+							if (recycler.update == null) {
+								recycler.update = defaultUpdateCellRenderer;
+								// don't replace reset if we didn't replace update too
+								if (recycler.reset == null) {
+									recycler.reset = defaultResetCellRenderer;
+								}
 							}
 						}
 					}
@@ -730,6 +732,9 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 	}
 
 	private function findUnrenderedData():Void {
+		if (this._columns == null || this._columns.length == 0) {
+			return;
+		}
 		var currentChildIndex = 0;
 		for (i in 0...this._columns.length) {
 			var column = this._columns.get(i);
@@ -1297,6 +1302,9 @@ class TreeGridViewRowRenderer extends LayoutGroup implements ITriggerView implem
 
 	private function treeGridViewRowRenderer_treeGridView_keyDownHandler(event:KeyboardEvent):Void {
 		if (!this._enabled || event.isDefaultPrevented()) {
+			return;
+		}
+		if (this._columns == null || this._columns.length == 0) {
 			return;
 		}
 		if (this._selected && event.keyCode == Keyboard.LEFT) {
