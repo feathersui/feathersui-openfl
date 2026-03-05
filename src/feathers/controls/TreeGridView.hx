@@ -1442,9 +1442,7 @@ class TreeGridView extends BaseScrollContainer implements IDataSelector<Dynamic>
 		if (this._allInvalid) {
 			this.treeGridViewPort.setInvalid();
 		} else {
-			for (flag in this._invalidationFlags.keys()) {
-				this.treeGridViewPort.setInvalid(flag);
-			}
+			this._invalidationFlags.setInvalid(this.treeGridViewPort);
 		}
 
 		super.update();

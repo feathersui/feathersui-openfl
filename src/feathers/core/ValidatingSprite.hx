@@ -1,6 +1,6 @@
 /*
 	Feathers UI
-	Copyright 2026 Bowler Hat LLC. All Rights Reserved.
+	Copyright 2025 Bowler Hat LLC. All Rights Reserved.
 
 	This program is free software. You can redistribute and/or modify it in
 	accordance with the terms of the accompanying license agreement.
@@ -9,6 +9,7 @@
 package feathers.core;
 
 import feathers.utils.DisplayUtil;
+import haxe.ds.BalancedTree.TreeNode;
 import openfl.display.Sprite;
 import openfl.errors.IllegalOperationError;
 import openfl.events.Event;
@@ -96,8 +97,8 @@ class ValidatingSprite extends Sprite implements IValidating {
 
 	private var _allInvalid:Bool = false;
 	private var _allInvalidDelayed:Bool = false;
-	private var _invalidationFlags:Map<InvalidationFlag, Bool> = new Map();
-	private var _delayedInvalidationFlags:Map<InvalidationFlag, Bool> = new Map();
+	private var _invalidationFlags:InvalidationFlagMap<Bool> = new InvalidationFlagMap();
+	private var _delayedInvalidationFlags:InvalidationFlagMap<Bool> = new InvalidationFlagMap();
 	private var _setInvalidCount:Int = 0;
 	private var _validationQueue:ValidationQueue = null;
 
@@ -136,7 +137,7 @@ class ValidatingSprite extends Sprite implements IValidating {
 		}
 		if (flag == null) {
 			// return true if any flag is set
-			return this._invalidationFlags.keys().hasNext();
+			return !this._invalidationFlags.isEmpty();
 		}
 		return this._invalidationFlags.exists(flag);
 	}
@@ -221,7 +222,7 @@ class ValidatingSprite extends Sprite implements IValidating {
 			#if feathersui_strict_set_invalid
 			throw new openfl.errors.IllegalOperationError("feathersui_strict_set_invalid requires no calls to setInvalid() during update()");
 			#end
-			alreadyDelayedInvalid = this._delayedInvalidationFlags.keys().hasNext();
+			alreadyDelayedInvalid = !this._delayedInvalidationFlags.isEmpty();
 		}
 		if (flag == null) {
 			if (this._validating) {
@@ -351,5 +352,55 @@ class ValidatingSprite extends Sprite implements IValidating {
 	private function validatingSprite_removedFromStageHandler(event:Event):Void {
 		this._depth = -1;
 		this._validationQueue = null;
+	}
+}
+
+private class InvalidationFlagMap<V> extends haxe.ds.BalancedTree<InvalidationFlag, V> implements haxe.Constraints.IMap<InvalidationFlag, V> {
+	override function compare(k1:InvalidationFlag, k2:InvalidationFlag):Int {
+		var d = k1.getIndex() - k2.getIndex();
+		if (d != 0)
+			return d;
+		// the default implementation calls getParameters(), which results in
+		// unnecessary allocation.
+		switch (k1) {
+			case CUSTOM(v1):
+				switch (k2) {
+					case CUSTOM(v2):
+						return Reflect.compare(v1, v2);
+					default:
+				}
+			default:
+		}
+		return 0;
+	}
+
+	override function copy():InvalidationFlagMap<V> {
+		var copied = new InvalidationFlagMap<V>();
+		copied.root = root;
+		return copied;
+	}
+
+	public function isEmpty():Bool {
+		// hopefully, it is safe to assume that, in future versions of Haxe, the
+		// root field will still exist, even though it is technically private.
+		// return !keys().hasNext() also works, but allocates an array of keys.
+		return root == null;
+	}
+
+	public function setInvalid(target:ValidatingSprite):Void {
+		if (root == null) {
+			return;
+		}
+		setInvalidLoop(target, root);
+	}
+
+	private function setInvalidLoop(target:ValidatingSprite, node:TreeNode<InvalidationFlag, V>):Void {
+		if (node.left != null) {
+			setInvalidLoop(target, node.left);
+		}
+		target.setInvalid(node.key);
+		if (node.right != null) {
+			setInvalidLoop(target, node.right);
+		}
 	}
 }

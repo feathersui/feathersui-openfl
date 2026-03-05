@@ -1356,9 +1356,7 @@ class ListView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._allInvalid) {
 			this.listViewPort.setInvalid();
 		} else {
-			for (flag in this._invalidationFlags.keys()) {
-				this.listViewPort.setInvalid(flag);
-			}
+			this._invalidationFlags.setInvalid(this.listViewPort);
 		}
 
 		super.update();

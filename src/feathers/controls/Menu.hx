@@ -1160,9 +1160,7 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 		if (this._allInvalid) {
 			this.menuViewPort.setInvalid();
 		} else {
-			for (flag in this._invalidationFlags.keys()) {
-				this.menuViewPort.setInvalid(flag);
-			}
+			this._invalidationFlags.setInvalid(this.menuViewPort);
 		}
 
 		super.update();

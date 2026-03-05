@@ -1761,9 +1761,7 @@ class GridView extends BaseScrollContainer implements IIndexSelector implements 
 		if (this._allInvalid) {
 			this.gridViewPort.setInvalid();
 		} else {
-			for (flag in this._invalidationFlags.keys()) {
-				this.gridViewPort.setInvalid(flag);
-			}
+			this._invalidationFlags.setInvalid(this.gridViewPort);
 		}
 
 		super.update();
