@@ -69,7 +69,7 @@ class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvide
 		super();
 	}
 
-	private var styleTargets:Map<StyleTarget, (Dynamic) -> Void>;
+	private var styleTargets:StyleTargetMap<(Dynamic) -> Void>;
 
 	/**
 		The target Feathers UI component is passed to this function when
@@ -80,7 +80,7 @@ class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvide
 	**/
 	public function setStyleFunction<T>(type:Class<T>, variant:String, callback:(T) -> Void):Void {
 		if (styleTargets == null) {
-			styleTargets = [];
+			styleTargets = new StyleTargetMap<(Dynamic) -> Void>();
 		}
 		var typeName = Type.getClassName(type);
 		var styleTarget = variant == null ? Class(typeName) : ClassAndVariant(typeName, variant);
@@ -173,4 +173,39 @@ class ClassVariantStyleProvider extends EventDispatcher implements IStyleProvide
 private enum StyleTarget {
 	Class(type:String);
 	ClassAndVariant(type:String, variant:String);
+}
+
+private class StyleTargetMap<V> extends haxe.ds.BalancedTree<StyleTarget, V> implements haxe.Constraints.IMap<StyleTarget, V> {
+	override function compare(k1:StyleTarget, k2:StyleTarget):Int {
+		var d = k1.getIndex() - k2.getIndex();
+		if (d != 0)
+			return d;
+		// the default implementation calls getParameters(), which results in
+		// unnecessary allocation.
+		switch (k1) {
+			case Class(t1):
+				switch (k2) {
+					case Class(t2):
+						return Reflect.compare(t1, t2);
+					default:
+				}
+			case ClassAndVariant(t1, v1):
+				switch (k2) {
+					case ClassAndVariant(t2, v2):
+						var result = Reflect.compare(t1, t2);
+						if (result != 0) {
+							return result;
+						}
+						return Reflect.compare(v1, v2);
+					default:
+				}
+		}
+		return 0;
+	}
+
+	override function copy():StyleTargetMap<V> {
+		var copied = new StyleTargetMap<V>();
+		copied.root = root;
+		return copied;
+	}
 }
