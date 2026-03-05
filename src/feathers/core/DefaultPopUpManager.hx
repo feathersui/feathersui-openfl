@@ -88,6 +88,7 @@ class DefaultPopUpManager implements IPopUpManager {
 	private var _centeredPopUps:Array<DisplayObject> = [];
 
 	private var _popUpToOverlay:Map<DisplayObject, DisplayObject> = [];
+	private var _modalPopUpCount:Int = 0;
 
 	private var _overlayFactory:() -> DisplayObject;
 
@@ -187,7 +188,7 @@ class DefaultPopUpManager implements IPopUpManager {
 		@see `feathers.core.IPopUpManager.hasModalPopUps`
 	**/
 	public function hasModalPopUps():Bool {
-		return this._popUpToOverlay.keyValueIterator().hasNext();
+		return this._modalPopUpCount > 0;
 	}
 
 	/**
@@ -200,22 +201,7 @@ class DefaultPopUpManager implements IPopUpManager {
 			this.popUps.splice(index, 1);
 		}
 		if (isModal) {
-			if (customOverlayFactory == null) {
-				customOverlayFactory = this._overlayFactory;
-			}
-			if (customOverlayFactory == null) {
-				customOverlayFactory = DefaultPopUpManager.defaultOverlayFactory;
-			}
-			var overlay = customOverlayFactory();
-			var stage = this._root.stage;
-			var stageTopLeft = this._root.globalToLocal(new Point());
-			var stageBottomRight = this._root.globalToLocal(new Point(stage.stageWidth, stage.stageHeight));
-			overlay.x = stageTopLeft.x;
-			overlay.y = stageTopLeft.y;
-			overlay.width = stageBottomRight.x - stageTopLeft.x;
-			overlay.height = stageBottomRight.y - stageTopLeft.y;
-			this._root.addChild(overlay);
-			this._popUpToOverlay.set(popUp, overlay);
+			this.createOverlay(popUp, customOverlayFactory);
 		}
 
 		this.popUps.push(popUp);
@@ -303,6 +289,26 @@ class DefaultPopUpManager implements IPopUpManager {
 		this._root.setChildIndex(popUp, this._root.numChildren - 1);
 	}
 
+	private function createOverlay(popUp:DisplayObject, customOverlayFactory:() -> DisplayObject):Void {
+		if (customOverlayFactory == null) {
+			customOverlayFactory = this._overlayFactory;
+		}
+		if (customOverlayFactory == null) {
+			customOverlayFactory = DefaultPopUpManager.defaultOverlayFactory;
+		}
+		var overlay = customOverlayFactory();
+		var stage = this._root.stage;
+		var stageTopLeft = this._root.globalToLocal(new Point());
+		var stageBottomRight = this._root.globalToLocal(new Point(stage.stageWidth, stage.stageHeight));
+		overlay.x = stageTopLeft.x;
+		overlay.y = stageTopLeft.y;
+		overlay.width = stageBottomRight.x - stageTopLeft.x;
+		overlay.height = stageBottomRight.y - stageTopLeft.y;
+		this._root.addChild(overlay);
+		this._popUpToOverlay.set(popUp, overlay);
+		this._modalPopUpCount++;
+	}
+
 	private function cleanupOverlay(popUp:DisplayObject):Void {
 		var overlay = this._popUpToOverlay.get(popUp);
 		if (overlay == null) {
@@ -310,6 +316,7 @@ class DefaultPopUpManager implements IPopUpManager {
 		}
 		this._root.removeChild(overlay);
 		this._popUpToOverlay.remove(popUp);
+		this._modalPopUpCount--;
 	}
 
 	private function defaultPopUpManager_popUp_removedFromStageHandler(event:Event):Void {
