@@ -970,8 +970,12 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 	private var _previousClearStyle:Dynamic;
 
 	private function clearStyles():Void {
+		if (this._styleProviderStyles.length == 0) {
+			return;
+		}
 		var oldClearingStyles = this._clearingStyles;
 		this._clearingStyles = true;
+		var methodArgs:Array<Dynamic> = [];
 		for (styleDef in this._styleProviderStyles) {
 			switch (styleDef) {
 				case Name(name):
@@ -981,12 +985,16 @@ class FeathersControl extends MeasureSprite implements IUIControl implements IVa
 						if (clearMethod == null) {
 							throw new ArgumentError("Missing @style method: '" + clearMethodName + "'");
 						}
-						Reflect.callMethod(this, clearMethod, []);
+						methodArgs.resize(0);
+						Reflect.callMethod(this, clearMethod, methodArgs);
 					}
 				case NameAndState(name, state):
 					{
 						var method = Reflect.field(this, name);
-						Reflect.callMethod(this, method, [state, null]);
+						methodArgs.resize(2);
+						methodArgs[0] = state;
+						methodArgs[1] = null;
+						Reflect.callMethod(this, method, methodArgs);
 					}
 			}
 		}
