@@ -21,7 +21,7 @@
 	-->
 	<haxeflag name="-dce" value="no" if="flash"/>
 
-	<section if="flash !display">
+	<section if="flash" unless="display">
 		<source path="build_macros/flash"/>
 		<haxeflag name="--macro" value="AddFlashPropertyMeta.find('feathers')"/>
 		<haxeflag name="--macro" value="AddEventMeta.find('feathers')"/>
