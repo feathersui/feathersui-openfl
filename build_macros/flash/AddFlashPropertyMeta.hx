@@ -22,6 +22,7 @@ class AddFlashPropertyMeta {
 						var classPack = classType.pack.join(".");
 						if (packStart == null || (classPack != null && StringTools.startsWith(classType.pack.join("."), packStart))) {
 							checkFields(classType, classType.fields.get());
+							checkFields(classType, classType.statics.get());
 						}
 					default: // skip
 				};
