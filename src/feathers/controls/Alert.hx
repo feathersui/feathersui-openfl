@@ -118,10 +118,14 @@ class Alert extends Panel {
 	}
 
 	private static function showAlert(alert:Alert, ?popUpAdapter:IPopUpAdapter):Alert {
+		var context:DisplayObject = Application.topLevelApplication;
+		if (context == null) {
+			context = Lib.current;
+		}
 		if (popUpAdapter != null) {
-			popUpAdapter.open(alert, Lib.current);
+			popUpAdapter.open(alert, context);
 		} else {
-			PopUpManager.addPopUp(alert, Lib.current, true, true);
+			PopUpManager.addPopUp(alert, context, true, true);
 		}
 		return alert;
 	}
