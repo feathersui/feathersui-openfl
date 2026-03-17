@@ -103,7 +103,7 @@ class Alert extends Panel {
 		@since 1.0.0
 	**/
 	public static function show(text:String, ?titleText:String, ?buttonsText:Array<String>, ?callback:(state:ButtonBarItemState) -> Void,
-			?alertFactory:() -> Alert, ?popUpAdapter:IPopUpAdapter):Alert {
+			?alertFactory:() -> Alert, ?popUpAdapter:IPopUpAdapter, ?context:DisplayObject):Alert {
 		var alert = (alertFactory != null) ? alertFactory() : new Alert();
 		alert.text = text;
 		alert.titleText = titleText;
@@ -114,13 +114,15 @@ class Alert extends Panel {
 				callback(event.state);
 			});
 		}
-		return showAlert(alert, popUpAdapter);
+		return showAlert(alert, popUpAdapter, context);
 	}
 
-	private static function showAlert(alert:Alert, ?popUpAdapter:IPopUpAdapter):Alert {
-		var context:DisplayObject = Application.topLevelApplication;
+	private static function showAlert(alert:Alert, ?popUpAdapter:IPopUpAdapter, ?context:DisplayObject):Alert {
 		if (context == null) {
-			context = Lib.current;
+			context = Application.topLevelApplication;
+			if (context == null) {
+				context = Lib.current;
+			}
 		}
 		if (popUpAdapter != null) {
 			popUpAdapter.open(alert, context);
