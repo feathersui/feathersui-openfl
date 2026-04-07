@@ -1120,6 +1120,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 			#else
 			this._openBranches.resize(0);
 			#end
+			this._totalLayoutCount = this.calculateTotalLayoutCount([]);
 			return this._openBranches;
 		}
 		this._openBranches = value.copy();
@@ -1157,6 +1158,7 @@ class TreeView extends BaseScrollContainer implements IDataSelector<Dynamic> imp
 				state.owner = null;
 			}
 		}
+		this._totalLayoutCount = this.calculateTotalLayoutCount([]);
 		return this._openBranches;
 	}
 
