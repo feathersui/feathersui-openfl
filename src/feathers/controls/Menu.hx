@@ -12,7 +12,6 @@ import feathers.controls.dataRenderers.IHierarchicalItemRenderer;
 import feathers.controls.dataRenderers.DrillDownItemRenderer;
 import feathers.controls.dataRenderers.IDataRenderer;
 import feathers.controls.dataRenderers.IMenuItemRenderer;
-import feathers.controls.dataRenderers.ItemRenderer;
 import feathers.controls.popups.DropDownPopUpAdapter;
 import feathers.controls.popups.IPopUpAdapter;
 import feathers.controls.popups.SubMenuPopUpAdapter;
@@ -122,6 +121,10 @@ import lime.ui.KeyCode;
 
 	@event openfl.events.Event.CLOSE Dispatched when the menu closes.
 
+	@event feathers.events.MenuEvent.MENU_OPEN Dispatched when a sub-menu opens.
+
+	@event feathers.events.MenuEvent.MENU_CLOSE Dispatched when a sub-menu closes.
+
 	@see [Tutorial: How to use the Menu component](https://feathersui.com/learn/haxe-openfl/menu/)
 	@see `feathers.controls.MenuBar`
 
@@ -129,6 +132,8 @@ import lime.ui.KeyCode;
 **/
 @:event(openfl.events.Event.CHANGE)
 @:event(feathers.events.MenuEvent.ITEM_TRIGGER)
+@:event(feathers.events.MenuEvent.MENU_OPEN)
+@:event(feathers.events.MenuEvent.MENU_CLOSE)
 @:event(openfl.events.Event.CLOSE)
 @:access(feathers.data.MenuItemState)
 @defaultXmlProperty("dataProvider")
@@ -230,6 +235,7 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 
 	private var _pendingSubMenuItemRenderer:DisplayObject;
 	private var _subMenu:Menu;
+	private var _subMenuIndex:Int = -1;
 	private var popUpAdapter:IPopUpAdapter;
 
 	private var menuViewPort:AdvancedLayoutViewPort;
@@ -2169,6 +2175,7 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 			factory = this.menuBarOwner.menuFactory;
 		}
 		this._oldSubMenuFactory = factory;
+		this._subMenuIndex = itemState.index;
 		this._subMenu = factory.create();
 		this._subMenu.menuBarOwner = this.menuBarOwner;
 		this._subMenu.menuOwner = this;
@@ -2384,6 +2391,11 @@ class Menu extends BaseScrollContainer implements IIndexSelector implements IDat
 		} else if (this.stage != null) {
 			this.stage.focus = this;
 		}
+
+		var item = this._dataProvider.get([this._subMenuIndex]);
+		this._subMenuIndex = -1;
+		var itemState = this.itemToItemState(item);
+		MenuEvent.dispatch(this, MenuEvent.MENU_CLOSE, itemState);
 	}
 
 	private function menu_stage_mouseDownHandler(event:MouseEvent):Void {
