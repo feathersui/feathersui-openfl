@@ -356,7 +356,7 @@ class FlowRowsLayout extends EventDispatcher implements ILayout {
 		Indicates if the height of items should be reset if the
 		`rowVerticalAlign` property is set to `VerticalAlign.JUSTIFY`.
 
-		@see `HorizontalLayout.rowVerticalAlign`
+		@see `FlowRowsLayout.rowVerticalAlign`
 
 		@since 1.0.0
 	**/
