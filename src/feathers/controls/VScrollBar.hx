@@ -249,11 +249,11 @@ class VScrollBar extends BaseScrollBar {
 			maxTrackY -= this.incrementButton.height;
 		}
 
-		this._currentTrackSkin.y = minTrackY;
-		this._currentTrackSkin.height = location;
+		this._currentSecondaryTrackSkin.y = minTrackY;
+		this._currentSecondaryTrackSkin.height = location;
 
-		this._currentSecondaryTrackSkin.y = location;
-		this._currentSecondaryTrackSkin.height = maxTrackY - location;
+		this._currentTrackSkin.y = location;
+		this._currentTrackSkin.height = maxTrackY - location;
 
 		if ((this._currentTrackSkin is IValidating)) {
 			(cast this._currentTrackSkin : IValidating).validateNow();

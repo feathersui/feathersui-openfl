@@ -196,11 +196,11 @@ class VSlider extends BaseSlider {
 			location += Math.round(this._currentThumbSkin.height / 2.0);
 		}
 
-		this._currentTrackSkin.y = 0.0;
-		this._currentTrackSkin.height = location;
+		this._currentSecondaryTrackSkin.y = 0.0;
+		this._currentSecondaryTrackSkin.height = location;
 
-		this._currentSecondaryTrackSkin.y = location;
-		this._currentSecondaryTrackSkin.height = this.actualHeight - location;
+		this._currentTrackSkin.y = location;
+		this._currentTrackSkin.height = this.actualHeight - location;
 
 		if ((this._currentTrackSkin is IValidating)) {
 			(cast this._currentTrackSkin : IValidating).validateNow();
