@@ -41,16 +41,16 @@ class FlowColumnsLayout extends EventDispatcher implements ILayout {
 		super();
 	}
 
-	private var _paddingLeft:Float = 0.0;
+	private var _paddingTop:Float = 0.0;
 
 	/**
-		The space, in pixels, between the parent container's left edge and its
+		The space, in pixels, between the parent container's top edge and its
 		content.
 
-		In the following example, the layout's left padding is set to 20 pixels:
+		In the following example, the layout's top padding is set to 20 pixels:
 
 		```haxe
-		layout.paddingLeft = 20.0;
+		layout.paddingTop = 20.0;
 		```
 
 		@default 0.0
@@ -58,51 +58,19 @@ class FlowColumnsLayout extends EventDispatcher implements ILayout {
 		@since 1.0.0
 	**/
 	@:bindable("change")
-	public var paddingLeft(get, set):Float;
+	public var paddingTop(get, set):Float;
 
-	private function get_paddingLeft():Float {
-		return this._paddingLeft;
+	private function get_paddingTop():Float {
+		return this._paddingTop;
 	}
 
-	private function set_paddingLeft(value:Float):Float {
-		if (this._paddingLeft == value) {
-			return this._paddingLeft;
+	private function set_paddingTop(value:Float):Float {
+		if (this._paddingTop == value) {
+			return this._paddingTop;
 		}
-		this._paddingLeft = value;
+		this._paddingTop = value;
 		FeathersEvent.dispatch(this, Event.CHANGE);
-		return this._paddingLeft;
-	}
-
-	private var _paddingBottom:Float = 0.0;
-
-	/**
-		The space, in pixels, between the parent container's bottom edge and its
-		content.
-
-		In the following example, the layout's bottom padding is set to 20 pixels:
-
-		```haxe
-		layout.paddingBottom = 20.0;
-		```
-
-		@default 0.0
-
-		@since 1.0.0
-	**/
-	@:bindable("change")
-	public var paddingBottom(get, set):Float;
-
-	private function get_paddingBottom():Float {
-		return this._paddingBottom;
-	}
-
-	private function set_paddingBottom(value:Float):Float {
-		if (this._paddingBottom == value) {
-			return this._paddingBottom;
-		}
-		this._paddingBottom = value;
-		FeathersEvent.dispatch(this, Event.CHANGE);
-		return this._paddingBottom;
+		return this._paddingTop;
 	}
 
 	private var _paddingRight:Float = 0.0;
@@ -137,16 +105,16 @@ class FlowColumnsLayout extends EventDispatcher implements ILayout {
 		return this._paddingRight;
 	}
 
-	private var _paddingTop:Float = 0.0;
+	private var _paddingBottom:Float = 0.0;
 
 	/**
-		The space, in pixels, between the parent container's top edge and its
+		The space, in pixels, between the parent container's bottom edge and its
 		content.
 
-		In the following example, the layout's top padding is set to 20 pixels:
+		In the following example, the layout's bottom padding is set to 20 pixels:
 
 		```haxe
-		layout.paddingTop = 20.0;
+		layout.paddingBottom = 20.0;
 		```
 
 		@default 0.0
@@ -154,31 +122,31 @@ class FlowColumnsLayout extends EventDispatcher implements ILayout {
 		@since 1.0.0
 	**/
 	@:bindable("change")
-	public var paddingTop(get, set):Float;
+	public var paddingBottom(get, set):Float;
 
-	private function get_paddingTop():Float {
-		return this._paddingTop;
+	private function get_paddingBottom():Float {
+		return this._paddingBottom;
 	}
 
-	private function set_paddingTop(value:Float):Float {
-		if (this._paddingTop == value) {
-			return this._paddingTop;
+	private function set_paddingBottom(value:Float):Float {
+		if (this._paddingBottom == value) {
+			return this._paddingBottom;
 		}
-		this._paddingTop = value;
+		this._paddingBottom = value;
 		FeathersEvent.dispatch(this, Event.CHANGE);
-		return this._paddingTop;
+		return this._paddingBottom;
 	}
 
-	private var _verticalGap:Float = 0.0;
+	private var _paddingLeft:Float = 0.0;
 
 	/**
-		The vertical space, in pixels, between each two adjacent items in the
-		layout.
+		The space, in pixels, between the parent container's left edge and its
+		content.
 
-		In the following example, the layout's vertical gap is set to 20 pixels:
+		In the following example, the layout's left padding is set to 20 pixels:
 
 		```haxe
-		layout.verticalGap = 20.0;
+		layout.paddingLeft = 20.0;
 		```
 
 		@default 0.0
@@ -186,19 +154,19 @@ class FlowColumnsLayout extends EventDispatcher implements ILayout {
 		@since 1.0.0
 	**/
 	@:bindable("change")
-	public var verticalGap(get, set):Float;
+	public var paddingLeft(get, set):Float;
 
-	private function get_verticalGap():Float {
-		return this._verticalGap;
+	private function get_paddingLeft():Float {
+		return this._paddingLeft;
 	}
 
-	private function set_verticalGap(value:Float):Float {
-		if (this._verticalGap == value) {
-			return this._verticalGap;
+	private function set_paddingLeft(value:Float):Float {
+		if (this._paddingLeft == value) {
+			return this._paddingLeft;
 		}
-		this._verticalGap = value;
+		this._paddingLeft = value;
 		FeathersEvent.dispatch(this, Event.CHANGE);
-		return this._verticalGap;
+		return this._paddingLeft;
 	}
 
 	private var _horizontalGap:Float = 0.0;
@@ -233,43 +201,36 @@ class FlowColumnsLayout extends EventDispatcher implements ILayout {
 		return this._horizontalGap;
 	}
 
-	private var _verticalAlign:VerticalAlign = TOP;
+	private var _verticalGap:Float = 0.0;
 
 	/**
-		How each column is positioned vertically (along the y-axis) within the
-		container.
+		The vertical space, in pixels, between each two adjacent items in the
+		layout.
 
-		**Note:** The `VerticalAlign.JUSTIFY` constant is not supported by
-		this layout.
-
-		The following example aligns each column's content to the bottom:
+		In the following example, the layout's vertical gap is set to 20 pixels:
 
 		```haxe
-		layout.verticalAlign = BOTTOM;
+		layout.verticalGap = 20.0;
 		```
 
-		@default feathers.layout.VerticalAlign.TOP
-
-		@see `feathers.layout.VerticalAlign.TOP`
-		@see `feathers.layout.VerticalAlign.MIDDLE`
-		@see `feathers.layout.VerticalAlign.BOTTOM`
+		@default 0.0
 
 		@since 1.0.0
 	**/
 	@:bindable("change")
-	public var verticalAlign(get, set):VerticalAlign;
+	public var verticalGap(get, set):Float;
 
-	private function get_verticalAlign():VerticalAlign {
-		return this._verticalAlign;
+	private function get_verticalGap():Float {
+		return this._verticalGap;
 	}
 
-	private function set_verticalAlign(value:VerticalAlign):VerticalAlign {
-		if (this._verticalAlign == value) {
-			return this._verticalAlign;
+	private function set_verticalGap(value:Float):Float {
+		if (this._verticalGap == value) {
+			return this._verticalGap;
 		}
-		this._verticalAlign = value;
+		this._verticalGap = value;
 		FeathersEvent.dispatch(this, Event.CHANGE);
-		return this._verticalAlign;
+		return this._verticalGap;
 	}
 
 	private var _horizontalAlign:HorizontalAlign = LEFT;
@@ -311,6 +272,45 @@ class FlowColumnsLayout extends EventDispatcher implements ILayout {
 		this._horizontalAlign = value;
 		FeathersEvent.dispatch(this, Event.CHANGE);
 		return this._horizontalAlign;
+	}
+
+	private var _verticalAlign:VerticalAlign = TOP;
+
+	/**
+		How each column is positioned vertically (along the y-axis) within the
+		container.
+
+		**Note:** The `VerticalAlign.JUSTIFY` constant is not supported by
+		this layout.
+
+		The following example aligns each column's content to the bottom:
+
+		```haxe
+		layout.verticalAlign = BOTTOM;
+		```
+
+		@default feathers.layout.VerticalAlign.TOP
+
+		@see `feathers.layout.VerticalAlign.TOP`
+		@see `feathers.layout.VerticalAlign.MIDDLE`
+		@see `feathers.layout.VerticalAlign.BOTTOM`
+
+		@since 1.0.0
+	**/
+	@:bindable("change")
+	public var verticalAlign(get, set):VerticalAlign;
+
+	private function get_verticalAlign():VerticalAlign {
+		return this._verticalAlign;
+	}
+
+	private function set_verticalAlign(value:VerticalAlign):VerticalAlign {
+		if (this._verticalAlign == value) {
+			return this._verticalAlign;
+		}
+		this._verticalAlign = value;
+		FeathersEvent.dispatch(this, Event.CHANGE);
+		return this._verticalAlign;
 	}
 
 	private var _columnHorizontalAlign:HorizontalAlign = LEFT;
