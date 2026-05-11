@@ -89,7 +89,7 @@ class VerticalLayoutData extends EventDispatcher implements ILayoutData {
 		container.layout = new VerticalLayout();
 
 		var child = new Label();
-		child.layoutData = VerticalLayoutData.fillHorizontal();
+		child.layoutData = VerticalLayoutData.fillVertical();
 		container.addChild(child);
 		```
 
@@ -220,7 +220,7 @@ class VerticalLayoutData extends EventDispatcher implements ILayoutData {
 		This item's `marginTop` value will be added to the layout's `gap`
 		value and the previous item's `marginBottom` value to create the total
 		space between items. If this is the first item in the layout, nothing
-		will be added to the `marginTop` value.
+		will be added to this item's `marginTop` value.
 
 		Negative values are allowed for the margins.
 

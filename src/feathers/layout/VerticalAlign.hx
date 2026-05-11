@@ -43,7 +43,7 @@ enum VerticalAlign {
 	BOTTOM;
 
 	/**
-		The items in the layout will fill the height of the bounds.
+		The items in the layout will fill the height of the container bounds.
 
 		@since 1.0.0
 	**/

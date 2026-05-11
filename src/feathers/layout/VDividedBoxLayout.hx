@@ -293,8 +293,8 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 				divider.y = contentHeight;
 				contentHeight += divider.height;
 			}
-			// the height might have changed after the initial validation
 			if ((item is IValidating)) {
+				// the height might have changed after the initial validation
 				(cast item : IValidating).validateNow();
 			}
 			if (contentWidth < item.width) {
@@ -455,9 +455,9 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 				var percentHeight = 100.0;
 				if ((item is IMeasureObject)) {
 					var measureItem:IMeasureObject = cast item;
-					var columnExplicitMinHeight = measureItem.explicitMinHeight;
-					if (columnExplicitMinHeight != null) {
-						totalMinHeight += columnExplicitMinHeight;
+					var itemExplicitMinHeight = measureItem.explicitMinHeight;
+					if (itemExplicitMinHeight != null) {
+						totalMinHeight += itemExplicitMinHeight;
 					}
 				}
 				totalPercentHeight += percentHeight;
@@ -496,21 +496,21 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 				// round to nearest pixel so that there aren't any visual gaps
 				// between items. we'll append the remainder at the end.
 				var itemHeight = Math.ffloor(percentToPixels * percentHeight);
-				var columnMinHeight:Null<Float> = null;
+				var itemMinHeight:Null<Float> = null;
 				if ((item is IMeasureObject)) {
 					var measureItem:IMeasureObject = cast item;
-					columnMinHeight = measureItem.explicitMinHeight;
+					itemMinHeight = measureItem.explicitMinHeight;
 				}
 
-				if (columnMinHeight != null) {
-					if (columnMinHeight > remainingHeight) {
+				if (itemMinHeight != null) {
+					if (itemMinHeight > remainingHeight) {
 						// we try to respect the item's minimum height, but if
 						// it's larger than the remaining space, we need to
 						// force it to fit
-						columnMinHeight = remainingHeight;
+						itemMinHeight = remainingHeight;
 					}
-					if (itemHeight < columnMinHeight) {
-						itemHeight = columnMinHeight;
+					if (itemHeight < itemMinHeight) {
+						itemHeight = itemMinHeight;
 						remainingHeight -= itemHeight;
 						totalPercentHeight -= percentHeight;
 						pendingIndices.remove(index);
@@ -533,7 +533,7 @@ class VDividedBoxLayout extends EventDispatcher implements ILayout {
 			}
 		} while (needsAnotherPass);
 		if (remainingHeight > 0.0 && pendingIndices.length > 0) {
-			// minimize the impact of a non-integer width by adding the
+			// minimize the impact of a non-integer height by adding the
 			// remainder to the final item
 			var index = pendingIndices[pendingIndices.length - 1];
 			var finalItem = items[index];

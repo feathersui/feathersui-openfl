@@ -141,7 +141,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 		layout.requestedColumnCount = 2.0;
 		```
 
-		@default 5.0
+		@default null
 
 		@since 1.0.0
 	**/
@@ -169,7 +169,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 
 		If `requestedColumnCount` is also set, this property is ignored.
 
-		In the following example, the layout's requested minimum coumn count is
+		In the following example, the layout's requested minimum column count is
 		set to 2 complete items:
 
 		```haxe
@@ -814,7 +814,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 			estimatedItemWidth = this._typicalItem.width;
 			// it's possible for two separate items to both be partially
 			// visible in the view port, so ceil alone may not be enough
-			minItems = Math.ceil(width / (estimatedItemWidth) + adjustedGap) + 1;
+			minItems = Math.ceil(width / (estimatedItemWidth + adjustedGap)) + 1;
 		}
 		var positionX = this._paddingLeft;
 		var scrollX = this._scrollX;
@@ -835,9 +835,9 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 				itemWidth = cacheItem.itemWidth;
 				if (estimatedItemWidth == null) {
 					estimatedItemWidth = itemWidth;
-					minItems = Math.ceil(width / (estimatedItemWidth) + adjustedGap) + 1;
+					minItems = Math.ceil(width / (estimatedItemWidth + adjustedGap)) + 1;
 					if (skippedMissingItems > 0) {
-						// include the heights of any items that were missing
+						// include the widths of any items that were missing
 						for (j in 0...skippedMissingItems) {
 							positionX += estimatedItemWidth + adjustedGap;
 							if (startIndex == -1 && positionX >= scrollX) {
@@ -866,7 +866,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 					skippedMissingItems++;
 					continue;
 				}
-				// if we can't find an estimated height, we return a range
+				// if we can't find an estimated width, we return a range
 				// where only the first item is visible. this allows the
 				// first item to be measured, and the container can
 				// request the visible items again using that measurement
@@ -889,7 +889,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 			}
 		}
 		if (startIndex == -1 && this._horizontalAlign != LEFT) {
-			// if we're not aligned to the top, scrolling beyond the end might
+			// if we're not aligned to the left, scrolling beyond the end might
 			// make some items disappear prematurely, so back-fill from here
 			startIndex = itemCount - 1;
 			endIndex = startIndex;
@@ -908,7 +908,7 @@ class HorizontalListLayout extends EventDispatcher implements IVirtualLayout imp
 					itemWidth = cacheItem.itemWidth;
 					if (estimatedItemWidth == null) {
 						estimatedItemWidth = itemWidth;
-						minItems = Math.ceil(width / (estimatedItemWidth) + adjustedGap) + 1;
+						minItems = Math.ceil(width / (estimatedItemWidth + adjustedGap)) + 1;
 					}
 				} else if (estimatedItemWidth != null) {
 					itemWidth = estimatedItemWidth;

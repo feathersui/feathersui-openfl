@@ -201,6 +201,7 @@ class VProgressBar extends BaseProgressBar {
 			default:
 				throw new ArgumentError("Unknown fill mode: " + this.fillMode);
 		}
+
 		if ((this._currentFillSkin is IValidating)) {
 			(cast this._currentFillSkin : IValidating).validateNow();
 		}

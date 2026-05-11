@@ -454,9 +454,9 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 				var percentWidth = 100.0;
 				if ((item is IMeasureObject)) {
 					var measureItem:IMeasureObject = cast item;
-					var columnExplicitMinWidth = measureItem.explicitMinWidth;
-					if (columnExplicitMinWidth != null) {
-						totalMinWidth += columnExplicitMinWidth;
+					var itemExplicitMinWidth = measureItem.explicitMinWidth;
+					if (itemExplicitMinWidth != null) {
+						totalMinWidth += itemExplicitMinWidth;
 					}
 				}
 				totalPercentWidth += percentWidth;
@@ -495,21 +495,21 @@ class HDividedBoxLayout extends EventDispatcher implements ILayout {
 				// round to nearest pixel so that there aren't any visual gaps
 				// between items. we'll append the remainder at the end.
 				var itemWidth = Math.ffloor(percentToPixels * percentWidth);
-				var columnMinWidth:Null<Float> = null;
+				var itemMinWidth:Null<Float> = null;
 				if ((item is IMeasureObject)) {
 					var measureItem:IMeasureObject = cast item;
-					columnMinWidth = measureItem.explicitMinWidth;
+					itemMinWidth = measureItem.explicitMinWidth;
 				}
 
-				if (columnMinWidth != null) {
-					if (columnMinWidth > remainingWidth) {
+				if (itemMinWidth != null) {
+					if (itemMinWidth > remainingWidth) {
 						// we try to respect the item's minimum width, but if
 						// it's larger than the remaining space, we need to
 						// force it to fit
-						columnMinWidth = remainingWidth;
+						itemMinWidth = remainingWidth;
 					}
-					if (itemWidth < columnMinWidth) {
-						itemWidth = columnMinWidth;
+					if (itemWidth < itemMinWidth) {
+						itemWidth = itemMinWidth;
 						remainingWidth -= itemWidth;
 						totalPercentWidth -= percentWidth;
 						pendingIndices.remove(index);

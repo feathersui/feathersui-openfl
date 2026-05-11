@@ -89,7 +89,7 @@ class HorizontalLayoutData extends EventDispatcher implements ILayoutData {
 		container.layout = new HorizontalLayout();
 
 		var child = new Label();
-		child.layoutData = HorizontalLayoutData.fillHorizontal();
+		child.layoutData = HorizontalLayoutData.fillVertical();
 		container.addChild(child);
 		```
 

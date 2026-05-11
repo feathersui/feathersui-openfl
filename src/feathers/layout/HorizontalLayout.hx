@@ -184,6 +184,9 @@ class HorizontalLayout extends EventDispatcher implements ILayout implements IDr
 
 		@default 0.0
 
+		@see `HorizontalLayoutData.marginLeft`
+		@see `HorizontalLayoutData.marginRight`
+
 		@since 1.0.0
 	**/
 	@:bindable("change")

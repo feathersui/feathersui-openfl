@@ -349,14 +349,14 @@ class VerticalLayout extends EventDispatcher implements ILayout implements IDrag
 
 	/**
 		Indicates if the width of items should be reset for re-measurement if
-		the item has `HorizontalLayoutData` with the `percentWidth` property
+		the item has `VerticalLayoutData` with the `percentWidth` property
 		populated and the container's width is not explicitly set.
 
 		Useful if changes to the items' content might affect their measured
 		dimensions after applying the percentages. For instance, if changing a
 		component's text should cause it to resize.
 
-		@see `HorizontalLayoutData.percentWidth`
+		@see `VerticalLayoutData.percentWidth`
 
 		@since 1.0.0
 	**/
@@ -380,14 +380,14 @@ class VerticalLayout extends EventDispatcher implements ILayout implements IDrag
 
 	/**
 		Indicates if the height of items should be reset for re-measurement if
-		the item has `HorizontalLayoutData` with the `percentHeight` property
+		the item has `VerticalLayoutData` with the `percentHeight` property
 		populated and the container's height is not explicitly set.
 
 		Useful if changes to the items' content might affect their measured
 		dimensions after applying the percentages. For instance, if changing a
 		component's text should cause it to resize.
 
-		@see `HorizontalLayoutData.percentHeight`
+		@see `VerticalLayoutData.percentHeight`
 
 		@since 1.0.0
 	**/

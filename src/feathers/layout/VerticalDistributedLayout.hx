@@ -337,7 +337,6 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout imple
 			item.y = contentHeight;
 			contentHeight += item.height + this._gap;
 		}
-		var maxItemWidth = contentWidth;
 		contentWidth += this._paddingLeft + this._paddingRight;
 		contentHeight += this._paddingBottom;
 		if (items.length > 0) {
@@ -365,7 +364,7 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout imple
 			}
 		}
 
-		this.applyHorizontalAlign(items, maxItemWidth, viewPortWidth);
+		this.applyHorizontalAlign(items, viewPortWidth);
 
 		if (contentWidth < viewPortWidth) {
 			contentWidth = viewPortWidth;
@@ -517,7 +516,7 @@ class VerticalDistributedLayout extends EventDispatcher implements ILayout imple
 		}
 	}
 
-	private inline function applyHorizontalAlign(items:Array<DisplayObject>, maxItemWidth:Float, viewPortWidth:Float):Void {
+	private inline function applyHorizontalAlign(items:Array<DisplayObject>, viewPortWidth:Float):Void {
 		var justifyContentWidth = viewPortWidth - this._paddingLeft - this._paddingRight;
 		if (justifyContentWidth < 0.0) {
 			justifyContentWidth = 0.0;

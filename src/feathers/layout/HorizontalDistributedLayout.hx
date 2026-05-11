@@ -509,7 +509,7 @@ class HorizontalDistributedLayout extends EventDispatcher implements ILayout imp
 			item.width = itemWidth;
 			if ((item is IValidating)) {
 				// changing the width of the item may cause its height
-				// to change, so we need to validate. the height is
+				// to change, so we need to validate. the width is
 				// needed for measurement.
 				(cast item : IValidating).validateNow();
 			}

@@ -77,6 +77,7 @@ class HSlider extends BaseSlider {
 
 	override private function locationToValue(x:Float, y:Float):Float {
 		var percentage = 0.0;
+
 		var trackScrollableWidth = this.actualWidth - this.minimumPadding - this.maximumPadding;
 		if (this._currentThumbSkin != null) {
 			trackScrollableWidth -= this._currentThumbSkin.width;
@@ -84,6 +85,7 @@ class HSlider extends BaseSlider {
 		var xOffset = x - this._pointerStartX - this.minimumPadding;
 		var xPosition = Math.min(Math.max(0.0, this._thumbStartX + xOffset), trackScrollableWidth);
 		percentage = xPosition / trackScrollableWidth;
+
 		return this._minimum + percentage * (this._maximum - this._minimum);
 	}
 
@@ -165,7 +167,7 @@ class HSlider extends BaseSlider {
 				if (newMinHeight < this._currentTrackSkin.height) {
 					newMinHeight = this._currentTrackSkin.height;
 				}
-				if (this._currentSecondaryTrackSkin != null && newHeight < this._currentSecondaryTrackSkin.height) {
+				if (this._currentSecondaryTrackSkin != null && newMinHeight < this._currentSecondaryTrackSkin.height) {
 					newMinHeight = this._currentSecondaryTrackSkin.height;
 				}
 			}
