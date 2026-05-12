@@ -17,7 +17,18 @@ import utest.Test;
 
 @:keep
 class ScrollContainerTest extends Test {
+	private static final CHILD1_WIDTH = 200.0;
+	private static final CHILD1_HEIGHT = 75.0;
+	private static final CHILD2_WIDTH = 150.0;
+	private static final CHILD2_HEIGHT = 100.0;
+	private static final CHILD3_WIDTH = 75.0;
+	private static final CHILD3_HEIGHT = 50.0;
+
 	private var _container:ScrollContainer;
+
+	private var _control1:LayoutGroup;
+	private var _control2:LayoutGroup;
+	private var _control3:LayoutGroup;
 
 	public function new() {
 		super();
@@ -26,6 +37,10 @@ class ScrollContainerTest extends Test {
 	public function setup():Void {
 		this._container = new ScrollContainer();
 		Lib.current.addChild(this._container);
+
+		this._control1 = new LayoutGroup();
+		this._control2 = new LayoutGroup();
+		this._control3 = new LayoutGroup();
 	}
 
 	public function teardown():Void {
@@ -33,6 +48,9 @@ class ScrollContainerTest extends Test {
 			this._container.parent.removeChild(this._container);
 		}
 		this._container = null;
+		this._control1 = null;
+		this._control2 = null;
+		this._control3 = null;
 		Assert.equals(1, Lib.current.numChildren, "Test cleanup failed to remove all children from the root");
 	}
 
@@ -83,6 +101,99 @@ class ScrollContainerTest extends Test {
 		this._container.validateNow();
 		Assert.isNull(skin1.parent);
 		Assert.equals(this._container, skin2.parent);
+	}
+
+	public function testOneChild():Void {
+		this._control1.width = CHILD1_WIDTH;
+		this._control1.height = CHILD1_HEIGHT;
+		this._container.addChild(this._control1);
+		this._container.validateNow();
+		Assert.equals(CHILD1_WIDTH, this._container.width);
+		Assert.equals(CHILD1_HEIGHT, this._container.height);
+		Assert.equals(1, this._container.numChildren);
+		Assert.equals(this._control1, this._container.getChildAt(0));
+	}
+
+	public function testTwoChildren():Void {
+		this._control1.width = CHILD1_WIDTH;
+		this._control1.height = CHILD1_HEIGHT;
+		this._container.addChild(this._control1);
+		this._control2.width = CHILD2_WIDTH;
+		this._control2.height = CHILD2_HEIGHT;
+		this._container.addChild(this._control2);
+		this._container.validateNow();
+		Assert.equals(Math.max(CHILD1_WIDTH, CHILD2_WIDTH), this._container.width);
+		Assert.equals(Math.max(CHILD1_HEIGHT, CHILD2_HEIGHT), this._container.height);
+		Assert.equals(2, this._container.numChildren);
+		Assert.equals(this._control1, this._container.getChildAt(0));
+		Assert.equals(this._control2, this._container.getChildAt(1));
+	}
+
+	public function testAddChildAt():Void {
+		this._control1.width = CHILD1_WIDTH;
+		this._control1.height = CHILD1_HEIGHT;
+		this._container.addChild(this._control1);
+		this._control2.width = CHILD2_WIDTH;
+		this._control2.height = CHILD2_HEIGHT;
+		this._container.addChildAt(this._control2, 0);
+		this._container.validateNow();
+		Assert.equals(Math.max(CHILD1_WIDTH, CHILD2_WIDTH), this._container.width);
+		Assert.equals(Math.max(CHILD1_HEIGHT, CHILD2_HEIGHT), this._container.height);
+		Assert.equals(2, this._container.numChildren);
+		Assert.equals(this._control2, this._container.getChildAt(0));
+		Assert.equals(this._control1, this._container.getChildAt(1));
+	}
+
+	public function testRemoveChild():Void {
+		this._container.addChild(this._control1);
+		this._container.addChild(this._control2);
+		this._container.addChild(this._control3);
+		Assert.equals(this._control1, this._container.getChildAt(0));
+		Assert.equals(this._control2, this._container.getChildAt(1));
+		Assert.equals(this._control3, this._container.getChildAt(2));
+		this._container.removeChild(this._control2);
+		Assert.equals(2, this._container.numChildren);
+		Assert.equals(this._control1, this._container.getChildAt(0));
+		Assert.equals(this._control3, this._container.getChildAt(1));
+		this._container.removeChild(this._control1);
+		Assert.equals(1, this._container.numChildren);
+		Assert.equals(this._control3, this._container.getChildAt(0));
+		this._container.removeChild(this._control3);
+		Assert.equals(0, this._container.numChildren);
+	}
+
+	public function testRemoveChildAt():Void {
+		this._container.addChild(this._control1);
+		this._container.addChild(this._control2);
+		this._container.addChild(this._control3);
+		Assert.equals(this._control1, this._container.getChildAt(0));
+		Assert.equals(this._control2, this._container.getChildAt(1));
+		Assert.equals(this._control3, this._container.getChildAt(2));
+		this._container.removeChildAt(1);
+		Assert.equals(2, this._container.numChildren);
+		Assert.equals(this._control1, this._container.getChildAt(0));
+		Assert.equals(this._control3, this._container.getChildAt(1));
+		this._container.removeChildAt(0);
+		Assert.equals(1, this._container.numChildren);
+		Assert.equals(this._control3, this._container.getChildAt(0));
+		this._container.removeChildAt(0);
+		Assert.equals(0, this._container.numChildren);
+	}
+
+	public function testRemoveChildren():Void {
+		this._container.addChild(this._control1);
+		this._container.addChild(this._control2);
+		this._container.addChild(this._control3);
+		Assert.equals(this._control1, this._container.getChildAt(0));
+		Assert.equals(this._control2, this._container.getChildAt(1));
+		Assert.equals(this._control3, this._container.getChildAt(2));
+		this._container.removeChildren();
+		Assert.equals(0, this._container.numChildren);
+		this._container.addChild(this._control1);
+		this._container.addChild(this._control2);
+		this._container.addChild(this._control3);
+		this._container.removeChildren(0, 1);
+		Assert.equals(1, this._container.numChildren);
 	}
 
 	public function testScrollBarsCornerSkinHiddenWhenNoScrollingRequired():Void {
