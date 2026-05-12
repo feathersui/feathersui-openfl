@@ -91,7 +91,7 @@ class VerticalLineSkin extends BaseGraphicsPathSkin {
 	private var _paddingBottom:Float = 0.0;
 
 	/**
-		Empty space above the vertical line.
+		Empty space below the vertical line.
 
 		@since 1.1.0
 	**/
