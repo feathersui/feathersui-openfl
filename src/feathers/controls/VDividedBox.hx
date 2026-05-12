@@ -70,13 +70,13 @@ class VDividedBox extends BaseDividedBox {
 		return result;
 	}
 
-	override private function removeItem(child:DisplayObject):DisplayObject {
+	override private function removeItem(child:DisplayObject, removeSuper:Bool):DisplayObject {
 		var index = this.items.indexOf(child);
 		var layoutIndex = this._layoutItems.indexOf(child);
 		if (this._fallbackFluidIndex == layoutIndex) {
 			this._fallbackFluidIndex = -1;
 		}
-		var result = super.removeItem(child);
+		var result = super.removeItem(child, removeSuper);
 		if (index != -1) {
 			this._customItemHeights.splice(index, 1);
 		}

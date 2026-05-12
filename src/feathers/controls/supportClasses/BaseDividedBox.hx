@@ -62,6 +62,7 @@ class BaseDividedBox extends FeathersControl {
 	private var _resizingTouchPointID:Null<Int> = null;
 	private var _resizingTouchPointIsMouse:Bool = false;
 	private var _resizingDividerIndex = -1;
+	private var _ignoreRemovedEvent:Bool = false;
 
 	private var _autoSizeMode:AutoSizeMode = CONTENT;
 
@@ -282,7 +283,7 @@ class BaseDividedBox extends FeathersControl {
 	private function get_numRawChildren():Int {
 		var oldBypass = this._displayListBypassEnabled;
 		this._displayListBypassEnabled = false;
-		var result = this.numChildren;
+		var result = this._numChildren;
 		this._displayListBypassEnabled = oldBypass;
 		return result;
 	}
@@ -296,52 +297,48 @@ class BaseDividedBox extends FeathersControl {
 
 	override public function addChild(child:DisplayObject):DisplayObject {
 		if (!this._displayListBypassEnabled) {
-			return super.addChild(child);
+			return this._addChild(child);
 		}
 		return this.addChildAt(child, this.items.length);
 	}
 
 	override public function addChildAt(child:DisplayObject, index:Int):DisplayObject {
 		if (!this._displayListBypassEnabled) {
-			return super.addChildAt(child, index);
+			return this._addChildAt(child, index);
 		}
 		var oldIndex = this.items.indexOf(child);
 		if (oldIndex == index) {
 			return child;
 		}
 		if (oldIndex >= 0) {
-			this.removeItem(child);
+			this.removeItem(child, true);
 		}
 		// insert into the array before adding as a child, so that display list
 		// APIs work in an Event.ADDED listener
 		var result = this.addItemAt(child, index);
-		// add listeners or access properties after adding a child
-		// because adding the child may result in better errors (like for null)
-		child.addEventListener(Event.RESIZE, baseDividedBox_child_resizeHandler);
-		child.addEventListener(FeathersEvent.LAYOUT_DATA_CHANGE, baseDividedBox_child_layoutDataChangeHandler);
 		this.setInvalid(LAYOUT);
 		return result;
 	}
 
 	override public function removeChild(child:DisplayObject):DisplayObject {
+		return this.removeChildInternal(child, true);
+	}
+
+	private function removeChildInternal(child:DisplayObject, removeSuper:Bool):DisplayObject {
 		if (!this._displayListBypassEnabled) {
-			return super.removeChild(child);
+			return this._removeChild(child);
 		}
 		if (child == null || child.parent != this) {
 			return child;
 		}
-		var result = this.removeItem(child);
-		// remove listeners or access properties after removing a child
-		// because removing the child may result in better errors (like for null)
-		child.removeEventListener(Event.RESIZE, baseDividedBox_child_resizeHandler);
-		child.removeEventListener(FeathersEvent.LAYOUT_DATA_CHANGE, baseDividedBox_child_layoutDataChangeHandler);
+		var result = this.removeItem(child, removeSuper);
 		this.setInvalid(LAYOUT);
 		return result;
 	}
 
 	override public function removeChildAt(index:Int):DisplayObject {
 		if (!this._displayListBypassEnabled) {
-			return super.removeChildAt(index);
+			return this._removeChildAt(index);
 		}
 		return this.removeChild(this.items[index]);
 	}
@@ -382,7 +379,8 @@ class BaseDividedBox extends FeathersControl {
 
 	override public function removeChildren(beginIndex:Int = 0, endIndex:Int = 0x7FFFFFFF):Void {
 		if (!this._displayListBypassEnabled) {
-			return super.removeChildren(beginIndex, endIndex);
+			this._removeChildren(beginIndex, endIndex);
+			return;
 		}
 
 		if (endIndex == 0x7FFFFFFF) {
@@ -404,6 +402,55 @@ class BaseDividedBox extends FeathersControl {
 			this.removeChildAt(beginIndex);
 			numRemovals--;
 		}
+	}
+
+	private var _numChildren(get, never):Int;
+
+	private function get__numChildren():Int {
+		return super.numChildren;
+	}
+
+	private function _addChild(child:DisplayObject):DisplayObject {
+		return super.addChildAt(child, this._numChildren);
+	}
+
+	private function _addChildAt(child:DisplayObject, index:Int):DisplayObject {
+		return super.addChildAt(child, index);
+	}
+
+	private function _removeChild(child:DisplayObject):DisplayObject {
+		var oldIgnoreRemovedEvent = this._ignoreRemovedEvent;
+		this._ignoreRemovedEvent = true;
+		var result = super.removeChild(child);
+		this._ignoreRemovedEvent = oldIgnoreRemovedEvent;
+		return result;
+	}
+
+	private function _removeChildAt(index:Int):DisplayObject {
+		var oldIgnoreRemovedEvent = this._ignoreRemovedEvent;
+		this._ignoreRemovedEvent = true;
+		var result = super.removeChildAt(index);
+		this._ignoreRemovedEvent = oldIgnoreRemovedEvent;
+		return result;
+	}
+
+	private function _removeChildren(beginIndex:Int = 0, endIndex:Int = 0x7FFFFFFF):Void {
+		var oldIgnoreRemovedEvent = this._ignoreRemovedEvent;
+		this._ignoreRemovedEvent = true;
+		super.removeChildren(beginIndex, endIndex);
+		this._ignoreRemovedEvent = oldIgnoreRemovedEvent;
+	}
+
+	private function _getChildAt(index:Int):DisplayObject {
+		return super.getChildAt(index);
+	}
+
+	private function _getChildByName(name:String):DisplayObject {
+		return super.getChildByName(name);
+	}
+
+	private function _setChildIndex(child:DisplayObject, index:Int):Void {
+		super.setChildIndex(child, index);
 	}
 
 	private function addRawChild(child:DisplayObject):DisplayObject {
@@ -482,15 +529,23 @@ class BaseDividedBox extends FeathersControl {
 		var childIndex = layoutIndex + ((this._currentBackgroundSkin != null) ? 1 : 0);
 		if (index != 0) {
 			var divider = this.createDivider();
-			super.addChildAt(divider, childIndex - 1);
+			this._addChildAt(divider, childIndex - 1);
 			this.dividers.insert(index - 1, divider);
 			this._layoutItems.insert(layoutIndex - 1, divider);
 		}
 		this._layoutItems.insert(layoutIndex, child);
-		return super.addChildAt(child, childIndex);
+		var result = this._addChildAt(child, childIndex);
+		// add listeners or access properties after adding a child
+		// because adding the child may result in better errors (like for null)
+		child.addEventListener(Event.RESIZE, baseDividedBox_child_resizeHandler);
+		child.addEventListener(FeathersEvent.LAYOUT_DATA_CHANGE, baseDividedBox_child_layoutDataChangeHandler);
+		// in some situations, removal happens automtically without calling our
+		// overrides, so we need to detect the event that gets dispatched
+		child.addEventListener(Event.REMOVED, baseDividedBox_child_removedHandler);
+		return result;
 	}
 
-	private function removeItem(child:DisplayObject):DisplayObject {
+	private function removeItem(child:DisplayObject, removeSuper:Bool):DisplayObject {
 		this.items.remove(child);
 		var index = this.getRawChildIndex(child);
 		if (index != 0) {
@@ -500,7 +555,16 @@ class BaseDividedBox extends FeathersControl {
 			this.destroyDivider(cast(divider, InteractiveObject), this._dividerFactory);
 		}
 		this._layoutItems.remove(child);
-		return super.removeChild(child);
+		var result = child;
+		if (removeSuper) {
+			child = this._removeChild(child);
+		}
+		// remove listeners or access properties after removing a child
+		// because removing the child may result in better errors (like for null)
+		child.removeEventListener(Event.RESIZE, baseDividedBox_child_resizeHandler);
+		child.removeEventListener(FeathersEvent.LAYOUT_DATA_CHANGE, baseDividedBox_child_layoutDataChangeHandler);
+		child.removeEventListener(Event.REMOVED, baseDividedBox_child_removedHandler);
+		return result;
 	}
 
 	override private function update():Void {
@@ -896,6 +960,14 @@ class BaseDividedBox extends FeathersControl {
 	private function baseDividedBox_removedFromStageHandler(event:Event):Void {
 		this.removeEventListener(Event.REMOVED_FROM_STAGE, baseDividedBox_removedFromStageHandler);
 		this.stage.removeEventListener(Event.RESIZE, baseDividedBox_stage_resizeHandler);
+	}
+
+	private function baseDividedBox_child_removedHandler(event:Event):Void {
+		if (this._ignoreRemovedEvent || event.target != event.currentTarget) {
+			return;
+		}
+		var child = cast(event.currentTarget, DisplayObject);
+		this.removeChildInternal(child, false);
 	}
 
 	private function baseDividedBox_stage_resizeHandler(event:Event):Void {

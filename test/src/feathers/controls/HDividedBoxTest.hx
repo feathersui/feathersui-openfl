@@ -8,6 +8,7 @@
 
 package feathers.controls;
 
+import feathers.controls.HDividedBox;
 import openfl.Lib;
 import openfl.display.InteractiveObject;
 import utest.Assert;
@@ -78,6 +79,8 @@ class HDividedBoxTest extends Test {
 		this._dividedBox.validateNow();
 		Assert.equals(CHILD1_WIDTH, this._dividedBox.width);
 		Assert.equals(CHILD1_HEIGHT, this._dividedBox.height);
+		Assert.equals(1, this._dividedBox.numChildren);
+		Assert.equals(this._control1, this._dividedBox.getChildAt(0));
 	}
 
 	public function testTwoChildren():Void {
@@ -90,6 +93,9 @@ class HDividedBoxTest extends Test {
 		this._dividedBox.validateNow();
 		Assert.equals(CHILD1_WIDTH + DIVIDER_SIZE + CHILD2_WIDTH, this._dividedBox.width);
 		Assert.equals(Math.max(CHILD1_HEIGHT, CHILD2_HEIGHT), this._dividedBox.height);
+		Assert.equals(2, this._dividedBox.numChildren);
+		Assert.equals(this._control1, this._dividedBox.getChildAt(0));
+		Assert.equals(this._control2, this._dividedBox.getChildAt(1));
 	}
 
 	public function testThreeChildren():Void {
@@ -105,6 +111,62 @@ class HDividedBoxTest extends Test {
 		this._dividedBox.validateNow();
 		Assert.equals(CHILD1_WIDTH + DIVIDER_SIZE + CHILD2_WIDTH + DIVIDER_SIZE + CHILD3_WIDTH, this._dividedBox.width);
 		Assert.equals(Math.max(Math.max(CHILD1_HEIGHT, CHILD2_HEIGHT), CHILD3_HEIGHT), this._dividedBox.height);
+		Assert.equals(3, this._dividedBox.numChildren);
+		Assert.equals(this._control1, this._dividedBox.getChildAt(0));
+		Assert.equals(this._control2, this._dividedBox.getChildAt(1));
+		Assert.equals(this._control3, this._dividedBox.getChildAt(2));
+	}
+
+	public function testRemoveChild():Void {
+		this._dividedBox.addChild(this._control1);
+		this._dividedBox.addChild(this._control2);
+		this._dividedBox.addChild(this._control3);
+		Assert.equals(this._control1, this._dividedBox.getChildAt(0));
+		Assert.equals(this._control2, this._dividedBox.getChildAt(1));
+		Assert.equals(this._control3, this._dividedBox.getChildAt(2));
+		this._dividedBox.removeChild(this._control2);
+		Assert.equals(2, this._dividedBox.numChildren);
+		Assert.equals(this._control1, this._dividedBox.getChildAt(0));
+		Assert.equals(this._control3, this._dividedBox.getChildAt(1));
+		this._dividedBox.removeChild(this._control1);
+		Assert.equals(1, this._dividedBox.numChildren);
+		Assert.equals(this._control3, this._dividedBox.getChildAt(0));
+		this._dividedBox.removeChild(this._control3);
+		Assert.equals(0, this._dividedBox.numChildren);
+	}
+
+	public function testRemoveChildAt():Void {
+		this._dividedBox.addChild(this._control1);
+		this._dividedBox.addChild(this._control2);
+		this._dividedBox.addChild(this._control3);
+		Assert.equals(this._control1, this._dividedBox.getChildAt(0));
+		Assert.equals(this._control2, this._dividedBox.getChildAt(1));
+		Assert.equals(this._control3, this._dividedBox.getChildAt(2));
+		this._dividedBox.removeChildAt(1);
+		Assert.equals(2, this._dividedBox.numChildren);
+		Assert.equals(this._control1, this._dividedBox.getChildAt(0));
+		Assert.equals(this._control3, this._dividedBox.getChildAt(1));
+		this._dividedBox.removeChildAt(0);
+		Assert.equals(1, this._dividedBox.numChildren);
+		Assert.equals(this._control3, this._dividedBox.getChildAt(0));
+		this._dividedBox.removeChildAt(0);
+		Assert.equals(0, this._dividedBox.numChildren);
+	}
+
+	public function testRemoveChildren():Void {
+		this._dividedBox.addChild(this._control1);
+		this._dividedBox.addChild(this._control2);
+		this._dividedBox.addChild(this._control3);
+		Assert.equals(this._control1, this._dividedBox.getChildAt(0));
+		Assert.equals(this._control2, this._dividedBox.getChildAt(1));
+		Assert.equals(this._control3, this._dividedBox.getChildAt(2));
+		this._dividedBox.removeChildren();
+		Assert.equals(0, this._dividedBox.numChildren);
+		this._dividedBox.addChild(this._control1);
+		this._dividedBox.addChild(this._control2);
+		this._dividedBox.addChild(this._control3);
+		this._dividedBox.removeChildren(0, 1);
+		Assert.equals(1, this._dividedBox.numChildren);
 	}
 
 	public function testThreeChildrenIncludeInLayoutFalseOnFirstChild():Void {
@@ -213,5 +275,24 @@ class HDividedBoxTest extends Test {
 		// largest child, if the largest child was included at least once.
 		// this is not a bug. just a limitation of how layouts work.
 		Assert.equals(Math.max(Math.max(CHILD1_HEIGHT, CHILD2_HEIGHT), CHILD3_HEIGHT), this._dividedBox.height);
+	}
+
+	// children may sometimes be removed without calling our overrides of
+	// removeChild() or removeChildAt(), so this test ensures that we have
+	// properly detected the automatic removal by listening for Event.REMOVED
+	// and updating the container's internal state
+	public function testAddChildToADifferentParent():Void {
+		var child1 = new LayoutGroup();
+		this._dividedBox.addChild(child1);
+		Assert.equals(this._dividedBox, child1.parent);
+		Assert.equals(1, this._dividedBox.numChildren);
+		Assert.equals(0, this._dividedBox.getChildIndex(child1));
+		var otherContainer = new HDividedBox();
+		Lib.current.addChild(otherContainer);
+		otherContainer.addChild(child1);
+		Assert.equals(otherContainer, child1.parent);
+		Assert.equals(0, this._dividedBox.numChildren);
+		Assert.equals(-1, this._dividedBox.getChildIndex(child1));
+		Lib.current.removeChild(otherContainer);
 	}
 }
