@@ -263,14 +263,15 @@ class HierarchicalItemRenderer extends ItemRenderer implements IHierarchicalItem
 	private var _disclosureButtonFactory:DisplayObjectFactory<Dynamic, ToggleButton>;
 
 	/**
-		Creates the button, which must be of type `feathers.controls.Button`.
+		Creates the button, which must be of type
+		`feathers.controls.ToggleButton`.
 
 		In the following example, a custom button factory is provided:
 
 		```haxe
-		listView.buttonFactory = () ->
+		itemRenderer.disclosureButtonFactory = () ->
 		{
-			return new Button();
+			return new ToggleButton();
 		};
 		```
 
