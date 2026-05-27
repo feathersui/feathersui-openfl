@@ -230,16 +230,15 @@ class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarc
 		if (location == null || location.length == 0) {
 			throw new RangeError('Item not found at location: ${location}');
 		}
+		var index = location[location.length - 1];
 		if (this._filterAndSortData != null) {
 			var branchChildren = this.findBranchChildren(this._filterAndSortData, this.filterAndSortDataItemToChildren, location);
-			var index = location[location.length - 1];
 			if (index < 0 || index >= branchChildren.length) {
 				throw new RangeError('Item not found at location: ${location}');
 			}
 			return branchChildren[index].item;
 		}
 		var branchChildren = this.findBranchChildren(this._array, this._itemToChildren, location);
-		var index = location[location.length - 1];
 		if (index < 0 || index >= branchChildren.length) {
 			throw new RangeError('Item not found at location: ${location}');
 		}
@@ -256,9 +255,9 @@ class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarc
 		if (location == null || location.length == 0) {
 			throw new RangeError('Item not found at location: ${location}');
 		}
+		var branchChildren = this.findBranchChildren(this._array, this._itemToChildren, location);
+		var lastLocationIndex = location[location.length - 1];
 		if (this._filterAndSortData != null) {
-			var lastLocationIndex = location[location.length - 1];
-			var branchChildren = this.findBranchChildren(this._array, this._itemToChildren, location);
 			var filteredOrSortedBranchChildren = this.findBranchChildren(this._filterAndSortData, this.filterAndSortDataItemToChildren, location);
 			var oldItem:T = null;
 			var unfilteredLastLocationIndex = branchChildren.length;
@@ -300,13 +299,11 @@ class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarc
 			}
 			return;
 		}
-		var branchChildren = this.findBranchChildren(this._array, this._itemToChildren, location);
-		var index = location[location.length - 1];
-		if (index < 0 || index > branchChildren.length) {
+		if (lastLocationIndex < 0 || lastLocationIndex > branchChildren.length) {
 			throw new RangeError('Item not found at location: ${location}');
 		}
-		var oldValue = branchChildren[index];
-		branchChildren[index] = value;
+		var oldValue = branchChildren[lastLocationIndex];
+		branchChildren[lastLocationIndex] = value;
 		HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.REPLACE_ITEM, location, value, oldValue);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 	}
@@ -359,9 +356,9 @@ class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarc
 		if (location == null || location.length == 0) {
 			throw new RangeError('Item cannot be added at location: ${location}');
 		}
+		var branchChildren = this.findBranchChildren(this._array, this._itemToChildren, location);
+		var lastLocationIndex = location[location.length - 1];
 		if (this._filterAndSortData != null) {
-			var lastLocationIndex = location[location.length - 1];
-			var branchChildren = this.findBranchChildren(this._array, this._itemToChildren, location);
 			var filteredOrSortedBranchChildren = this.findBranchChildren(this._filterAndSortData, filterAndSortDataItemToChildren, location);
 			var oldItem:T = null;
 			var unfilteredLastLocationIndex = branchChildren.length;
@@ -389,12 +386,10 @@ class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarc
 			}
 			return;
 		}
-		var branchChildren = this.findBranchChildren(this._array, this._itemToChildren, location);
-		var index = location[location.length - 1];
-		if (index < 0 || index > branchChildren.length) {
+		if (lastLocationIndex < 0 || lastLocationIndex > branchChildren.length) {
 			throw new RangeError('Item cannot be added at location: ${location}');
 		}
-		branchChildren.insert(index, itemToAdd);
+		branchChildren.insert(lastLocationIndex, itemToAdd);
 		HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.ADD_ITEM, location, itemToAdd);
 		FeathersEvent.dispatch(this, Event.CHANGE);
 	}
@@ -409,9 +404,9 @@ class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarc
 		if (location == null || location.length == 0) {
 			throw new RangeError('Item not found at location: ${location}');
 		}
+		var branchChildren = this.findBranchChildren(this._array, this._itemToChildren, location);
+		var lastLocationIndex = location[location.length - 1];
 		if (this._filterAndSortData != null) {
-			var lastLocationIndex = location[location.length - 1];
-			var branchChildren = this.findBranchChildren(this._array, this._itemToChildren, location);
 			var filteredOrSortedBranchChildren = this.findBranchChildren(this._filterAndSortData, filterAndSortDataItemToChildren, location);
 			var removedItem = filteredOrSortedBranchChildren.splice(lastLocationIndex, 1)[0].item;
 			branchChildren.remove(removedItem);
@@ -419,12 +414,10 @@ class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarc
 			FeathersEvent.dispatch(this, Event.CHANGE);
 			return removedItem;
 		}
-		var branchChildren = this.findBranchChildren(this._array, this._itemToChildren, location);
-		var index = location[location.length - 1];
-		if (index < 0 || index >= branchChildren.length) {
+		if (lastLocationIndex < 0 || lastLocationIndex >= branchChildren.length) {
 			throw new RangeError('Item not found at location: ${location}');
 		}
-		var removedItem = branchChildren[index];
+		var removedItem = branchChildren[lastLocationIndex];
 		branchChildren.remove(removedItem);
 		HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.REMOVE_ITEM, location, null, removedItem);
 		FeathersEvent.dispatch(this, Event.CHANGE);
@@ -474,28 +467,17 @@ class ArrayHierarchicalCollection<T> extends EventDispatcher implements IHierarc
 		if (getLength(location) == 0) {
 			return;
 		}
+		var firstChildLocation = location.copy();
+		firstChildLocation.push(0);
+		var branchChildren = this.findBranchChildren(this._array, this._itemToChildren, firstChildLocation);
 		if (this._filterAndSortData != null) {
-			var firstChildLocation = location.copy();
-			firstChildLocation.push(0);
-			var branchChildren = this.findBranchChildren(this._array, this._itemToChildren, firstChildLocation);
 			var filteredOrSortedBranchChildren = this.findBranchChildren(this._filterAndSortData, filterAndSortDataItemToChildren, firstChildLocation);
 			#if (hl && haxe_ver < 4.3)
 			filteredOrSortedBranchChildren.splice(0, filteredOrSortedBranchChildren.length);
 			#else
 			filteredOrSortedBranchChildren.resize(0);
 			#end
-			#if (hl && haxe_ver < 4.3)
-			branchChildren.splice(0, branchChildren.length);
-			#else
-			branchChildren.resize(0);
-			#end
-			HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.REMOVE_ALL, location);
-			FeathersEvent.dispatch(this, Event.CHANGE);
-			return;
 		}
-		var firstChildLocation = location.copy();
-		firstChildLocation.push(0);
-		var branchChildren = this.findBranchChildren(this._array, this._itemToChildren, firstChildLocation);
 		#if (hl && haxe_ver < 4.3)
 		branchChildren.splice(0, branchChildren.length);
 		#else
