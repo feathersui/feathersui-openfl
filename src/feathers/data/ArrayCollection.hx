@@ -39,7 +39,7 @@ import openfl.utils.IExternalizable;
 	when the source of the collection is changed.
 
 	@event feathers.events.FlatCollectionEvent.UPDATE_ITEM Dispatched
-	when `IHierarchicalCollection.updateItem()` is called.
+	when `IHierarchicalCollection.updateAt()` is called.
 
 	@event feathers.events.FlatCollectionEvent.UPDATE_ALL Dispatched
 	when `IHierarchicalCollection.updateAll()` is called.

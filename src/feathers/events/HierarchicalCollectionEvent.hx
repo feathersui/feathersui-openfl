@@ -62,7 +62,7 @@ class HierarchicalCollectionEvent extends Event {
 		The `HierarchicalCollectionEvent.UPDATE_ITEM` event type is dispatched
 		when the `updateAt()` method is called on the collection.
 
-		@see `feathers.data.IHierarchicalCollection.updateItem()`
+		@see `feathers.data.IHierarchicalCollection.updateAt()`
 
 		@since 1.0.0
 	**/
