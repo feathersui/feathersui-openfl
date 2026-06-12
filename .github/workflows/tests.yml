@@ -20,6 +20,7 @@ jobs:
     - name: Set up Haxelib dependencies
       run: |
         haxelib update haxelib --global
+        haxelib fixrepo
         haxelib install lime 7.8.0 --quiet
         haxelib install openfl 8.9.7 --quiet
         haxelib install actuate --quiet
@@ -31,7 +32,7 @@ jobs:
   test-neko:
     strategy:
       matrix:
-        haxe-version: [4.2.5, 4.3.2]
+        haxe-version: [4.2.5, 4.3.7]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v6
@@ -41,6 +42,7 @@ jobs:
     - name: Set up Haxelib dependencies
       run: |
         haxelib update haxelib --global
+        haxelib fixrepo
         haxelib install lime 8.1.3 --quiet
         haxelib install openfl --quiet
         haxelib install actuate --quiet
@@ -54,7 +56,7 @@ jobs:
   test-hashlink:
     strategy:
       matrix:
-        haxe-version: [4.2.5, 4.3.2]
+        haxe-version: [4.2.5, 4.3.7]
     # AL init fails on both windows and ubuntu
     runs-on: macos-latest
     steps:
@@ -65,6 +67,7 @@ jobs:
     - name: Set up Haxelib dependencies
       run: |
         haxelib update haxelib --global
+        haxelib fixrepo
         haxelib install lime --quiet
         haxelib install openfl --quiet
         haxelib install actuate --quiet
@@ -76,7 +79,7 @@ jobs:
   test-html5:
     strategy:
       matrix:
-        haxe-version: [4.2.5, 4.3.2]
+        haxe-version: [4.2.5, 4.3.7]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v6
@@ -89,6 +92,7 @@ jobs:
     - name: Set up Haxelib dependencies
       run: |
         haxelib update haxelib --global
+        haxelib fixrepo
         haxelib install lime --quiet
         haxelib install openfl --quiet
         haxelib install actuate --quiet
@@ -108,7 +112,7 @@ jobs:
   test-air:
     strategy:
       matrix:
-        haxe-version: [4.2.5, 4.3.2]
+        haxe-version: [4.2.5, 4.3.7]
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v6
@@ -122,6 +126,7 @@ jobs:
     - name: Set up Haxelib dependencies
       run: |
         haxelib update haxelib --global
+        haxelib fixrepo
         haxelib install lime --quiet
         haxelib install openfl --quiet
         haxelib install actuate --quiet

@@ -13,7 +13,7 @@ jobs:
     - uses: actions/checkout@v6
     - uses: krdlab/setup-haxe@v2
       with:
-        haxe-version: 4.3.4
+        haxe-version: 4.3.7
     - name: Package Haxelib
       working-directory: haxelib
       run: haxe haxelib.hxml
@@ -32,6 +32,7 @@ jobs:
     - name: Set up Haxelib dependencies
       run: |
         haxelib update haxelib --global
+        haxelib fixrepo
         haxelib install lime 7.8.0 --quiet
         haxelib install openfl 8.9.7 --quiet
         haxelib install actuate --quiet
@@ -57,6 +58,7 @@ jobs:
     - name: Set up Haxelib dependencies
       run: |
         haxelib update haxelib --global
+        haxelib fixrepo
         haxelib install lime 7.8.0 --quiet
         haxelib install openfl 8.9.7 --quiet
         haxelib install actuate --quiet
@@ -78,6 +80,7 @@ jobs:
     - name: Set up Haxelib dependencies
       run: |
         haxelib update haxelib --global
+        haxelib fixrepo
         haxelib install lime 7.8.0 --quiet
         haxelib install openfl 8.9.7 --quiet
         haxelib install actuate --quiet
