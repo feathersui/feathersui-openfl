@@ -1,5 +1,49 @@
 # Feathers UI for OpenFL and Haxe Change Log
 
+## 1.3.1 (2026-06-??)
+
+- Alert: default to `Application.topLevelApplication` and fall back to `Lib.current` when determining where to show the alert by default
+- ArrayHierarchicalCollection, TreeCollection: fix exception in `removeAll()` with location that is branch, but it contains zero children
+- AssetLoader: dispatch Event.COMPLETE for local assets
+- BaseGraphicsPathSkin: fix state remaining temporarily unchanged after setting new `uiContext` or `stateContext`
+- Button, ToggleButton: don't position single or right-aligned child before `paddingLeft` or `paddingTop`
+- Button, ToggleButton: automatically pass `doubleClickEnabled` to direct children
+- ButtonBar, TabBar: fix wrong button/tab recycler being used sometimes when multiple are registered
+- ButtonBar, PageIndicator, TabBar: fix measurements to include background skin
+- Check, Radio: fix size of selected disabled icon
+- Collapsible: fix animation playing when setting opened to same value as current
+- Collapsible: fix missing update of `enabled` on header when collapsible `enabled` changes
+- Collapsible: fix missing `focusRectSkin` in default theme
+- Collapsible: when resizing header or content internally, ignore resize event
+- DatePicker: fix issue where changing month title variant resulted in two month titles with different styles
+- DefaultFocusManager: fix passing focus to children of a container when that container is not visible
+- EdgePuller: if `maxPullDistance` changes while an animation is active, start a fresh animation with the new target
+- FeathersControl: fix null exception in `alwaysShowFocus` setter when `focusRectSkin` has not been set yet
+- FormItem: when resizing content internally, ignore resize event
+- General: fix width and height of layout items and sub-components sometimes getting set to negative values
+- General: when disposing text controls, clean up `TextFormat` values to avoid memory leaks
+- General: improved performance in Visual Studio Code and other editors that use Haxe language server
+- GridView, TreeGridView: fix for floating point precision errors causing repeated, unnecessary invalidation
+- GridViewRowLayout: check of columns is null or empty and return early
+- HDividedBox, VDividedBox: fix `dividerFactory` setter removing wrong children
+- HDividedBox, VDividedBox: fix undetected removal of children (which can happen when adding to a different container)
+- IReadableGenericActuator: fix `Dynamic` return type on `getDuration()` that should have been `Float` instead
+- KeyToState: fix edge case where target gets `KEY_DOWN` event, but not `KEY_UP`
+- LayoutGroup: remove Flash-only conditional compilation for overridden display list methods that may be needed for OpenFL in the future
+- MathUtil: improve rounding of fractional values
+- NumericStepper: fix `valueParseFunction` being ignored
+- NumericStepper, HScrollBar, VScrollBar: fix exclusive pointer claiming mouse instead of touch for `TouchEvent`
+- Panel: fix missing update of enabled on header and footer
+- HScrollBar, VScrollBar: fix issue where setting thumb size did not account for increment and decrement button size, if the buttons are enabled
+- HScrollBar, VScrollBar: fix divide by zero when dragging thumb that completely fills the track by always setting the new value to the minimum
+- HScrollBar, VScrollBar: don't allow thumb, track, or buttons to receive focus separately from scroll bar
+- ScrollContainer, HDividedBox, VDividedBox: fix incorrect call to `getChildAt()` sometimes removing a display object
+- TextArea, TextInput, ToggleSwitch: ensure that cached text and formats are cleared when internal `TextField` is set to `null`
+- TextFormat: fix exception in `fromSimpleTextFormat()` when value is `null`
+- TextFormat: expose `strikethrough` property added in OpenFL 9.5.0
+- ToggleSwitch, HSlider, VSlider: set `focusEnabled` to `false` on track skins
+- Transitions: fix `NaN` values creeping into end position
+
 ## 1.3.0 (2024-08-01)
 
 - General: Added a `dispose()` method to `FeathersControl` to allow UI components to be optionally disposed when they are no longer needed. Clears data providers, removes sub-components, removes selection, and some event listeners. Developers are not required to call `dispose()`, but it can help with garbage collection and general cleanup.
