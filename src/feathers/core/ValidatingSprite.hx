@@ -1,6 +1,6 @@
 /*
 	Feathers UI
-	Copyright 2024 Bowler Hat LLC. All Rights Reserved.
+	Copyright 2026 Bowler Hat LLC. All Rights Reserved.
 
 	This program is free software. You can redistribute and/or modify it in
 	accordance with the terms of the accompanying license agreement.
@@ -72,14 +72,7 @@ import openfl.events.Event;
 @:event(openfl.events.TouchEvent.TOUCH_ROLL_OVER)
 @:event(openfl.events.TouchEvent.TOUCH_TAP)
 #if air
-@:event(openfl.events.MouseEvent.CONTEXT_MENU)
-@:event(openfl.events.TouchEvent.PROXIMITY_BEGIN)
-@:event(openfl.events.TouchEvent.PROXIMITY_END)
-@:event(openfl.events.TouchEvent.PROXIMITY_MOVE)
-@:event(openfl.events.TouchEvent.PROXIMITY_OUT)
-@:event(openfl.events.TouchEvent.PROXIMITY_OVER)
-@:event(openfl.events.TouchEvent.PROXIMITY_ROLL_OUT)
-@:event(openfl.events.TouchEvent.PROXIMITY_ROLL_OVER)
+@:event(openfl.events.MouseEvent.CONTEXT_MENU) @:event(openfl.events.TouchEvent.PROXIMITY_BEGIN) @:event(openfl.events.TouchEvent.PROXIMITY_END) @:event(openfl.events.TouchEvent.PROXIMITY_MOVE) @:event(openfl.events.TouchEvent.PROXIMITY_OUT) @:event(openfl.events.TouchEvent.PROXIMITY_OVER) @:event(openfl.events.TouchEvent.PROXIMITY_ROLL_OUT) @:event(openfl.events.TouchEvent.PROXIMITY_ROLL_OVER)
 #end
 class ValidatingSprite extends Sprite implements IValidating {
 	private function new() {
