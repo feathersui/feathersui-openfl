@@ -27,6 +27,11 @@
 		<haxeflag name="--macro" value="include('feathers')"/>
 	</section>
 
+	<section if="doc_gen">
+		<haxedef name="display" value="usage"/>
+		<haxeflag name="--macro" value="include('feathers')"/>
+	</section>
+
 	<section if="find_missing_docs">
 		<source path="build_macros/docs"/>
 		<haxeflag name="--macro" value="FindMissingDocs.find('feathers')"/>
