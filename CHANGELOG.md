@@ -1,6 +1,6 @@
 # Feathers UI for OpenFL and Haxe Change Log
 
-## 1.3.1 (2026-06-??)
+## 1.3.1 (2026-06-15)
 
 - Alert: default to `Application.topLevelApplication` and fall back to `Lib.current` when determining where to show the alert by default
 - ArrayHierarchicalCollection, TreeCollection: fix exception in `removeAll()` with location that is branch, but it contains zero children
