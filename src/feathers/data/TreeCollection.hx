@@ -277,7 +277,7 @@ class TreeCollection<T> extends EventDispatcher implements IHierarchicalCollecti
 				// then try to figure out where the new item goes when inserted
 				var wrappedItem = this.createFilterAndSortItem(value);
 				var sortedIndex = this.getSortedInsertionIndex(filteredOrSortedBranchChildren, wrappedItem);
-				filteredOrSortedBranchChildren[sortedIndex] = wrappedItem;
+				filteredOrSortedBranchChildren.insert(sortedIndex, wrappedItem);
 				HierarchicalCollectionEvent.dispatch(this, HierarchicalCollectionEvent.REPLACE_ITEM, location, value, oldItem);
 				FeathersEvent.dispatch(this, Event.CHANGE);
 				return;
