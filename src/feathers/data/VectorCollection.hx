@@ -477,7 +477,8 @@ class VectorCollection<T> extends EventDispatcher implements IFlatCollection<T> 
 
 	/**
 		Using a callback that returns either `true` or `false`, returns the
-		first item in the collection where the callback returns `true`.
+		index of the first item in the collection where the callback returns
+		`true`.
 
 		@since 1.4.0
 	**/
@@ -494,7 +495,7 @@ class VectorCollection<T> extends EventDispatcher implements IFlatCollection<T> 
 
 	/**
 		Using a callback that returns either `true` or `false`, determines if
-		at all items in the collection return `true`.
+		at least one item in the collection returns `true`.
 
 		@since 1.4.0
 	**/
@@ -511,7 +512,7 @@ class VectorCollection<T> extends EventDispatcher implements IFlatCollection<T> 
 
 	/**
 		Using a callback that returns either `true` or `false`, determines if
-		at least one item in the collection returns `true`.
+		all items in the collection return `true`.
 
 		@since 1.4.0
 	**/

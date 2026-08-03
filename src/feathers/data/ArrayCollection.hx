@@ -482,7 +482,8 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> i
 
 	/**
 		Using a callback that returns either `true` or `false`, returns the
-		first item in the collection where the callback returns `true`.
+		index of the first item in the collection where the callback returns
+		`true`.
 
 		@since 1.0.0
 	**/
@@ -499,7 +500,7 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> i
 
 	/**
 		Using a callback that returns either `true` or `false`, determines if
-		at all items in the collection return `true`.
+		at least one item in the collection returns `true`.
 
 		@since 1.0.0
 	**/
@@ -516,7 +517,7 @@ class ArrayCollection<T> extends EventDispatcher implements IFlatCollection<T> i
 
 	/**
 		Using a callback that returns either `true` or `false`, determines if
-		at least one item in the collection returns `true`.
+		all items in the collection return `true`.
 
 		@since 1.0.0
 	**/
