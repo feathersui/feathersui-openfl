@@ -203,26 +203,6 @@ class IHierarchicalCollectionTest<Item:MockItem> extends Test {
 		return allTestsPassed;
 	}
 
-	private function locationsMatch(location1:Array<Int>, location2:Array<Int>):Bool {
-		if (location1 == null && location2 == null) {
-			return true;
-		}
-		if (location1 == null || location2 == null) {
-			return false;
-		}
-		if (location1.length != location2.length) {
-			return false;
-		}
-		for (i in 0...location1.length) {
-			var item1 = location1[i];
-			var item2 = location2[i];
-			if (item1 != item2) {
-				return false;
-			}
-		}
-		return true;
-	}
-
 	private function filterFunction(item:Item):Bool {
 		if (item == this._2 || item == this._1b || item.text == TEXT_FILTER_ME) {
 			return false;
@@ -252,17 +232,17 @@ class IHierarchicalCollectionTest<Item:MockItem> extends Test {
 	}
 
 	public function testLocationOf():Void {
-		Assert.isTrue(locationsMatch([0], this._collection.locationOf(this._1)), "Collection locationOf() returns wrong location");
-		Assert.isTrue(locationsMatch([1], this._collection.locationOf(this._2)), "Collection locationOf() returns wrong location");
-		Assert.isTrue(locationsMatch([2], this._collection.locationOf(this._3)), "Collection locationOf() returns wrong location");
-		Assert.isTrue(locationsMatch([3], this._collection.locationOf(this._4)), "Collection locationOf() returns wrong location");
-		Assert.isTrue(locationsMatch([4], this._collection.locationOf(this._5)), "Collection locationOf() returns wrong location");
-		Assert.isTrue(locationsMatch([0, 0], this._collection.locationOf(this._1a)), "Collection locationOf() returns wrong location");
-		Assert.isTrue(locationsMatch([0, 1], this._collection.locationOf(this._1b)), "Collection locationOf() returns wrong location");
-		Assert.isTrue(locationsMatch([0, 2], this._collection.locationOf(this._1c)), "Collection locationOf() returns wrong location");
-		Assert.isTrue(locationsMatch([1, 0], this._collection.locationOf(this._2a)), "Collection locationOf() returns wrong location");
-		Assert.isTrue(locationsMatch([3, 0], this._collection.locationOf(this._4a)), "Collection locationOf() returns wrong location");
-		Assert.isTrue(locationsMatch([3, 1], this._collection.locationOf(this._4b)), "Collection locationOf() returns wrong location");
+		Assert.same([0], this._collection.locationOf(this._1), "Collection locationOf() returns wrong location");
+		Assert.same([1], this._collection.locationOf(this._2), "Collection locationOf() returns wrong location");
+		Assert.same([2], this._collection.locationOf(this._3), "Collection locationOf() returns wrong location");
+		Assert.same([3], this._collection.locationOf(this._4), "Collection locationOf() returns wrong location");
+		Assert.same([4], this._collection.locationOf(this._5), "Collection locationOf() returns wrong location");
+		Assert.same([0, 0], this._collection.locationOf(this._1a), "Collection locationOf() returns wrong location");
+		Assert.same([0, 1], this._collection.locationOf(this._1b), "Collection locationOf() returns wrong location");
+		Assert.same([0, 2], this._collection.locationOf(this._1c), "Collection locationOf() returns wrong location");
+		Assert.same([1, 0], this._collection.locationOf(this._2a), "Collection locationOf() returns wrong location");
+		Assert.same([3, 0], this._collection.locationOf(this._4a), "Collection locationOf() returns wrong location");
+		Assert.same([3, 1], this._collection.locationOf(this._4b), "Collection locationOf() returns wrong location");
 		Assert.isNull(this._collection.locationOf(createItem("Not in collection", -1)),
 			"Collection locationOf() must return null for items not in collection");
 	}
@@ -310,7 +290,7 @@ class IHierarchicalCollectionTest<Item:MockItem> extends Test {
 			{type: HierarchicalCollectionEvent.ADD_ITEM, location: [0, 1], addedItem: itemToAdd},
 			{type: Event.CHANGE}
 		]);
-		Assert.isTrue(locationsMatch([0, 1], this._collection.locationOf(itemToAdd)), "Adding item to collection returns incorrect location");
+		Assert.same([0, 1], this._collection.locationOf(itemToAdd), "Adding item to collection returns incorrect location");
 
 		Assert.raises(function() {
 			this._collection.addAt(itemToAdd, null);
@@ -332,7 +312,7 @@ class IHierarchicalCollectionTest<Item:MockItem> extends Test {
 			{type: HierarchicalCollectionEvent.ADD_ITEM, location: [0, originalLength], addedItem: itemToAdd},
 			{type: Event.CHANGE}
 		]);
-		Assert.isTrue(locationsMatch([0, originalLength], this._collection.locationOf(itemToAdd)), "Adding item to collection returns incorrect location");
+		Assert.same([0, originalLength], this._collection.locationOf(itemToAdd), "Adding item to collection returns incorrect location");
 	}
 
 	public function testSetReplace():Void {
@@ -343,7 +323,7 @@ class IHierarchicalCollectionTest<Item:MockItem> extends Test {
 			{type: HierarchicalCollectionEvent.REPLACE_ITEM, location: [0, 1], addedItem: itemToAdd, removedItem: this._1b},
 			{type: Event.CHANGE}
 		]);
-		Assert.isTrue(locationsMatch([0, 1], this._collection.locationOf(itemToAdd)), "Replacing item in collection returns incorrect location");
+		Assert.same([0, 1], this._collection.locationOf(itemToAdd), "Replacing item in collection returns incorrect location");
 
 		Assert.raises(function() {
 			this._collection.set(null, itemToAdd);
@@ -366,7 +346,7 @@ class IHierarchicalCollectionTest<Item:MockItem> extends Test {
 			{type: HierarchicalCollectionEvent.REPLACE_ITEM, location: [0, originalLength], addedItem: itemToAdd},
 			{type: Event.CHANGE}
 		]);
-		Assert.isTrue(locationsMatch([0, originalLength], this._collection.locationOf(itemToAdd)),
+		Assert.same([0, originalLength], this._collection.locationOf(itemToAdd),
 			"Setting item after end of collection returns incorrect location");
 	}
 
@@ -519,17 +499,17 @@ class IHierarchicalCollectionTest<Item:MockItem> extends Test {
 
 	public function testLocationOfWithFilterFunction():Void {
 		this._collection.filterFunction = filterFunction;
-		Assert.isTrue(locationsMatch([0], this._collection.locationOf(this._1)), "Collection with filterFunction must contain unfiltered item");
-		Assert.isTrue(locationsMatch([0, 0], this._collection.locationOf(this._1a)), "Collection with filterFunction must contain unfiltered item");
+		Assert.same([0], this._collection.locationOf(this._1), "Collection with filterFunction must contain unfiltered item");
+		Assert.same([0, 0], this._collection.locationOf(this._1a), "Collection with filterFunction must contain unfiltered item");
 		Assert.isNull(this._collection.locationOf(this._1b), "Collection with filterFunction must not contain filtered item");
-		Assert.isTrue(locationsMatch([0, 1], this._collection.locationOf(this._1c)), "Collection with filterFunction must contain unfiltered item");
+		Assert.same([0, 1], this._collection.locationOf(this._1c), "Collection with filterFunction must contain unfiltered item");
 		Assert.isNull(this._collection.locationOf(this._2), "Collection with filterFunction must contain unfiltered item");
 		Assert.isNull(this._collection.locationOf(this._2a), "Collection with filterFunction must contain unfiltered item");
-		Assert.isTrue(locationsMatch([1], this._collection.locationOf(this._3)), "Collection with filterFunction must contain unfiltered item");
-		Assert.isTrue(locationsMatch([2], this._collection.locationOf(this._4)), "Collection with filterFunction must not contain filtered item");
-		Assert.isTrue(locationsMatch([2, 0], this._collection.locationOf(this._4a)), "Collection with filterFunction must not contain filtered item");
-		Assert.isTrue(locationsMatch([2, 1], this._collection.locationOf(this._4b)), "Collection with filterFunction must not contain filtered item");
-		Assert.isTrue(locationsMatch([3], this._collection.locationOf(this._5)), "Collection with filterFunction must contain unfiltered item");
+		Assert.same([1], this._collection.locationOf(this._3), "Collection with filterFunction must contain unfiltered item");
+		Assert.same([2], this._collection.locationOf(this._4), "Collection with filterFunction must not contain filtered item");
+		Assert.same([2, 0], this._collection.locationOf(this._4a), "Collection with filterFunction must not contain filtered item");
+		Assert.same([2, 1], this._collection.locationOf(this._4b), "Collection with filterFunction must not contain filtered item");
+		Assert.same([3], this._collection.locationOf(this._5), "Collection with filterFunction must contain unfiltered item");
 	}
 
 	public function testSetReplaceWithFilterFunction():Void {
@@ -544,11 +524,11 @@ class IHierarchicalCollectionTest<Item:MockItem> extends Test {
 			{type: HierarchicalCollectionEvent.REPLACE_ITEM, location: [3], addedItem: itemToAdd, removedItem: this._5},
 			{type: Event.CHANGE}
 		]);
-		Assert.isTrue(locationsMatch([3], this._collection.locationOf(itemToAdd)), "Replacing item in collection returns incorrect location");
+		Assert.same([3], this._collection.locationOf(itemToAdd), "Replacing item in collection returns incorrect location");
 
 		this._collection.filterFunction = null;
 		this.assertBranchMatches([this._1, this._2, this._3, this._4, itemToAdd]);
-		Assert.isTrue(locationsMatch([4], this._collection.locationOf(itemToAdd)),
+		Assert.same([4], this._collection.locationOf(itemToAdd),
 			"Replacing item returns incorrect location of new item");
 	}
 
@@ -564,12 +544,12 @@ class IHierarchicalCollectionTest<Item:MockItem> extends Test {
 			{type: HierarchicalCollectionEvent.ADD_ITEM, location: [4], addedItem: itemToAdd},
 			{type: Event.CHANGE}
 		]);
-		Assert.isTrue(locationsMatch([4], this._collection.locationOf(itemToAdd)),
+		Assert.same([4], this._collection.locationOf(itemToAdd),
 			"Setting item after end of collection returns incorrect location");
 
 		this._collection.filterFunction = null;
 		this.assertBranchMatches([this._1, this._2, this._3, this._4, this._5, itemToAdd]);
-		Assert.isTrue(locationsMatch([5], this._collection.locationOf(itemToAdd)),
+		Assert.same([5], this._collection.locationOf(itemToAdd),
 			"Setting item after end of collection returns incorrect location");
 	}
 
@@ -589,7 +569,7 @@ class IHierarchicalCollectionTest<Item:MockItem> extends Test {
 
 		this._collection.filterFunction = null;
 		this.assertBranchMatches([this._1, this._2, this._3, this._4, itemToAdd]);
-		Assert.isTrue(locationsMatch([4], this._collection.locationOf(itemToAdd)),
+		Assert.same([4], this._collection.locationOf(itemToAdd),
 			"Setting item after end of collection returns incorrect location");
 	}
 
@@ -664,17 +644,17 @@ class IHierarchicalCollectionTest<Item:MockItem> extends Test {
 
 	public function testLocationOfWithSortCompareFunction():Void {
 		this._collection.sortCompareFunction = sortCompareFunction;
-		Assert.isTrue(locationsMatch([0], this._collection.locationOf(this._1)), "Collection locationOf() returns wrong location");
-		Assert.isTrue(locationsMatch([1], this._collection.locationOf(this._4)), "Collection locationOf() returns wrong location");
-		Assert.isTrue(locationsMatch([2], this._collection.locationOf(this._2)), "Collection locationOf() returns wrong location");
-		Assert.isTrue(locationsMatch([3], this._collection.locationOf(this._3)), "Collection locationOf() returns wrong location");
-		Assert.isTrue(locationsMatch([4], this._collection.locationOf(this._5)), "Collection locationOf() returns wrong location");
-		Assert.isTrue(locationsMatch([0, 0], this._collection.locationOf(this._1b)), "Collection locationOf() returns wrong location");
-		Assert.isTrue(locationsMatch([0, 1], this._collection.locationOf(this._1a)), "Collection locationOf() returns wrong location");
-		Assert.isTrue(locationsMatch([0, 2], this._collection.locationOf(this._1c)), "Collection locationOf() returns wrong location");
-		Assert.isTrue(locationsMatch([2, 0], this._collection.locationOf(this._2a)), "Collection locationOf() returns wrong location");
-		Assert.isTrue(locationsMatch([1, 0], this._collection.locationOf(this._4b)), "Collection locationOf() returns wrong location");
-		Assert.isTrue(locationsMatch([1, 1], this._collection.locationOf(this._4a)), "Collection locationOf() returns wrong location");
+		Assert.same([0], this._collection.locationOf(this._1), "Collection locationOf() returns wrong location");
+		Assert.same([1], this._collection.locationOf(this._4), "Collection locationOf() returns wrong location");
+		Assert.same([2], this._collection.locationOf(this._2), "Collection locationOf() returns wrong location");
+		Assert.same([3], this._collection.locationOf(this._3), "Collection locationOf() returns wrong location");
+		Assert.same([4], this._collection.locationOf(this._5), "Collection locationOf() returns wrong location");
+		Assert.same([0, 0], this._collection.locationOf(this._1b), "Collection locationOf() returns wrong location");
+		Assert.same([0, 1], this._collection.locationOf(this._1a), "Collection locationOf() returns wrong location");
+		Assert.same([0, 2], this._collection.locationOf(this._1c), "Collection locationOf() returns wrong location");
+		Assert.same([2, 0], this._collection.locationOf(this._2a), "Collection locationOf() returns wrong location");
+		Assert.same([1, 0], this._collection.locationOf(this._4b), "Collection locationOf() returns wrong location");
+		Assert.same([1, 1], this._collection.locationOf(this._4a), "Collection locationOf() returns wrong location");
 		Assert.isNull(this._collection.locationOf(createItem("Not in collection", -1)),
 			"Collection locationOf() must return null for items not in collection");
 	}
@@ -839,17 +819,17 @@ class IHierarchicalCollectionTest<Item:MockItem> extends Test {
 	public function testLocationOfWithSortCompareFunctionAndFilterFunction():Void {
 		this._collection.filterFunction = filterFunction;
 		this._collection.sortCompareFunction = sortCompareFunction;
-		Assert.isTrue(locationsMatch([0], this._collection.locationOf(this._1)), "Collection locationOf() returns wrong location");
-		Assert.isTrue(locationsMatch([1], this._collection.locationOf(this._4)), "Collection locationOf() returns wrong location");
+		Assert.same([0], this._collection.locationOf(this._1), "Collection locationOf() returns wrong location");
+		Assert.same([1], this._collection.locationOf(this._4), "Collection locationOf() returns wrong location");
 		Assert.isNull(this._collection.locationOf(this._2), "Collection locationOf() returns wrong location");
-		Assert.isTrue(locationsMatch([2], this._collection.locationOf(this._3)), "Collection locationOf() returns wrong location");
-		Assert.isTrue(locationsMatch([3], this._collection.locationOf(this._5)), "Collection locationOf() returns wrong location");
+		Assert.same([2], this._collection.locationOf(this._3), "Collection locationOf() returns wrong location");
+		Assert.same([3], this._collection.locationOf(this._5), "Collection locationOf() returns wrong location");
 		Assert.isNull(this._collection.locationOf(this._1b), "Collection locationOf() returns wrong location");
-		Assert.isTrue(locationsMatch([0, 0], this._collection.locationOf(this._1a)), "Collection locationOf() returns wrong location");
-		Assert.isTrue(locationsMatch([0, 1], this._collection.locationOf(this._1c)), "Collection locationOf() returns wrong location");
+		Assert.same([0, 0], this._collection.locationOf(this._1a), "Collection locationOf() returns wrong location");
+		Assert.same([0, 1], this._collection.locationOf(this._1c), "Collection locationOf() returns wrong location");
 		Assert.isNull(this._collection.locationOf(this._2a), "Collection locationOf() returns wrong location");
-		Assert.isTrue(locationsMatch([1, 0], this._collection.locationOf(this._4b)), "Collection locationOf() returns wrong location");
-		Assert.isTrue(locationsMatch([1, 1], this._collection.locationOf(this._4a)), "Collection locationOf() returns wrong location");
+		Assert.same([1, 0], this._collection.locationOf(this._4b), "Collection locationOf() returns wrong location");
+		Assert.same([1, 1], this._collection.locationOf(this._4a), "Collection locationOf() returns wrong location");
 		Assert.isNull(this._collection.locationOf(createItem("Not in collection", -1)),
 			"Collection locationOf() must return null for items not in collection");
 	}
