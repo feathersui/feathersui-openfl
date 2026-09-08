@@ -115,32 +115,43 @@ class IHierarchicalCollectionTest<Item:MockItem> extends Test {
 		if (collection == null) {
 			collection = this._collection;
 		}
+
 		if (location == null) {
 			location = [];
 		} else if (location.length > 0 && !collection.isBranch(collection.get(location))) {
 			Assert.fail('Collection should have a branch at location $location', pos);
 			return false;
 		}
-		if (items.length == collection.getLength(location)) {
-			Assert.pass();
-		} else {
-			Assert.fail('Branch should have length ${items.length}, got ${collection.getLength(location)}', pos);
-			return false;
-		}
-		var result:Bool = true;
+
+		var allTestsPassed:Bool = true;
+		var branchLength:Int = collection.getLength(location);
+		allTestsPassed = Assert.equals(items.length, branchLength,
+			'Expected ${items.length} items at $location, got $branchLength', pos);
+
+		var locationOriginalLength:Int = location.length;
+		location.push(0);
+
 		for (i in 0...items.length) {
-			location.push(i);
+			location[locationOriginalLength] = i;
 			var expected:Item = items[i];
-			var actual:Item = collection.get(location);
-			if (expected == actual) {
-				Assert.pass();
-			} else {
-				result = false;
-				Assert.fail('Expected $expected at $location, got $actual', pos);
+			if (i >= branchLength) {
+				Assert.fail('Expected $expected at $location', pos);
+				continue;
 			}
-			location.pop();
+			var actual:Item = collection.get(location);
+			allTestsPassed = Assert.equals(expected, actual,
+				'Expected $expected at $location, got $actual', pos)
+				&& allTestsPassed;
 		}
-		return result;
+
+		for (i in items.length...branchLength) {
+			location[locationOriginalLength] = i;
+			Assert.fail('Expected no item at $location, got ${collection.get(location)}', pos);
+		}
+
+		location.pop();
+
+		return allTestsPassed;
 	}
 
 	/**
@@ -160,12 +171,13 @@ class IHierarchicalCollectionTest<Item:MockItem> extends Test {
 		}
 
 		var allTestsPassed:Bool = true;
+		allTestsPassed = Assert.equals(expectedEvents.length, actualEvents.length,
+			'Expected ${expectedEvents.length} events, got ${actualEvents.length}', pos);
 
 		for (i in 0...expectedEvents.length) {
 			var expected = expectedEvents[i];
 			if (i >= actualEvents.length) {
 				Assert.fail('Collection must dispatch ${expected.type} as event #$i', pos);
-				allTestsPassed = false;
 				continue;
 			}
 
@@ -197,7 +209,6 @@ class IHierarchicalCollectionTest<Item:MockItem> extends Test {
 		for (i in expectedEvents.length...actualEvents.length) {
 			var actual = actualEvents[i];
 			Assert.fail('Collection must not dispatch ${actual.type} event (#$i)', pos);
-			allTestsPassed = false;
 		}
 
 		return allTestsPassed;

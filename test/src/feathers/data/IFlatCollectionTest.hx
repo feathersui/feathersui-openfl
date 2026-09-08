@@ -114,24 +114,29 @@ class IFlatCollectionTest extends Test {
 		if (collection == null) {
 			collection = this._collection;
 		}
-		if (items.length == collection.length) {
-			Assert.pass();
-		} else {
-			Assert.fail('Collection should have length ${items.length}, got ${collection.length}', pos);
-			return false;
-		}
-		var result:Bool = true;
+
+		var allTestsPassed:Bool = true;
+		var collectionLength:Int = collection.length;
+		allTestsPassed = Assert.equals(items.length, collectionLength,
+			'Expected ${items.length} items, got $collectionLength', pos);
+
 		for (i in 0...items.length) {
 			var expected:MockItem = items[i];
-			var actual:MockItem = collection.get(i);
-			if (expected == actual) {
-				Assert.pass();
-			} else {
-				result = false;
-				Assert.fail('Expected $expected at index $i, got $actual', pos);
+			if (i > collectionLength) {
+				Assert.fail('Expected $expected at index $i', pos);
+				continue;
 			}
+			var actual:MockItem = collection.get(i);
+			allTestsPassed = Assert.equals(expected, actual,
+				'Expected $expected at index $i, got $actual', pos)
+				&& allTestsPassed;
 		}
-		return result;
+
+		for (i in items.length...collectionLength) {
+			Assert.fail('Expected no item at index $i, got ${collection.get(i)}', pos);
+		}
+
+		return allTestsPassed;
 	}
 
 	/**
@@ -149,12 +154,13 @@ class IFlatCollectionTest extends Test {
 		}
 
 		var allTestsPassed:Bool = true;
+		allTestsPassed = Assert.equals(expectedEvents.length, actualEvents.length,
+			'Expected ${expectedEvents.length} events, got ${actualEvents.length}', pos);
 
 		for (i in 0...expectedEvents.length) {
 			var expected = expectedEvents[i];
 			if (i >= actualEvents.length) {
 				Assert.fail('Collection must dispatch ${expected.type} as event #$i', pos);
-				allTestsPassed = false;
 				continue;
 			}
 
@@ -180,7 +186,6 @@ class IFlatCollectionTest extends Test {
 		for (i in expectedEvents.length...actualEvents.length) {
 			var actual = actualEvents[i];
 			Assert.fail('Collection must not dispatch ${actual.type} event (#$i)', pos);
-			allTestsPassed = false;
 		}
 
 		return allTestsPassed;
