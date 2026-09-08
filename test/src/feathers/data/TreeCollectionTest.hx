@@ -1355,13 +1355,3 @@ import utest.Test;
 			"Collection with sortCompareFunction and filterFunction with set() did not return correct item for unsorted index 5");
 	}
 }
-
-private class MockItem {
-	public function new(text:String, value:Float) {
-		this.text = text;
-		this.value = value;
-	}
-
-	public var text:String;
-	public var value:Float;
-}
