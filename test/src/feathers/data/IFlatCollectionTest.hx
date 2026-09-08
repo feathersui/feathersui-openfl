@@ -198,11 +198,11 @@ class IFlatCollectionTest extends Test {
 	}
 
 	public function testIndexOf():Void {
-		Assert.equals(0, this._collection.indexOf(this._a), "Collection indexOf() returns wrong index");
-		Assert.equals(1, this._collection.indexOf(this._b), "Collection indexOf() returns wrong index");
-		Assert.equals(2, this._collection.indexOf(this._c), "Collection indexOf() returns wrong index");
-		Assert.equals(3, this._collection.indexOf(this._d), "Collection indexOf() returns wrong index");
-		Assert.equals(-1, this._collection.indexOf(new MockItem("Not in collection", -1)), "Collection indexOf() must return -1 for items not in collection");
+		Assert.equals(0, this._collection.indexOf(this._a));
+		Assert.equals(1, this._collection.indexOf(this._b));
+		Assert.equals(2, this._collection.indexOf(this._c));
+		Assert.equals(3, this._collection.indexOf(this._d));
+		Assert.equals(-1, this._collection.indexOf(new MockItem("Not in collection", -1)));
 	}
 
 	public function testContains():Void {
@@ -215,10 +215,10 @@ class IFlatCollectionTest extends Test {
 	}
 
 	public function testGet():Void {
-		Assert.equals(this._a, this._collection.get(0), "Collection get() returns wrong item");
-		Assert.equals(this._b, this._collection.get(1), "Collection get() returns wrong item");
-		Assert.equals(this._c, this._collection.get(2), "Collection get() returns wrong item");
-		Assert.equals(this._d, this._collection.get(3), "Collection get() returns wrong item");
+		Assert.equals(this._a, this._collection.get(0));
+		Assert.equals(this._b, this._collection.get(1));
+		Assert.equals(this._c, this._collection.get(2));
+		Assert.equals(this._d, this._collection.get(3));
 		Assert.raises(function() {
 			this._collection.get(100);
 		}, RangeError);
@@ -403,10 +403,10 @@ class IFlatCollectionTest extends Test {
 
 	public function testIndexOfWithFilterFunction():Void {
 		this._collection.filterFunction = filterFunction;
-		Assert.equals(-1, this._collection.indexOf(this._a), "Collection with filterFunction must return -1 for index of filtered item");
-		Assert.equals(0, this._collection.indexOf(this._b), "Collection with filterFunction must return index of unfiltered item");
-		Assert.equals(-1, this._collection.indexOf(this._c), "Collection with filterFunction must return -1 for index of filtered item");
-		Assert.equals(1, this._collection.indexOf(this._d), "Collection with filterFunction must return index of unfiltered item");
+		Assert.equals(-1, this._collection.indexOf(this._a));
+		Assert.equals(0, this._collection.indexOf(this._b));
+		Assert.equals(-1, this._collection.indexOf(this._c));
+		Assert.equals(1, this._collection.indexOf(this._d));
 	}
 
 	public function testSetReplaceWithFilterFunction():Void {
@@ -422,7 +422,7 @@ class IFlatCollectionTest extends Test {
 			{type: FlatCollectionEvent.REPLACE_ITEM, index: expectedIndex, addedItem: itemToAdd, removedItem: this._d},
 			{type: Event.CHANGE}
 		]);
-		Assert.equals(expectedIndex, this._collection.indexOf(itemToAdd), "Replacing item in collection returns incorrect index");
+		Assert.equals(expectedIndex, this._collection.indexOf(itemToAdd));
 
 		this._collection.filterFunction = null;
 
@@ -442,7 +442,7 @@ class IFlatCollectionTest extends Test {
 			{type: FlatCollectionEvent.ADD_ITEM, index: originalFilteredLength, addedItem: itemToAdd},
 			{type: Event.CHANGE}
 		]);
-		Assert.equals(originalFilteredLength, this._collection.indexOf(itemToAdd), "Setting item after end of collection returns incorrect index");
+		Assert.equals(originalFilteredLength, this._collection.indexOf(itemToAdd));
 
 		this._collection.filterFunction = null;
 		this.assertCollectionMatches([this._a, this._b, this._c, this._d, itemToAdd]);
@@ -461,7 +461,7 @@ class IFlatCollectionTest extends Test {
 			{type: FlatCollectionEvent.REMOVE_ITEM, index: expectedIndex, removedItem: this._d},
 			{type: Event.CHANGE}
 		]);
-		Assert.equals(-1, this._collection.indexOf(itemToAdd), "Setting item that is filtered returns incorrect index");
+		Assert.equals(-1, this._collection.indexOf(itemToAdd));
 
 		this._collection.filterFunction = null;
 		this.assertCollectionMatches([this._a, this._b, this._c, itemToAdd]);
@@ -529,10 +529,10 @@ class IFlatCollectionTest extends Test {
 
 	public function testIndexOfWithSortCompareFunction():Void {
 		this._collection.sortCompareFunction = sortCompareFunction;
-		Assert.equals(0, this._collection.indexOf(this._a), "Collection with sortCompareFunction must return correct index for item");
-		Assert.equals(2, this._collection.indexOf(this._b), "Collection with sortCompareFunction must return correct index for item");
-		Assert.equals(3, this._collection.indexOf(this._c), "Collection with sortCompareFunction must return correct index for item");
-		Assert.equals(1, this._collection.indexOf(this._d), "Collection with sortCompareFunction must return correct index for item");
+		Assert.equals(0, this._collection.indexOf(this._a));
+		Assert.equals(2, this._collection.indexOf(this._b));
+		Assert.equals(3, this._collection.indexOf(this._c));
+		Assert.equals(1, this._collection.indexOf(this._d));
 	}
 
 	public function testAddWithSortCompareFunction():Void {
@@ -674,12 +674,10 @@ class IFlatCollectionTest extends Test {
 	public function testIndexOfWithSortCompareFunctionAndFilterFunction():Void {
 		this._collection.filterFunction = filterFunction;
 		this._collection.sortCompareFunction = sortCompareFunction;
-		Assert.equals(-1, this._collection.indexOf(this._a),
-			"Collection with sortCompareFunction and filterFunction must return -1 for index of filtered item");
-		Assert.equals(1, this._collection.indexOf(this._b), "Collection with sortCompareFunction and filterFunction must return index of unfiltered item");
-		Assert.equals(-1, this._collection.indexOf(this._c),
-			"Collection with sortCompareFunction and filterFunction must return -1 for index of filtered item");
-		Assert.equals(0, this._collection.indexOf(this._d), "Collection with sortCompareFunction and filterFunction must return index of unfiltered item");
+		Assert.equals(-1, this._collection.indexOf(this._a));
+		Assert.equals(1, this._collection.indexOf(this._b));
+		Assert.equals(-1, this._collection.indexOf(this._c));
+		Assert.equals(0, this._collection.indexOf(this._d));
 	}
 
 	public function testAddWithSortCompareFunctionAndFilterFunction():Void {
