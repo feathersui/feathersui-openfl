@@ -559,7 +559,6 @@ class IFlatCollectionTest extends Test {
 
 		var newItem = new MockItem("New Item", 1.5);
 		this._collection.addAt(newItem, 1);
-		// the index we passed in isn't necessarily the same while sorted
 		this.assertCollectionMatches([this._a, this._d, newItem, this._b, this._c]);
 		this.assertEventsDispatched([
 			{type: FlatCollectionEvent.ADD_ITEM, index: 2, addedItem: newItem},
@@ -567,11 +566,7 @@ class IFlatCollectionTest extends Test {
 		]);
 
 		this._collection.sortCompareFunction = null;
-		// and it might not even be the same while unsorted!
-		// that's because, in the unsorted data, it will be placed relative to
-		// the item in the sorted data that was at the index passed to addAt().
-		// it may be confusing, but it's consistent with set() on filtered
-		// collections
+		// newItem was inserted before this._d because this._d was at [1]
 		this.assertCollectionMatches([this._a, this._b, this._c, newItem, this._d]);
 	}
 
@@ -631,7 +626,6 @@ class IFlatCollectionTest extends Test {
 
 		var newItem = new MockItem("New Item", 1.5);
 		this._collection.set(3, newItem);
-		// the index we passed in isn't necessarily the same while sorted
 		this.assertCollectionMatches([this._a, this._d, newItem, this._b]);
 		this.assertEventsDispatched([
 			{type: FlatCollectionEvent.REMOVE_ITEM, index: 3, removedItem: this._c},
@@ -640,11 +634,7 @@ class IFlatCollectionTest extends Test {
 		]);
 
 		this._collection.sortCompareFunction = null;
-		// and it might not even be the same while unsorted!
-		// that's because, in the unsorted data, it will replace the item in the
-		// the sorted data that was at the index passed to set().
-		// it may be confusing, but it's consistent with set() on filtered
-		// collections
+		// newItem was inserted in place of this._c because this._d was at [3]
 		this.assertCollectionMatches([this._a, this._b, newItem, this._d]);
 	}
 
