@@ -1480,7 +1480,7 @@ class MenuBar extends FeathersControl implements IDataSelector<Dynamic> implemen
 		if (itemState.branch) {
 			menuCollection = new HierarchicalSubCollection(this._dataProvider, menuLocation);
 		} else {
-			menuCollection = new ArrayHierarchicalCollection();
+			return;
 		}
 		var factory = this._menuFactory != null ? this._menuFactory : defaultMenuFactory;
 		this._oldMenuFactory = factory;
@@ -1576,7 +1576,11 @@ class MenuBar extends FeathersControl implements IDataSelector<Dynamic> implemen
 	private function menuBar_itemRenderer_mouseDownHandler(event:MouseEvent):Void {
 		var itemRenderer = cast(event.currentTarget, DisplayObject);
 		var itemState = this.itemRendererToItemState.get(itemRenderer);
-		this.openMenuAtIndex(itemState.index);
+		if (itemState.branch) {
+			this.openMenuAtIndex(itemState.index);
+		} else if (!itemState.separator && itemState.enabled) {
+			MenuEvent.dispatch(this, MenuEvent.ITEM_TRIGGER, itemState);
+		}
 	}
 
 	private function menuBar_stage_keyDownHandler(event:KeyboardEvent):Void {
