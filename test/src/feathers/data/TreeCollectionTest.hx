@@ -262,15 +262,15 @@ import utest.Test;
 		this._collection.addEventListener(Event.CHANGE, function(event:Event):Void {
 			changeEvent = true;
 		});
-		var replaceItemEvent = false;
+		var addItemEvent = false;
 		var locationFromEvent:Array<Int> = null;
-		this._collection.addEventListener(HierarchicalCollectionEvent.REPLACE_ITEM, function(event:HierarchicalCollectionEvent):Void {
-			replaceItemEvent = true;
+		this._collection.addEventListener(HierarchicalCollectionEvent.ADD_ITEM, function(event:HierarchicalCollectionEvent):Void {
+			addItemEvent = true;
 			locationFromEvent = event.location;
 		});
 		this._collection.set([0, originalLength], itemToAdd);
 		Assert.isTrue(changeEvent, "Event.CHANGE must be dispatched after setting item after end of collection");
-		Assert.isTrue(replaceItemEvent, "HierarchicalCollectionEvent.REPLACE_ITEM must be dispatched after setting item after end of collection");
+		Assert.isTrue(addItemEvent, "HierarchicalCollectionEvent.ADD_ITEM must be dispatched after setting item after end of collection");
 		Assert.equals(originalLength + 1, this._collection.getLength([0]), "Collection length must change after setting item after end in collection");
 		Assert.equals(2, this._collection.locationOf(itemToAdd).length, "Setting item after end of collection returns incorrect location");
 		Assert.equals(0, this._collection.locationOf(itemToAdd)[0], "Setting item after end of collection returns incorrect location");

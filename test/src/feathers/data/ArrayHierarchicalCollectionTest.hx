@@ -244,15 +244,15 @@ import utest.Test;
 		this._collection.addEventListener(Event.CHANGE, function(event:Event):Void {
 			changeEvent = true;
 		});
-		var replaceItemEvent = false;
+		var addItemEvent = false;
 		var locationFromEvent:Array<Int> = null;
-		this._collection.addEventListener(HierarchicalCollectionEvent.REPLACE_ITEM, function(event:HierarchicalCollectionEvent):Void {
-			replaceItemEvent = true;
+		this._collection.addEventListener(HierarchicalCollectionEvent.ADD_ITEM, function(event:HierarchicalCollectionEvent):Void {
+			addItemEvent = true;
 			locationFromEvent = event.location;
 		});
 		this._collection.set([0, originalLength], itemToAdd);
 		Assert.isTrue(changeEvent, "Event.CHANGE must be dispatched after setting item after end of collection");
-		Assert.isTrue(replaceItemEvent, "HierarchicalCollectionEvent.REPLACE_ITEM must be dispatched after setting item after end of collection");
+		Assert.isTrue(addItemEvent, "HierarchicalCollectionEvent.ADD_ITEM must be dispatched after setting item after end of collection");
 		Assert.equals(originalLength + 1, this._collection.getLength([0]), "Collection length must change after setting item after end in collection");
 		Assert.isTrue(locationsMatch([0, originalLength], this._collection.locationOf(itemToAdd)),
 			"Setting item after end of collection returns incorrect location");
@@ -630,6 +630,13 @@ import utest.Test;
 		Assert.equals(originalFilteredLength - 1, this._collection.getLength(), "Collection length must change after setting item that is filtered");
 		Assert.isNull(this._collection.locationOf(itemToAdd), "Setting item that is filtered returns incorrect location");
 		Assert.isTrue(locationsMatch([expectedIndex], locationFromEvent), "Setting item that is filtered returns incorrect location in event");
+		Assert.equals(this._1, this._collection.get([0]), "Collection with filterFunction and set() did not return correct item for unsorted index 0");
+		Assert.equals(this._3, this._collection.get([1]), "Collection with filterFunction and set() did not return correct item for unsorted index 1");
+		Assert.equals(this._4, this._collection.get([2]), "Collection with filterFunction and set() did not return correct item for unsorted index 2");
+		Assert.equals(this._4a, this._collection.get([2, 0]), "Collection with filterFunction and set() did not return correct item for unsorted index [2, 0]");
+		Assert.raises(function():Void {
+			this._collection.get([3]);
+		}, RangeError);
 
 		this._collection.filterFunction = null;
 
@@ -821,7 +828,11 @@ import utest.Test;
 		Assert.equals(this._1, this._collection.get([0]), "Collection with sortCompareFunction and addAt() did not return correct item for sorted index 0");
 		Assert.equals(this._4, this._collection.get([1]), "Collection with sortCompareFunction and addAt() did not return correct item for sorted index 1");
 		Assert.equals(newItem, this._collection.get([2]), "Collection with sortCompareFunction and addAt() did not return correct item for sorted index 2");
+		Assert.raises(function():Void {
+			this._collection.get([2, 0]);
+		}, RangeError);
 		Assert.equals(this._2, this._collection.get([3]), "Collection with sortCompareFunction and addAt() did not return correct item for sorted index 3");
+		Assert.equals(this._2a, this._collection.get([3, 0]), "Collection with sortCompareFunction and addAt() did not return correct item for sorted index [3, 0]");
 		Assert.equals(this._3, this._collection.get([4]), "Collection with sortCompareFunction and addAt() did not return correct item for sorted index 4");
 		Assert.equals(this._5, this._collection.get([5]), "Collection with sortCompareFunction and addAt() did not return correct item for sorted index 5");
 
@@ -933,6 +944,9 @@ import utest.Test;
 		Assert.isFalse(this._collection.contains(this._4), "Collection with sortCompareFunction and set() did not remove correct item for sorted index");
 		Assert.equals(this._1, this._collection.get([0]), "Collection with sortCompareFunction and set() did not return correct item for sorted index 0");
 		Assert.equals(newItem, this._collection.get([1]), "Collection with sortCompareFunction and set() did not return correct item for sorted index 1");
+		Assert.raises(function():Void {
+			this._collection.get([1, 0]);
+		}, RangeError);
 		Assert.equals(this._2, this._collection.get([2]), "Collection with sortCompareFunction and set() did not return correct item for sorted index 2");
 		Assert.equals(this._3, this._collection.get([3]), "Collection with sortCompareFunction and set() did not return correct item for sorted index 3");
 		Assert.equals(this._5, this._collection.get([4]), "Collection with sortCompareFunction and set() did not return correct item for sorted index 4");
@@ -947,8 +961,12 @@ import utest.Test;
 		// collections
 		Assert.equals(this._1, this._collection.get([0]), "Collection with sortCompareFunction and set() did not return correct item for unsorted index 0");
 		Assert.equals(this._2, this._collection.get([1]), "Collection with sortCompareFunction and set() did not return correct item for unsorted index 1");
+		Assert.equals(this._2a, this._collection.get([1, 0]), "Collection with sortCompareFunction and set() did not return correct item for unsorted index [1, 0]");
 		Assert.equals(this._3, this._collection.get([2]), "Collection with sortCompareFunction and set() did not return correct item for unsorted index 2");
 		Assert.equals(newItem, this._collection.get([3]), "Collection with sortCompareFunction and set() did not return correct item for unsorted index 3");
+		Assert.raises(function():Void {
+			this._collection.get([3, 0]);
+		}, RangeError);
 		Assert.equals(this._5, this._collection.get([4]), "Collection with sortCompareFunction and set() did not return correct item for unsorted index 4");
 	}
 
@@ -988,7 +1006,11 @@ import utest.Test;
 		Assert.equals(this._1, this._collection.get([0]), "Collection with sortCompareFunction and set() did not return correct item for sorted index 0");
 		Assert.equals(this._4, this._collection.get([1]), "Collection with sortCompareFunction and set() did not return correct item for sorted index 1");
 		Assert.equals(newItem, this._collection.get([2]), "Collection with sortCompareFunction and set() did not return correct item for sorted index 2");
+		Assert.raises(function():Void {
+			this._collection.get([2, 0]);
+		}, RangeError);
 		Assert.equals(this._2, this._collection.get([3]), "Collection with sortCompareFunction and set() did not return correct item for sorted index 3");
+		Assert.equals(this._2a, this._collection.get([3, 0]), "Collection with sortCompareFunction and set() did not return correct item for sorted index [3, 0]");
 		Assert.equals(this._5, this._collection.get([4]), "Collection with sortCompareFunction and set() did not return correct item for sorted index 4");
 
 		this._collection.sortCompareFunction = null;
@@ -1002,7 +1024,11 @@ import utest.Test;
 		Assert.equals(this._1, this._collection.get([0]), "Collection with sortCompareFunction and set() did not return correct item for unsorted index 0");
 		Assert.equals(this._2, this._collection.get([1]), "Collection with sortCompareFunction and set() did not return correct item for unsorted index 1");
 		Assert.equals(newItem, this._collection.get([2]), "Collection with sortCompareFunction and set() did not return correct item for unsorted index 2");
+		Assert.raises(function():Void {
+			this._collection.get([2, 0]);
+		}, RangeError);
 		Assert.equals(this._4, this._collection.get([3]), "Collection with sortCompareFunction and set() did not return correct item for unsorted index 3");
+		Assert.equals(this._4a, this._collection.get([3, 0]), "Collection with sortCompareFunction and set() did not return correct item for unsorted index [3, 0]");
 		Assert.equals(this._5, this._collection.get([4]), "Collection with sortCompareFunction and set() did not return correct item for unsorted index 4");
 	}
 
@@ -1237,8 +1263,13 @@ import utest.Test;
 			"Collection with sortCompareFunction and filterFunction with set() did not return correct item for sorted index 0");
 		Assert.equals(newItem, this._collection.get([1]),
 			"Collection with sortCompareFunction and filterFunction with set() did not return correct item for sorted index 1");
+		Assert.raises(function():Void {
+			this._collection.get([1, 0]);
+		}, RangeError);
 		Assert.equals(this._4, this._collection.get([2]),
 			"Collection with sortCompareFunction and filterFunction with set() did not return correct item for sorted index 2");
+		Assert.equals(this._4b, this._collection.get([2, 0]),
+			"Collection with sortCompareFunction and filterFunction with set() did not return correct item for sorted index [2, 0]");
 		Assert.equals(this._5, this._collection.get([3]),
 			"Collection with sortCompareFunction and filterFunction with set() did not return correct item for sorted index 3");
 
@@ -1255,8 +1286,13 @@ import utest.Test;
 			"Collection with sortCompareFunction and filterFunction with set() did not return correct item for unsorted index 0");
 		Assert.equals(this._2, this._collection.get([1]),
 			"Collection with sortCompareFunction and filterFunction with set() did not return correct item for unsorted index 1");
+		Assert.equals(this._2a, this._collection.get([1, 0]),
+			"Collection with sortCompareFunction and filterFunction with set() did not return correct item for unsorted index [1, 0]");
 		Assert.equals(newItem, this._collection.get([2]),
 			"Collection with sortCompareFunction and filterFunction with set() did not return correct item for unsorted index 2");
+		Assert.raises(function():Void {
+			this._collection.get([2, 0]);
+		}, RangeError);
 		Assert.equals(this._4, this._collection.get([3]),
 			"Collection with sortCompareFunction and filterFunction with set() did not return correct item for unsorted index 3");
 		Assert.equals(this._5, this._collection.get([4]),
@@ -1300,8 +1336,13 @@ import utest.Test;
 			"Collection with sortCompareFunction and filterFunction with set() did not return correct item for sorted index 0");
 		Assert.equals(newItem, this._collection.get([1]),
 			"Collection with sortCompareFunction and filterFunction with set() did not return correct item for sorted index 1");
+		Assert.raises(function():Void {
+			this._collection.get([1, 0]);
+		}, RangeError);
 		Assert.equals(this._4, this._collection.get([2]),
 			"Collection with sortCompareFunction and filterFunction with set() did not return correct item for sorted index 2");
+		Assert.equals(this._4b, this._collection.get([2, 0]),
+			"Collection with sortCompareFunction and filterFunction with set() did not return correct item for sorted index [2, 0]");
 		Assert.equals(this._3, this._collection.get([3]),
 			"Collection with sortCompareFunction and filterFunction with set() did not return correct item for sorted index 3");
 		Assert.equals(this._5, this._collection.get([4]),
@@ -1320,6 +1361,8 @@ import utest.Test;
 			"Collection with sortCompareFunction and filterFunction with set() did not return correct item for unsorted index 0");
 		Assert.equals(this._2, this._collection.get([1]),
 			"Collection with sortCompareFunction and filterFunction with set() did not return correct item for unsorted index 1");
+		Assert.equals(this._2a, this._collection.get([1, 0]),
+			"Collection with sortCompareFunction and filterFunction with set() did not return correct item for sorted index [1, 0]");
 		Assert.equals(this._3, this._collection.get([2]),
 			"Collection with sortCompareFunction and filterFunction with set() did not return correct item for unsorted index 2");
 		Assert.equals(this._4, this._collection.get([3]),

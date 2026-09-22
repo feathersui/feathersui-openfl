@@ -265,23 +265,23 @@ class HierarchicalSubCollectionTest extends Test {
 		this._subCollection.addEventListener(Event.CHANGE, function(event:Event):Void {
 			subChangeEvent = true;
 		});
-		var parentReplaceItemEvent = false;
+		var parentAddItemEvent = false;
 		var parentLocationFromEvent:Array<Int> = null;
-		var subReplaceItemEvent = false;
+		var subAddItemEvent = false;
 		var subLocationFromEvent:Array<Int> = null;
-		this._parentCollection.addEventListener(HierarchicalCollectionEvent.REPLACE_ITEM, function(event:HierarchicalCollectionEvent):Void {
-			parentReplaceItemEvent = true;
+		this._parentCollection.addEventListener(HierarchicalCollectionEvent.ADD_ITEM, function(event:HierarchicalCollectionEvent):Void {
+			parentAddItemEvent = true;
 			parentLocationFromEvent = event.location;
 		});
-		this._subCollection.addEventListener(HierarchicalCollectionEvent.REPLACE_ITEM, function(event:HierarchicalCollectionEvent):Void {
-			subReplaceItemEvent = true;
+		this._subCollection.addEventListener(HierarchicalCollectionEvent.ADD_ITEM, function(event:HierarchicalCollectionEvent):Void {
+			subAddItemEvent = true;
 			subLocationFromEvent = event.location;
 		});
 		this._subCollection.set([1, 1], itemToAdd);
 		Assert.isTrue(parentChangeEvent, "Event.CHANGE must be dispatched after replacing in collection");
 		Assert.isTrue(subChangeEvent, "Event.CHANGE must be dispatched after replacing in collection");
-		Assert.isTrue(parentReplaceItemEvent, "HierarchicalCollectionEvent.REPLACE_ITEM must be dispatched after replacing in collection");
-		Assert.isTrue(subReplaceItemEvent, "HierarchicalCollectionEvent.REPLACE_ITEM must be dispatched after replacing in collection");
+		Assert.isTrue(parentAddItemEvent, "HierarchicalCollectionEvent.ADD_ITEM must be dispatched after replacing in collection");
+		Assert.isTrue(subAddItemEvent, "HierarchicalCollectionEvent.ADD_ITEM must be dispatched after replacing in collection");
 		Assert.equals(parentOriginalLength + 1, this._parentCollection.getLength([1, 1]));
 		Assert.equals(subOriginalLength + 1, this._subCollection.getLength([1]));
 		Assert.isTrue(locationsMatch([1, 1, 1], this._parentCollection.locationOf(itemToAdd)), "Replacing item in collection returns incorrect location");
@@ -546,4 +546,8 @@ private class MockItem {
 	public var text:String;
 	public var children:Array<MockItem>;
 	public var value:Float;
+	
+	public function toString():String {
+		return '$text $value: $children';
+	}
 }
